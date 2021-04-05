@@ -1,10 +1,38 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tags on Hyuntae&#39;s Tech Blog</title>
+    <title>Tags on 1o2o3o&#39;s Tech Blog</title>
     <link>https://ddd4117.github.io/tags/</link>
-    <description>Recent content in Tags on Hyuntae&#39;s Tech Blog</description>
+    <description>Recent content in Tags on 1o2o3o&#39;s Tech Blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>kr-ko</language><atom:link href="https://ddd4117.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <language>kr-ko</language>
+    <lastBuildDate>Mon, 05 Apr 2021 17:08:34 +0900</lastBuildDate><atom:link href="https://ddd4117.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>cs</title>
+      <link>https://ddd4117.github.io/tags/cs/</link>
+      <pubDate>Mon, 05 Apr 2021 17:08:34 +0900</pubDate>
+      
+      <guid>https://ddd4117.github.io/tags/cs/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>os</title>
+      <link>https://ddd4117.github.io/tags/os/</link>
+      <pubDate>Mon, 05 Apr 2021 17:08:34 +0900</pubDate>
+      
+      <guid>https://ddd4117.github.io/tags/os/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>운영체제</title>
+      <link>https://ddd4117.github.io/tags/%EC%9A%B4%EC%98%81%EC%B2%B4%EC%A0%9C/</link>
+      <pubDate>Mon, 05 Apr 2021 17:08:34 +0900</pubDate>
+      
+      <guid>https://ddd4117.github.io/tags/%EC%9A%B4%EC%98%81%EC%B2%B4%EC%A0%9C/</guid>
+      <description></description>
+    </item>
+    
   </channel>
 </rss>
