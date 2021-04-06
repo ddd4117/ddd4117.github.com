@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="kr-ko">
+  <head>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.82.0 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="author" content="1o2o3o">
+<meta name="keywords" content="">
+<meta name="description" content="">
+
+
+<meta property="og:description" content="">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[JPA] 1장 - SQL을 직접 다룰 때 발생하는 문제점">
+<meta name="twitter:title" content="[JPA] 1장 - SQL을 직접 다룰 때 발생하는 문제점">
+<meta property="og:url" content="https://ddd4117.github.io/2021/04/jpa-1%EC%9E%A5-sql%EC%9D%84-%EC%A7%81%EC%A0%91-%EB%8B%A4%EB%A3%B0-%EB%95%8C-%EB%B0%9C%EC%83%9D%ED%95%98%EB%8A%94-%EB%AC%B8%EC%A0%9C%EC%A0%90/">
+<meta property="twitter:url" content="https://ddd4117.github.io/2021/04/jpa-1%EC%9E%A5-sql%EC%9D%84-%EC%A7%81%EC%A0%91-%EB%8B%A4%EB%A3%B0-%EB%95%8C-%EB%B0%9C%EC%83%9D%ED%95%98%EB%8A%94-%EB%AC%B8%EC%A0%9C%EC%A0%90/">
+<meta property="og:site_name" content="1o2o3o&#39;s Tech Blog">
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+<meta property="og:locale" content="en-us">
+
+  
+    <meta property="article:published_time" content="2021-04-06T14:30:07">
+  
+  
+    <meta property="article:modified_time" content="2021-04-06T14:30:07">
+  
+  
+  
+    
+      <meta property="article:section" content="Spring">
+    
+  
+  
+    
+      <meta property="article:tag" content="Spring">
+    
+      <meta property="article:tag" content="JPA">
+    
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://user-images.githubusercontent.com/28971015/113664175-3e7dac00-96e6-11eb-97f2-b143f4e60d4a.jpg">
+  <meta property="twitter:image" content="https://user-images.githubusercontent.com/28971015/113664175-3e7dac00-96e6-11eb-97f2-b143f4e60d4a.jpg">
+
+
+
+
+
+  <meta property="og:image" content="https://www.gravatar.com/avatar/81f6ab7b1e9e7aa50245c468df481517?s=640">
+  <meta property="twitter:image" content="https://www.gravatar.com/avatar/81f6ab7b1e9e7aa50245c468df481517?s=640">
+
+
+    <title>[JPA] 1장 - SQL을 직접 다룰 때 발생하는 문제점 - 1o2o3o&#39;s Tech Blog</title>
+
+
+    <link rel="icon" href="https://ddd4117.github.io/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://ddd4117.github.io/2021/04/jpa-1%EC%9E%A5-sql%EC%9D%84-%EC%A7%81%EC%A0%91-%EB%8B%A4%EB%A3%B0-%EB%95%8C-%EB%B0%9C%EC%83%9D%ED%95%98%EB%8A%94-%EB%AC%B8%EC%A0%9C%EC%A0%90/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css" integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
+    
+    
+    <link rel="stylesheet" href="https://ddd4117.github.io/css/style-twzjdbqhmnnacqs0pwwdzcdbt8yhv8giawvjqjmyfoqnvazl0dalmnhdkvp7.min.css" />
+    
+    
+
+    
+      
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-141048320-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="5">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://ddd4117.github.io/">1o2o3o&#39;s Tech Blog</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://ddd4117.github.io/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="https://www.gravatar.com/avatar/81f6ab7b1e9e7aa50245c468df481517?s=90" alt="Author&#39;s picture" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="5">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://ddd4117.github.io/#about">
+          <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/81f6ab7b1e9e7aa50245c468df481517?s=110" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">1o2o3o</h4>
+        
+          <h5 class="sidebar-profile-bio">마구잡이 코딩맨</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/categories/os">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-linux"></i>
+      
+      <span class="sidebar-button-desc">OS</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/categories/spring">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-linux"></i>
+      
+      <span class="sidebar-button-desc">spring</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/ddd4117" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/index.xml">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/#about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="5"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      [JPA] 1장 - SQL을 직접 다룰 때 발생하는 문제점
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2021-04-06T14:30:07&#43;09:00">
+        
+  April 6, 2021
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://ddd4117.github.io/categories/spring">Spring</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              <h1 id="1장---sql을-직접-다룰-때-발생하는-문제점">1장 - SQL을 직접 다룰 때 발생하는 문제점</h1>
+<blockquote>
+<p>자바 ORM 표준 JPA 프로그래밍 1장을 요약한 내용 입니다.</p>
+</blockquote>
+<h1 id="sql을-직접-다룰-때-발생하는-문제점">SQL을 직접 다룰 때 발생하는 문제점</h1>
+<p><code>SQL</code>을 직접 다룰 때의 문제점을 알아보기 위해 <code>자바</code>와 <code>관계형 데이터베이스</code>를 사용해서 회원 관리 기능을 개발해보자.</p>
+<h3 id="먼저-회원을-조회하는-기능을-개발한다">먼저 회원을 조회하는 기능을 개발한다.</h3>
+<ul>
+<li>회원 조회용 SQL을 작성한다.</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">SELECT</span> MEMBER_ID,  NAME <span style="color:#66d9ef">FROM</span> MEMBER M <span style="color:#66d9ef">WHERE</span> MEMBER_ID <span style="color:#f92672">=</span> <span style="color:#f92672">?</span>
+</code></pre></div><ul>
+<li>JDBC API를 사용해서 SQL을 실행한다.</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">ResultSet rs <span style="color:#f92672">=</span> stmt<span style="color:#f92672">.</span><span style="color:#a6e22e">executeQuery</span><span style="color:#f92672">(</span>sql<span style="color:#f92672">);</span>
+</code></pre></div><ul>
+<li>조회 결과를 Member 객체로 실행한다.</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">String memberId <span style="color:#f92672">=</span> rs<span style="color:#f92672">.</span><span style="color:#a6e22e">getString</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;MEMBER_ID&#34;</span><span style="color:#f92672">);</span>String name <span style="color:#f92672">=</span> rs<span style="color:#f92672">.</span><span style="color:#a6e22e">getString</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;NAME&#34;</span><span style="color:#f92672">);</span>Member member <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Member<span style="color:#f92672">();</span>member<span style="color:#f92672">.</span><span style="color:#a6e22e">setMemberId</span><span style="color:#f92672">(</span>memberId<span style="color:#f92672">);</span>member<span style="color:#f92672">.</span><span style="color:#a6e22e">setName</span><span style="color:#f92672">(</span>name<span style="color:#f92672">);...</span>
+</code></pre></div><h3 id="이번엔-회원-등록-기능을-개발한다">이번엔 회원 등록 기능을 개발한다.</h3>
+<ul>
+<li>회원 등록용 SQL을 작성한다.</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">String sql <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;INSERT INTO MEMBER(MEMBER_ID, NAME) VALUES(?,?)&#34;</span><span style="color:#f92672">;</span>
+</code></pre></div><ul>
+<li>회원 객체의 값을 꺼내서 등록 SQL에 전달한다.</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">pstmt<span style="color:#f92672">.</span><span style="color:#a6e22e">setString</span><span style="color:#f92672">(</span>1<span style="color:#f92672">,</span> member<span style="color:#f92672">.</span><span style="color:#a6e22e">getMemberId</span><span style="color:#f92672">());</span>
+pstmt<span style="color:#f92672">.</span><span style="color:#a6e22e">setString</span><span style="color:#f92672">(</span>2<span style="color:#f92672">,</span> member<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">());</span>
+</code></pre></div><ul>
+<li>JDBC API를 사용해서 SQL을 실행한다.</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">pstmt<span style="color:#f92672">.</span><span style="color:#a6e22e">executeUpdate</span><span style="color:#f92672">(</span>sql<span style="color:#f92672">);</span>
+</code></pre></div><p>회원 객체를 데이터베이스가 아닌 <code>자바 컬렉션</code>에 보관한다면 어떨까? 컬렉션은 다음 한 줄로 객체를 저장할 수 있다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">list<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>member<span style="color:#f92672">);</span>
+</code></pre></div><p>따라서 개발자가 <code>객체지향 애플리케이션</code>과 <code>데이터베이스</code> 중간에서 <code>SQL</code>과 <code>JDBC API</code>를 사용해서 <code>변환</code> 작업을 직접 해주어야 한다.</p>
+<p>문제는 객체를 데이터베이스에 <code>CRUD</code>하려면 너무 많은 <code>SQL</code>과 <code>JDBC API</code>를 코드로 작성해야 한다는 점이다. <code>데이터 접근 계층(DAO)</code>을 개발하는 일은 이렇듯 지루함과 반복의 연속이다.</p>
+<h2 id="sql에-의존적인-개발">SQL에 의존적인 개발</h2>
+<p>회원 객체를 관리하는 <code>MemberDAO</code>를 완성하고 애플리케이션의 나머지 기능도 개발을 완료했다. <strong>그런데 갑자기 회원의 연락처도 함께 저장해 달라는 <code>요구사항</code>이 추가되었다.</strong></p>
+<h3 id="등록-코드-변경">등록 코드 변경</h3>
+<ul>
+<li>회원 클래스에 연락처 필드 추가</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Member</span> <span style="color:#f92672">{</span>  
+	<span style="color:#66d9ef">private</span> String memberId<span style="color:#f92672">;</span>
+  <span style="color:#66d9ef">private</span> String name<span style="color:#f92672">;</span>
+  <span style="color:#66d9ef">private</span> String tel<span style="color:#f92672">;</span>
+ <span style="color:#75715e">// 추가  ...
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+</code></pre></div><ul>
+<li>등록 SQL을 수정</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">String sql <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;INSERT INTO MEMBER(MEMBER_ID, NAME, TEL) VALUES(?,?,?)&#34;</span><span style="color:#f92672">;</span>
+</code></pre></div><ul>
+<li>회원 객체의 연락처 값을 꺼내서 등록 SQL에 전달한다.</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">pstmt<span style="color:#f92672">.</span><span style="color:#a6e22e">setString</span><span style="color:#f92672">(</span>3<span style="color:#f92672">,</span> member<span style="color:#f92672">.</span><span style="color:#a6e22e">getTel</span><span style="color:#f92672">());</span>
+</code></pre></div><h3 id="조회-코드-변경">조회 코드 변경</h3>
+<p>다음으로 회원 조회 화면에서 모든 연락처의 값이 <code>null</code>로 출력되었다. <strong>생각해보니 조회 <code>SQL</code>에 연락처 컬럼을 추가하지 않았다.</strong></p>
+<ul>
+<li>조회용 SQL을 수정</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">SELECT</span> MEMBER_ID, NAME, TEL <span style="color:#66d9ef">FROM</span> MEMBER <span style="color:#66d9ef">WHERE</span> MEMBER_ID <span style="color:#f92672">=</span> <span style="color:#f92672">?</span>
+</code></pre></div><ul>
+<li>연락처의 조회 결과를 Member 객체에 추가로 매핑한다.</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">String tel <span style="color:#f92672">=</span> rs<span style="color:#f92672">.</span><span style="color:#a6e22e">getString</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;TEL&#34;</span><span style="color:#f92672">);</span>member<span style="color:#f92672">.</span><span style="color:#a6e22e">setTel</span><span style="color:#f92672">(</span>tel<span style="color:#f92672">);</span>
+</code></pre></div><h3 id="연관된-객체">연관된 객체</h3>
+<p>회원은 어떤 한 팀에 필수로 소속되어야 한다는 요구사항이 추가되었다. <code>Member</code> 객체에 <code>team</code> 필드가 추가되어 있었다. 그러나 코드를 실행해보니 <code>member.getTeam()</code>의 값이 항상 <code>null</code>이 나오고 있었다.</p>
+<p><code>memberDAO</code> 코드를 열어보니 회원을 출력할 때 사용하는 <code>find()</code> 메소드는 회원만 조회하는 <code>SQL</code>을 그대로 유지하였다. 그래서 <code>findWithTeam()</code> 메서드를 추가하였다.</p>
+<ul>
+<li>연관 팀 정보를 가져오는 SQL 추가</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">SELECT</span> M.MEMBER_ID, M.NAME, M.TEL, T.TEAM_ID, T.TEAM_NAME
+<span style="color:#66d9ef">FROM</span> MEMBER MJOIN TEAM T  
+<span style="color:#66d9ef">ON</span> M.TEAM_ID <span style="color:#f92672">=</span> T.TEAM_ID
+</code></pre></div><p>위의 사례에서 보듯이 <code>Member</code> 객체가 연관된 <code>Team</code> 객체를 사용할 수 있을지 없을지는 전적으로 사용하는 <code>SQL</code>에 달려 있다. 이런 방식의 가장 큰 문제는 <code>데이터 접근 계층</code>을 사용해서 <code>SQL</code>을 숨겨도 어쩔 수 없이 <code>DAO</code>를 열어서 어떤 <code>SQL</code>이 실행 되는지 확인해야 한다는 점이다.</p>
+<p>이렇듯 <code>SQL</code>에 모든 것을 의존하는 상황에서는 개발자들이 <code>엔티티</code>를 신뢰하고 사용할 수 없다. <strong>대신에 <code>DAO</code>를 열어서 어떤 <code>SQL</code>이 실행되고 어떤 객체 들이 함께 조회 되는지 일일이 확인해야 한다.</strong></p>
+<h3 id="앞의-문제점을-요약하면-다음과-같다">앞의 문제점을 요약하면 다음과 같다.</h3>
+<ul>
+<li><strong>진정한 의미의 계층 분할이 어렵다.</strong></li>
+<li><strong>엔티티를 신뢰할 수 없다.</strong></li>
+<li><strong>SQL에 의존적인 개발을 피하기 어렵다.</strong></li>
+</ul>
+<h2 id="jpa와-문제-해결">JPA와 문제 해결</h2>
+<p><code>JPA</code>를 사용하면 객체를 데이터베이스에 저장하고 관리할 때, 개발자가 직접 <code>SQL</code>을 작성하는 것이 아니라 <code>JPA</code>가 제공하는 <code>API</code>를 사용하면 된다. 그러면 <code>JPA</code>가 개발자 대신에 적절한 <code>SQL</code>을 생성해서 데이터베이스에 전달한다.</p>
+<p>이전에 구현하였던 애플리케이션의 기능을 JPA를 사용해서 구현 해보자.</p>
+<ul>
+<li>조회 기능</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">String memberId <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;helloId&#34;</span><span style="color:#f92672">;</span>
+Member member <span style="color:#f92672">=</span> jpa<span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>Member<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">,</span> memberId<span style="color:#f92672">);</span> <span style="color:#75715e">// 조회
+</span></code></pre></div><ul>
+<li>수정 기능</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Member member <span style="color:#f92672">=</span> jpa<span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>Member<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">,</span> memberId<span style="color:#f92672">);</span>
+member<span style="color:#f92672">.</span><span style="color:#a6e22e">setName</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;이름변경&#34;</span><span style="color:#f92672">);</span> <span style="color:#75715e">// 수정
+</span></code></pre></div><ul>
+<li>연관된 객체 조회</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Member member <span style="color:#f92672">=</span> jpa<span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>Member<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">,</span> memberId<span style="color:#f92672">);</span>
+Team team <span style="color:#f92672">=</span> member<span style="color:#f92672">.</span><span style="color:#a6e22e">getTeam</span><span style="color:#f92672">();</span> <span style="color:#75715e">// 연관된 객체 조회
+</span></code></pre></div><h1 id="패러다임의-불일치">패러다임의 불일치</h1>
+<p>비즈니스 요구사항을 정의한 도메인 모델도 객체로 <code>모델링</code>하면 객체지향 언어가 가진 <code>장점</code>들을 활용할 수 있다. 문제는 이렇게 정의한 <code>도메인 모델</code>을 저장할 때 발생한다.</p>
+<ul>
+<li><code>객체의 기능</code>은 클래스에 정의되어 있으므로 객체 <code>인스턴스</code>의 <code>상태</code>인 속성만 저장 했다가 필요할 때 불러 와서 복구하면 된다.</li>
+<li><code>관계형 데이터베이스</code>는 데이터 중심으로 구조화되어 있고, <code>집합적인 사고</code>를 요구한다. 그리고 객체 지향에서 이야기하는 <code>추상화</code>, <code>상속</code>, <code>다형성</code> 같은 개념이 없다.</li>
+</ul>
+<p>객체와 관계형 데이터베이스는 <code>지향하는 목적</code>이 서로 다르므로 둘의 <code>기능</code>과 <code>표현 방법</code>도 다르다. 이것을 객체와 관계형 데이터베이스의 <code>패러다임 불일치 문제</code>라 한다. 따라서 <code>객체 구조</code>를 <code>테이블 구조</code>에 저장하는 데는 한계가 있다.</p>
+<p>문제는 이런 객체와 관계형 데이터베이스 사이의 패러다임 불일치 문제를 해결하는 데 <code>너무 많은 시간</code>과 <code>코드</code>를 <code>소비</code>하는 데 있다.</p>
+<h2 id="상속">상속</h2>
+<p><strong>객체는 상속 이라는 기능을 가지고 있지만 테이블은 상속 이라는 기능이 없다.</strong></p>
+<p><img src="https://user-images.githubusercontent.com/2491418/78592088-79ed5c80-787f-11ea-8174-8afcfcc8ff7a.png" alt="https://user-images.githubusercontent.com/2491418/78592088-79ed5c80-787f-11ea-8174-8afcfcc8ff7a.png"></p>
+<p>jpa1</p>
+<h3 id="jdbc를-이용한-상속-구현">JDBC를 이용한 상속 구현</h3>
+<p>JDBC API를 사용해서 상속 관계의 객체를 저장 하려면 <code>부모 객체</code>에서 <code>부모 데이터</code>만 꺼내서 INSERT SQL을 작성하고 <code>자식 객체</code>에서 <code>자식 데이터</code>만 꺼내서 INSERT SQL을 별도로 작성해야 한다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">INSERT</span> INFO ITEM ...<span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> ALBUM ...
+</code></pre></div><h3 id="jpa를-이용한-상속-구현">JPA를 이용한 상속 구현</h3>
+<p>JPA는 상속과 관련된 패러다임의 불일치 문제를 개발자 대신 해결해준다. 개발자는 마치 <code>자바 컬렉션</code>에 객체를 저장 하듯이 <code>JPA</code>에게 객체를 저장하면 된다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">jpa<span style="color:#f92672">.</span><span style="color:#a6e22e">persist</span><span style="color:#f92672">(</span>album<span style="color:#f92672">);</span>
+</code></pre></div><h2 id="연관관계">연관관계</h2>
+<p>객체는 참조를 사용해서 다른 객체와 연관관계를 가지고 <code>참조</code>에 <code>접근</code>해서 연관된 객체를 조회한다. 반면에 테이블은 <code>외래 키</code>를 사용해서 다른 테이블과 연관관계를 가지고 <code>조인</code>을 사용해서 연관된 테이블을 조회한다.</p>
+<ul>
+<li>테이블에 맞춘 객체 모델</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Member</span> <span style="color:#f92672">{</span>
+  String id<span style="color:#f92672">;</span> <span style="color:#75715e">// MEMBER_ID 컬럼 사용
+</span><span style="color:#75715e"></span>  Long temId<span style="color:#f92672">;</span> <span style="color:#75715e">// TEAM_ID FK 컬럼 사용
+</span><span style="color:#75715e"></span>  String username<span style="color:#f92672">;</span> <span style="color:#75715e">// USERNAME 컬럼 사용
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Team</span> <span style="color:#f92672">{</span>
+  Long id<span style="color:#f92672">;</span> <span style="color:#75715e">// TEAM_ID PK 사용
+</span><span style="color:#75715e"></span>  String name<span style="color:#f92672">;</span> <span style="color:#75715e">// NAME 컬럼 사용
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+</code></pre></div><p>그런데 여기서 <code>TEAM_ID</code> 외래 키의 값을 그대로 보관하는 <code>teamId</code>필드에는 문제가 있다. 객체는 연관된 객체의 <code>참조</code>를 보관해야 다음처럼 참조를 통해 연관된 객체를 찾을 수 있어야 하는데 하지 못하게 된다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Team team <span style="color:#f92672">=</span> member<span style="color:#f92672">.</span><span style="color:#a6e22e">getTeam</span><span style="color:#f92672">();</span>
+</code></pre></div><p><strong>이런 방식을 따르면 좋은 객체 모델링은 기대하기 어렵고 결국 객체 지향의 특징을 잃어버리게 된다.</strong></p>
+<blockquote>
+<p>엔티티를 직접 참조하는 것과 간접 참조하는 것에 대한 장단점이 무엇이 있을까?</p>
+</blockquote>
+<ul>
+<li>직접 참조
+<ul>
+<li>장점 : 연관된 데이터를 <code>한번에</code> 추출할 수 있다.</li>
+<li>단점 : 연관된 데이터에 대한 수정이 발생할 경우 <code>영향의 범위</code>가 커질 수 있다.</li>
+</ul>
+</li>
+<li>간접 참조
+<ul>
+<li>장점 : 복잡도를 낮출 수 있고, <code>응집도</code>를 높이고 <code>결합도</code>를 낮출 수 있다.</li>
+<li>단점 : 연관된 데이터를 한번에 추출 하려면 구현해야 하는 <code>로직</code>이 복잡하다.</li>
+</ul>
+</li>
+<li>참조를 사용하는 객체 모델</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Member</span> <span style="color:#f92672">{</span>
+  String id<span style="color:#f92672">;</span> <span style="color:#75715e">// MEMBER_ID 컬럼 사용
+</span><span style="color:#75715e"></span>  Long temId<span style="color:#f92672">;</span> <span style="color:#75715e">// TEAM_ID FK 컬럼 사용
+</span><span style="color:#75715e"></span>  Team team<span style="color:#f92672">;</span> <span style="color:#75715e">// 참조로 연관관계를 맺는다.
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Team</span> <span style="color:#f92672">{</span>
+  Long id<span style="color:#f92672">;</span> <span style="color:#75715e">// TEAM_ID PK 사용
+</span><span style="color:#75715e"></span>  String name<span style="color:#f92672">;</span> <span style="color:#75715e">// NAME 컬럼 사용
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+</code></pre></div><h3 id="jdbc를-이용한-연관-관계-구현">JDBC를 이용한 연관 관계 구현</h3>
+<p>만약 JDBC로 저장하는 로직을 만들기 위해서는 team 필드를 TEAM_ID <code>외래 키</code> 값으로 변환해야 한다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">member<span style="color:#f92672">.</span><span style="color:#a6e22e">getId</span><span style="color:#f92672">();</span> <span style="color:#75715e">// MEMBER_ID PK에 저장
+</span><span style="color:#75715e"></span>member<span style="color:#f92672">.</span><span style="color:#a6e22e">getTeam</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getId</span><span style="color:#f92672">();</span> <span style="color:#75715e">// TEAM_ID FK에 저장
+</span><span style="color:#75715e"></span>member<span style="color:#f92672">.</span><span style="color:#a6e22e">getUsername</span><span style="color:#f92672">();</span> <span style="color:#75715e">// USERNAME 컬럼에 저장
+</span></code></pre></div><p>또는 조회하는 로직에도 객체를 생성하고 연관관계를 설정해서 반환하는 로직이 필요하다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> Member <span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>String memberId<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+  <span style="color:#75715e">// SQL 실행  ...
+</span><span style="color:#75715e"></span>  Member member <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Member<span style="color:#f92672">();</span>
+  <span style="color:#f92672">...</span>  <span style="color:#75715e">// 데이터베이스에서 조회한 회원 관련 정보를 모두 입력
+</span><span style="color:#75715e"></span>  Team team <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Team<span style="color:#f92672">();</span>
+  <span style="color:#f92672">...</span>  <span style="color:#75715e">// 데이터베이스에서 조회한 팀 관련 정보를 모두 입력
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// 회원과 팀 관계 설정
+</span><span style="color:#75715e"></span>  member<span style="color:#f92672">.</span><span style="color:#a6e22e">setTeam</span><span style="color:#f92672">(</span>team<span style="color:#f92672">);</span>
+  <span style="color:#66d9ef">return</span> member<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="jpa와-연관관계-구현">JPA와 연관관계 구현</h3>
+<p>개발자는 <code>회원</code>과 <code>팀</code>의 관계를 설정하고 <code>회원 객체</code>를 저장하면 된다. <code>JPA</code>는 <code>team</code>의 참조를 외래 키로 변환해서 적절한 INSERT SQL을 데이터베이스에 전달한다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">member<span style="color:#f92672">.</span><span style="color:#a6e22e">setTeam</span><span style="color:#f92672">(</span>team<span style="color:#f92672">);</span>
+jpa<span style="color:#f92672">.</span><span style="color:#a6e22e">persist</span><span style="color:#f92672">(</span>member<span style="color:#f92672">);</span>
+</code></pre></div><p>객체를 조회할 때 외래 키를 참조로 변환하는 일도 JPA가 처리 해준다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Member member <span style="color:#f92672">=</span> jpa<span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>Member<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">,</span> memberId<span style="color:#f92672">);</span>
+Team team <span style="color:#f92672">=</span> member<span style="color:#f92672">.</span><span style="color:#a6e22e">getTeam</span><span style="color:#f92672">();</span>
+</code></pre></div><h2 id="객체-그래프-탐색">객체 그래프 탐색</h2>
+<p><code>SQL</code>을 직접 다루면 처음 실행하는 <code>SQL</code>에 따라 객체 그래프를 어디까지 탐색할 수 있는지 정해진다. 이것은 객체지향 개발자에겐 너무 큰 제약이다. 왜냐하면 비즈니스 로직에 따라 사용하는 객체 그래프가 다른데 언제 끊어질지 모를 <code>객체 그래프</code>를 함부로 탐색할 수는 없기 때문이다.</p>
+<p>결국, 어디까지 객체 그래프 탐색이 가능한지 알아보려면 데이터 접근 계층인 <code>DAO</code>를 열어서 <code>SQL</code>을 직접 확인해야 한다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MemberService</span> <span style="color:#f92672">{</span>  
+<span style="color:#f92672">...</span>
+  <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">process</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    Member member <span style="color:#f92672">=</span> memberDAO<span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>memberId<span style="color:#f92672">);</span>
+    member<span style="color:#f92672">.</span><span style="color:#a6e22e">getTeam</span><span style="color:#f92672">();</span>
+ <span style="color:#75715e">// member-&gt;team 객체 그래프 탐색이 가능한가?
+</span><span style="color:#75715e"></span>    member<span style="color:#f92672">.</span><span style="color:#a6e22e">getOrder</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getDelivery</span><span style="color:#f92672">();</span>
+ <span style="color:#75715e">// ???
+</span><span style="color:#75715e"></span>  <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="jpa와-객체-그래프-탐색">JPA와 객체 그래프 탐색</h3>
+<p>JPA를 사용하면 연관된 객체를 신뢰하고 마음껏 조회할 수 있다. 이 기능은 실제 객체를 사용하는 기점까지 데이터베이스 조회를 미룬다고 해서 <code>지연 로딩</code>이라 한다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// 처음 조회 시점에 SELECT MEMBER SQL
+</span><span style="color:#75715e"></span>Member member <span style="color:#f92672">=</span> jpa<span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>Member<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">,</span> memberId<span style="color:#f92672">);</span>
+Order order <span style="color:#f92672">=</span> member<span style="color:#f92672">.</span><span style="color:#a6e22e">getOrder</span><span style="color:#f92672">();</span>
+order<span style="color:#f92672">.</span><span style="color:#a6e22e">getOrderDate</span><span style="color:#f92672">();</span> <span style="color:#75715e">// Order를 사용하는 시점에 SELECT ORDER SQL
+</span></code></pre></div><p>여기서 마지막 줄의 <code>order.getOrderDate()</code> 같이 실제 <code>Order</code> 객체를 사용하는 시점에 JPA는 데이터베이스에서 <code>ORDER</code> 테이블을 조회한다.</p>
+<h2 id="비교">비교</h2>
+<p>데이터베이스는 기본 키의 값으로 각 로우(row)를 구분한다. 반면에 객체는 <code>동일성(indentity)</code>비교와 <code>동등성(equality)</code> 비교라는 두 가지 비교 방법이 있다.</p>
+<ul>
+<li><strong>동일성 비교는 == 비교다. 객체 인스턴스의 주소 값을 비교한다.</strong></li>
+<li><strong>동등성 비교는 equals() 메소드를 사용해서 객체 내부의 값을 비교한다.</strong></li>
+</ul>
+<h3 id="jdbc로-구현한-비교">JDBC로 구현한 비교</h3>
+<pre><code>class MemberDAO {
+  public Member getMember(String memberId) {
+	String sql = &quot;SELECT * FROM MEMBER WHERE MEMBER_ID + ?&quot;;
+	...
+	// JDBC API, SQL 실행
+	return new Member(...);
+  }
+  
+  public void equals(){
+	String memberId = &quot;100&quot;;
+	Member member1 = memberDAO.getMember(memberId);
+	Member member2 = memberDAO.getMember(memberId);
+	member1 == member2; // false
+  }
+}
+</code></pre><p><strong>데이터베이스의 같은 로우를 조회했지만 객체의 동일성 비교에는 실패한다.</strong></p>
+<h3 id="jpa로-구현한-비교">JPA로 구현한 비교</h3>
+<p>JPA는 같은 트랜잭션일 때 같은 객체가 조회되는 것을 보장한다. 그러므로 다음 코드에서 member1과 member2는 동일성 비교에 성공한다.</p>
+<pre><code>String memberId = &quot;100&quot;;
+Member member1 = jpa.find(Member.class,memberId);
+Member member2 = jpa.find(Member.class,memberId);
+member1 == member2; // true
+</code></pre><h2 id="정리">정리</h2>
+<p><code>객체 모델</code>과 <code>관계형 데이터베이스 모델</code>은 지향하는 <code>패러다임</code>이 서로 다르다. <strong>더 어려운 문제는 객체 지향 애플리케이션 답게 정교한 객체 모델링을 할수록 패러다임의 불일치 문제가 더 커진다는 점이다.</strong> 이는 결국 객체 모델링은 힘을 잃고 점점 <code>데이터 중심의 모델</code>로 변해간다. JPA는 패러다임의 불일치 문제를 해결 해주고 정교한 객체 모델링 유지하게 도와준다.</p>
+<blockquote>
+<p>데이터 주도 설계와 도메인 주도 설계의 장단점은 무엇일까?</p>
+</blockquote>
+<h1 id="jpa란-무엇인가">JPA란 무엇인가?</h1>
+<p><code>JPA(Java Persistence API)</code>는 자바 진영의 ORM 기술 표준이다.</p>
+<h3 id="그렇다면-orm이란-무엇일까">그렇다면 ORM이란 무엇일까?</h3>
+<p><code>ORM(Object-Relational Mapping)</code>은 이름 그대로 객체와 관계형 데이터베이스를 <code>매핑</code> 한다는 뜻이다. ORM 프레임워크는 객체와 테이블을 매핑 해서 패러다임의 불일치 문제를 개발자 대신 해결해준다.</p>
+<p>따라서 객체 측면에서는 정교한 객체 모델링을 할 수 있고 관계형 데이터베이스는 데이터베이스에 맞도록 모델링하면 된다. 그리고 둘을 어떻게 매핑 해야 하는지 매핑 방법만 ORM 프레임워크에게 알려주면 된다.</p>
+<h2 id="왜-jpa를-사용해야-하는가">왜 JPA를 사용해야 하는가?</h2>
+<ul>
+<li>
+<p>생산성</p>
+<p>이전에 <code>DAO</code>에서 작업하던 지루하고 반복적인 일은 <code>JPA</code>가 대신 처리 해준다. 이런 기능들을 사용하면 데이터베이스 설계 중심의 패러다임을 <code>객체 설계 중심</code>으로 역전시킬 수 있다.</p>
+</li>
+<li>
+<p>유지보수</p>
+<p>이전엔 <code>엔티티</code> 필드 하나만 수정해도 관련된 <code>DAO</code> 로직의 <code>SQL</code>문을 모두 변경해야 했다. 반면에 <code>JPA</code>는 대신 처리해주므로 필드를 추가하거나 삭제해도 수정해야 할 코드가 줄어든다.</p>
+</li>
+<li>
+<p>패러다임의 불일치 해결</p>
+</li>
+<li>
+<p>성능</p>
+<p>JPA는 애플리케이션과 데이터베이스 사이에 동작하여 <code>최적화</code> 관점에서 시도해 볼 수 있는 것들이 많다. 예를 들어 동일한 조건으로 조회 했을 경우엔 SELECT SQL을 한 번만 데이터베이스에 전달하고 두 번째 조회한 회원 객체는 <code>재사용</code>할 수 있다.</p>
+</li>
+<li>
+<p>데이터 접근 추상화와 벤더 독립성</p>
+<p>관계형 데이터베이스는 같은 기능도 벤더 마다 사용법이 다른 경우가 많다. 단적인 예로 <code>페이징 처리</code>는 데이터베이스마다 달라서 사용법을 각각 배워야 한다. 결국 애플리케이션은 데이터베이스에 <code>종속</code>되어 변경 하기는 매우 어렵다. <code>*JPA</code>는 추상화된 데이터 접근 계층을 제공해서 애플리케이션이 특정 데이터베이스 기술에 종속되지 않도록 할 수 있다.**</p>
+</li>
+</ul>
+<h2 id="orm에-대한-궁금증과-오해">ORM에 대한 궁금증과 오해</h2>
+<ul>
+<li>
+<p>JPA를 사용하면 성능이 느리지 않나요?</p>
+<p><code>JPA</code>는 다양한 성능 <code>최적화</code> 기능을 제공해서 잘 이해하고 사용하면 <code>SQL</code>을 직접 사용할 때보다 더 좋은 성능을 낼 수도 있다. 하지만 JPA를 잘 이해하지 못하고 사용하면 <strong><code>N+1</code></strong> 같은 문제로 인해 심각한 성능 저하가 발생할 수 있다.</p>
+<blockquote>
+<p>JPA N+1 문제란 무엇인가? 해결 방법은 또한 무엇인가?</p>
+</blockquote>
+</li>
+<li>
+<p>통계 쿼리처럼 매우 복잡한 SQL은 어떻게 하나요?</p>
+<p>JPA는 통계 쿼리 같이 복잡한 쿼리보다는 <code>실시간 처리용 쿼리</code>에 더 최적화되어 있다. 따라서 통계용은 <code>네이티브 SQL</code>을 사용하거나 <code>마이바티스</code>나 스프링의 <code>jdbcTemplate</code> 같은 SQL 매퍼 형태의 프레임워크를 혼용하는 것도 좋은 방법이다.</p>
+</li>
+</ul>
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="https://ddd4117.github.io/tags/spring/">Spring</a>
+
+  <a class="tag tag--primary tag--small" href="https://ddd4117.github.io/tags/jpa/">JPA</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/04/os-2%EC%9E%A5-%EC%BB%B4%ED%93%A8%ED%84%B0-%EC%8B%9C%EC%8A%A4%ED%85%9C-%EA%B5%AC%EC%A1%B0/" data-tooltip="[OS] 2장 - 컴퓨터 시스템 구조">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+            
+              
+                <div id="disqus_thread">
+  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2021 <a href="https://github.com/ddd4117">1o2o3o</a>. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="5">
+        <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/04/os-2%EC%9E%A5-%EC%BB%B4%ED%93%A8%ED%84%B0-%EC%8B%9C%EC%8A%A4%ED%85%9C-%EA%B5%AC%EC%A1%B0/" data-tooltip="[OS] 2장 - 컴퓨터 시스템 구조">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="5">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://www.gravatar.com/avatar/81f6ab7b1e9e7aa50245c468df481517?s=110" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">1o2o3o</h4>
+    
+      <div id="about-card-bio">마구잡이 코딩맨</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        SW developer
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        Korea
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://ddd4117.github.io/images/cover.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
+
+
+<script src="https://ddd4117.github.io/js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js"></script>
+
+
+<script lang="javascript">
+window.onload = updateMinWidth;
+window.onresize = updateMinWidth;
+document.getElementById("sidebar").addEventListener("transitionend", updateMinWidth);
+function updateMinWidth() {
+  var sidebar = document.getElementById("sidebar");
+  var main = document.getElementById("main");
+  main.style.minWidth = "";
+  var w1 = getComputedStyle(main).getPropertyValue("min-width");
+  var w2 = getComputedStyle(sidebar).getPropertyValue("width");
+  var w3 = getComputedStyle(sidebar).getPropertyValue("left");
+  main.style.minWidth = `calc(${w1} - ${w2} - ${w3})`;
+}
+</script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = 'https:\/\/ddd4117.github.io\/2021\/04\/jpa-1%EC%9E%A5-sql%EC%9D%84-%EC%A7%81%EC%A0%91-%EB%8B%A4%EB%A3%B0-%EB%95%8C-%EB%B0%9C%EC%83%9D%ED%95%98%EB%8A%94-%EB%AC%B8%EC%A0%9C%EC%A0%90\/';
+          
+            this.page.identifier = '\/2021\/04\/jpa-1%EC%9E%A5-sql%EC%9D%84-%EC%A7%81%EC%A0%91-%EB%8B%A4%EB%A3%B0-%EB%95%8C-%EB%B0%9C%EC%83%9D%ED%95%98%EB%8A%94-%EB%AC%B8%EC%A0%9C%EC%A0%90\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'hyuntae';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+
+    
+  </body>
+</html>
+
