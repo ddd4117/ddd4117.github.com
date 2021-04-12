@@ -6,7 +6,16 @@
     <description>Recent content on 1o2o3o&#39;s Tech Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>kr-ko</language>
-    <lastBuildDate>Thu, 08 Apr 2021 11:10:42 +0900</lastBuildDate><atom:link href="https://ddd4117.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 12 Apr 2021 20:48:52 +0900</lastBuildDate><atom:link href="https://ddd4117.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>[OS] 3장 - Process</title>
+      <link>https://ddd4117.github.io/2021/04/os-3%EC%9E%A5-process/</link>
+      <pubDate>Mon, 12 Apr 2021 20:48:52 +0900</pubDate>
+      
+      <guid>https://ddd4117.github.io/2021/04/os-3%EC%9E%A5-process/</guid>
+      <description>&lt;p&gt;프로세스는 실행중인 프로그램이다.&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>[JPA] 4장 - 매핑</title>
       <link>https://ddd4117.github.io/2021/04/jpa-4%EC%9E%A5-%EB%A7%A4%ED%95%91/</link>
