@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="kr-ko">
+  <head>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.82.0 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="author" content="1o2o3o">
+<meta name="keywords" content="">
+<meta name="description" content="">
+
+
+<meta property="og:description" content="">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[JPA] 5장 - 연관관계 매핑">
+<meta name="twitter:title" content="[JPA] 5장 - 연관관계 매핑">
+<meta property="og:url" content="https://ddd4117.github.io/2021/04/jpa-5%EC%9E%A5-%EC%97%B0%EA%B4%80%EA%B4%80%EA%B3%84-%EB%A7%A4%ED%95%91/">
+<meta property="twitter:url" content="https://ddd4117.github.io/2021/04/jpa-5%EC%9E%A5-%EC%97%B0%EA%B4%80%EA%B4%80%EA%B3%84-%EB%A7%A4%ED%95%91/">
+<meta property="og:site_name" content="1o2o3o&#39;s Tech Blog">
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+<meta property="og:locale" content="en-us">
+
+  
+    <meta property="article:published_time" content="2021-04-13T22:28:14">
+  
+  
+    <meta property="article:modified_time" content="2021-04-13T22:28:14">
+  
+  
+  
+    
+      <meta property="article:section" content="Spring">
+    
+  
+  
+    
+      <meta property="article:tag" content="Spring">
+    
+      <meta property="article:tag" content="JPA">
+    
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://user-images.githubusercontent.com/28971015/113664175-3e7dac00-96e6-11eb-97f2-b143f4e60d4a.jpg">
+  <meta property="twitter:image" content="https://user-images.githubusercontent.com/28971015/113664175-3e7dac00-96e6-11eb-97f2-b143f4e60d4a.jpg">
+
+
+
+
+
+  <meta property="og:image" content="https://www.gravatar.com/avatar/81f6ab7b1e9e7aa50245c468df481517?s=640">
+  <meta property="twitter:image" content="https://www.gravatar.com/avatar/81f6ab7b1e9e7aa50245c468df481517?s=640">
+
+
+    <title>[JPA] 5장 - 연관관계 매핑 - 1o2o3o&#39;s Tech Blog</title>
+	<script data-ad-client="ca-pub-7778071856226172" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+    <link rel="icon" href="https://ddd4117.github.io/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://ddd4117.github.io/2021/04/jpa-5%EC%9E%A5-%EC%97%B0%EA%B4%80%EA%B4%80%EA%B3%84-%EB%A7%A4%ED%95%91/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css" integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
+    
+    
+    <link rel="stylesheet" href="https://ddd4117.github.io/css/style-twzjdbqhmnnacqs0pwwdzcdbt8yhv8giawvjqjmyfoqnvazl0dalmnhdkvp7.min.css" />
+    
+    
+
+    
+      
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LJYW9800LT"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-LJYW9800LT', { 'anonymize_ip': false });
+}
+</script>
+
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="5">
+ 
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LJYW9800LT"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-LJYW9800LT', { 'anonymize_ip': false });
+}
+</script>
+ 
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://ddd4117.github.io/">1o2o3o&#39;s Tech Blog</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://ddd4117.github.io/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="https://www.gravatar.com/avatar/81f6ab7b1e9e7aa50245c468df481517?s=90" alt="Author&#39;s picture" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="5">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://ddd4117.github.io/#about">
+          <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/81f6ab7b1e9e7aa50245c468df481517?s=110" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">1o2o3o</h4>
+        
+          <h5 class="sidebar-profile-bio">마구잡이 코딩맨</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/categories/os">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-linux"></i>
+      
+      <span class="sidebar-button-desc">OS</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/categories/spring">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-linux"></i>
+      
+      <span class="sidebar-button-desc">spring</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/ddd4117" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/index.xml">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/#about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="5"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      [JPA] 5장 - 연관관계 매핑
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2021-04-13T22:28:14&#43;09:00">
+        
+  April 13, 2021
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://ddd4117.github.io/categories/spring">Spring</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              <h1 id="5장-연관관계-매핑">5장-연관관계 매핑</h1>
+<blockquote>
+<p>자바 ORM 표준 JPA 프로그래밍 5장을 요약한 내용 입니다.</p>
+</blockquote>
+<p>객체 관계 매핑(ORM)에서 가장 어려운 부분이 바로 객체 연관관계와 테이블 연관관계를 매핑하는 일이다.</p>
+<h2 id="단방향-연관관계">단방향 연관관계</h2>
+<p><img src="https://user-images.githubusercontent.com/2491418/81809574-92c2ef00-955c-11ea-8949-7e74429549e8.png" alt="https://user-images.githubusercontent.com/2491418/81809574-92c2ef00-955c-11ea-8949-7e74429549e8.png"></p>
+<ul>
+<li>
+<p>객체 연관관계</p>
+<ul>
+<li>회원 객체는 <code>Member.team</code>	필드로 팀 객체와 연관관계를 맺는다.</li>
+<li>회원 객체와 팀 객체는 단방향 관계다. 반대 방향인 <code>team</code> → <code>member</code>를 접근하는 필드는 없다.</li>
+</ul>
+</li>
+<li>
+<p>테이블 연관관계</p>
+<ul>
+<li>회원 테이블은 <code>TEAM_ID</code> 외래 키로 팀 테이블과 연관관계를 맺는다.</li>
+<li>회원 테이블과 팀 테이블은 <code>양방향 관계</code>다.</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span> 
+<span style="color:#66d9ef">FROM</span> MEMBER M <span style="color:#66d9ef">JOIN</span> TEAM T
+<span style="color:#66d9ef">ON</span> M.TEAM_ID <span style="color:#f92672">=</span> T.ID
+</code></pre></div><p>다음은 반대인 팀과 회원을 조인하는 SQL이다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span>
+<span style="color:#66d9ef">FROM</span> TEAM T <span style="color:#66d9ef">JOIN</span> MEMBER M
+<span style="color:#66d9ef">ON</span> T.TEAM_ID <span style="color:#f92672">=</span> M.TEAM_ID
+</code></pre></div></li>
+</ul>
+<h3 id="객체-연관관계와-테이블-연관관계의-가장-큰-차이">객체 연관관계와 테이블 연관관계의 가장 큰 차이</h3>
+<p>참조를 통한 연관관계는 언제나 <code>단방향</code>이다. 객체간에 연관관계를 양방향으로 만들고 싶으면 반대쪽에도 필드를 추가해서 <code>참조</code>를 보관해야 한다. <strong>하지만 정확히 이야기하면 이것은 양방향 관계가 아니라 서로 다른 단방향 관계 2개다.</strong></p>
+<h3 id="객체-연관관계-vs-테이블-연관관계-정리">객체 연관관계 vs 테이블 연관관계 정리</h3>
+<ul>
+<li><strong>객체는 <code>참조(주소)</code>로 연관관계를 맺는다.</strong></li>
+<li><strong>테이블은 <code>외래 키</code>로 연관관계를 맺는다.</strong></li>
+</ul>
+<p>연관된 데이터를 조회할 때 객체는 참조를 사용하지만 테이블은 <code>조인(JOIN)</code>을 사용한다. 객체는 <code>참조</code>를 사용해서 연관관계를 탐색할 수 있는데 이것을 <code>객체 그래프 탐색</code>이라 한다.</p>
+<h2 id="객체-관계-매핑">객체 관계 매핑</h2>
+<p>이제 <code>JPA</code>를 사용해서 둘을 매핑 해보자.</p>
+<p><img src="https://user-images.githubusercontent.com/2491418/81809575-935b8580-955c-11ea-935b-0be11ab5fca0.png" alt="https://user-images.githubusercontent.com/2491418/81809575-935b8580-955c-11ea-935b-0be11ab5fca0.png"></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Entity</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Member</span> <span style="color:#f92672">{</span>
+    <span style="color:#a6e22e">@Id</span>
+    <span style="color:#a6e22e">@Column</span><span style="color:#f92672">(</span>name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;MEMBER_ID&#34;</span><span style="color:#f92672">)</span>
+    <span style="color:#66d9ef">private</span> String id<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> String username<span style="color:#f92672">;</span>
+        <span style="color:#75715e">//연관관계 매핑
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">@ManyToOne</span>
+    <span style="color:#a6e22e">@JoinColumn</span><span style="color:#f92672">(</span>name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;TEAM_ID&#34;</span><span style="color:#f92672">)</span>
+    <span style="color:#66d9ef">private</span> Team team<span style="color:#f92672">;</span>        <span style="color:#75715e">//연관관계 설정
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setTeam</span><span style="color:#f92672">(</span>Team team<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">team</span> <span style="color:#f92672">=</span> team<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">//Getter, Setter ...
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Entity</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Team</span> <span style="color:#f92672">{</span>
+    <span style="color:#a6e22e">@Id</span>
+    <span style="color:#a6e22e">@Column</span> <span style="color:#f92672">(</span>name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;TEAM_ID&#34;</span><span style="color:#f92672">)</span>
+    <span style="color:#66d9ef">private</span> String id<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> String name<span style="color:#f92672">;</span>
+    <span style="color:#75715e">//Getter, Setter ...
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+</code></pre></div><p>Member.team과 MEMBER.TEAM_ID를 매핑하는 것이 연관관계 매핑이다.</p>
+<ul>
+<li><code>@ManyToOne</code> : 이름 그대로 다대일(N:1) 관계라는 매핑 정보다.</li>
+<li><code>@JoinColumn(name=&quot;TEAM_ID&quot;)</code> : 조인 컬럼은 외래 키를 매핑할 때 사용한다.</li>
+</ul>
+<h2 id="joincolumn">@JoinColumn</h2>
+<p>@JoinColumn은 외래 키를 매핑할 때 사용한다.</p>
+<blockquote>
+<p>@JoinColumn 생략시</p>
+</blockquote>
+<ul>
+<li>기본 전략 : 필드명 + &ldquo;_&rdquo; +참조하는 테이블의 컬럼명</li>
+<li>예시 : 필드명(team) + &ldquo;_&rdquo; + 참조하는 테이블의 컬럼명(TEAM_ID) -&gt; team_TEAM_ID</li>
+</ul>
+<h2 id="manytoone">@ManyToOne</h2>
+<p>@ManyToOne 어노테이션은 다대일 관계에서 사용한다.</p>
+<blockquote>
+<p>단방향 관계를 매핑할 때 둘 중 어떤 것을 사용해야 할지는 반대편 관계에 달려 있다.
+반대편이 일대다 관계면 다대일을 사용하고 반대편이 일대일 관계면 일대일을 사용하면 된다.
+참고로 일대일 관계는 다음 장에서 설명한다.</p>
+</blockquote>
+<h2 id="연관관계-사용">연관관계 사용</h2>
+<h3 id="조회">조회</h3>
+<p>연관관계가 있는 엔티티를 조회하는 방법은 크게 2가지다.</p>
+<ul>
+<li>
+<p>객체 그래프 탐색(객체 연관관계를 사용한 조회)</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Member member <span style="color:#f92672">=</span> em<span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>Member<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;member1&#34;</span><span style="color:#f92672">);</span>
+  
+Team team <span style="color:#f92672">=</span> member<span style="color:#f92672">.</span><span style="color:#a6e22e">getTeam</span><span style="color:#f92672">();</span> <span style="color:#75715e">// 객체 그래프 탐색
+</span><span style="color:#75715e"></span>  
+System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;팀 이름 = &#34;</span> <span style="color:#f92672">+</span> team<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">());</span>
+<span style="color:#75715e">// 출력 결과 : 팀 이름 = 팀1
+</span></code></pre></div></li>
+<li>
+<p>객체지향 쿼리 사용(JPQL)</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">queryLogicJoin</span><span style="color:#f92672">(</span>EntityManager em<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+String jpql <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;select m from Member m join m.team t where &#34;</span> <span style="color:#f92672">+</span><span style="color:#e6db74">&#34; t. name=: teamName &#34;</span><span style="color:#f92672">;</span>
+  
+List<span style="color:#f92672">&lt;</span>Member<span style="color:#f92672">&gt;</span> resultList <span style="color:#f92672">=</span> em<span style="color:#f92672">.</span><span style="color:#a6e22e">createQuery</span><span style="color:#f92672">(</span>jpql<span style="color:#f92672">,</span> Member<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">setParameter</span> <span style="color:#f92672">(</span><span style="color:#e6db74">&#34;teamName&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;팀 1&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">getResultList</span><span style="color:#f92672">();</span>
+      
+<span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Member member <span style="color:#f92672">:</span> resultList<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">printin</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;[query] member. username=,&#34;</span> <span style="color:#f92672">+</span> member<span style="color:#f92672">.</span><span style="color:#a6e22e">getUsername</span><span style="color:#f92672">());</span>
+<span style="color:#f92672">}</span>
+  
+<span style="color:#75715e">// 결과: [query] member.username = 회원1
+</span><span style="color:#75715e">// 결과: [query] member.username = 회원2
+</span></code></pre></div></li>
+</ul>
+<h3 id="수정">수정</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">updateRelation</span><span style="color:#f92672">(</span>EntityManager em<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">//새로운 팀 2
+</span><span style="color:#75715e"></span>    Team team2 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Team<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;team2&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;팀2&#34;</span><span style="color:#f92672">);</span>
+    em<span style="color:#f92672">.</span><span style="color:#a6e22e">persist</span><span style="color:#f92672">(</span>team2<span style="color:#f92672">);</span>        <span style="color:#75715e">//회원 1 에 새로운 팀2 설정
+</span><span style="color:#75715e"></span>	
+    Member member <span style="color:#f92672">=</span> em<span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>Member<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;memberl&#34;</span><span style="color:#f92672">);</span>
+    member<span style="color:#f92672">.</span><span style="color:#a6e22e">setTeam</span><span style="color:#f92672">(</span>team2<span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>실행되는 수정 SQL은 다음과 같다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">UPDATE</span> MEMBER
+<span style="color:#66d9ef">SET</span>
+     TEAM_ID<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;team2&#39;</span>,
+<span style="color:#66d9ef">WHERE</span>
+    ID<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;member1&#39;</span>
+</code></pre></div><h2 id="양방향-연관관계">양방향 연관관계</h2>
+<p>데이터베이스 테이블은 <code>외래 키</code> 하나로 <code>양방향</code>으로 조회할 수 있다. 따라서 데이터베이스에 추가할 내용은 전혀 없다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Entity</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Member</span> <span style="color:#f92672">{</span>
+  <span style="color:#a6e22e">@Id</span>
+  <span style="color:#a6e22e">@Column</span> <span style="color:#f92672">(</span>name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;MEMBER_ID&#34;</span><span style="color:#f92672">)</span>
+  <span style="color:#66d9ef">private</span> String id<span style="color:#f92672">;</span>
+  <span style="color:#66d9ef">private</span> String username<span style="color:#f92672">;</span>
+
+  <span style="color:#a6e22e">@ManyToOne</span>
+  <span style="color:#a6e22e">@JoinColumn</span><span style="color:#f92672">(</span>name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;TEAM_ID&#34;</span><span style="color:#f92672">)</span>
+  <span style="color:#66d9ef">private</span> Team team<span style="color:#f92672">;</span>
+  <span style="color:#75715e">//연관관계 :설정
+</span><span style="color:#75715e"></span>
+  <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setTeam</span><span style="color:#f92672">(</span>Team team<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">team</span> <span style="color:#f92672">=</span> team<span style="color:#f92672">;</span>
+  <span style="color:#f92672">}</span>
+  <span style="color:#75715e">//Getter, Setter ...  
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+</code></pre></div><p>회원 엔티티에는 변경한 부분이 없다. 팀 엔티티를 보자.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Entity</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Team</span> <span style="color:#f92672">{</span>
+  <span style="color:#a6e22e">@Id</span>
+  <span style="color:#a6e22e">@Column</span><span style="color:#f92672">(</span>name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;TEAM_ID&#34;</span><span style="color:#f92672">)</span>
+  <span style="color:#66d9ef">private</span> String id<span style="color:#f92672">;</span>
+  
+  <span style="color:#66d9ef">private</span> String name<span style="color:#f92672">;</span>  <span style="color:#75715e">//==추가==//
+</span><span style="color:#75715e"></span>  
+  <span style="color:#a6e22e">@OneToMany</span> <span style="color:#f92672">(</span>mappedBy <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;team&#34;</span><span style="color:#f92672">)</span>
+  <span style="color:#66d9ef">private</span> List<span style="color:#f92672">&lt;</span>Member<span style="color:#f92672">&gt;</span> members <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span>Member<span style="color:#f92672">&gt;</span> <span style="color:#f92672">()</span> <span style="color:#f92672">;</span>  <span style="color:#f92672">...</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h2 id="연관관계의-주인">연관관계의 주인</h2>
+<h3 id="onetomany만-있으면-되지-mappedby는-왜-필요할까">@OneToMany만 있으면 되지 mappedBy는 왜 필요할까?</h3>
+<p>객체에는 <code>양방향</code> 연관관계라는 것이 없다. 서로 다른 <code>단방향</code> 연관관계 <code>2개</code>를 애플리케이션 로직으로 잘 묶어서 양방향인 것처럼 보이게 할 뿐이다.</p>
+<p><strong>엔티티를 양방향 연관관계로 설정하면 객체의 참조는 둘인데 외래 키는 하나다.</strong> 따라서 둘 사이에 차이가 발생한다. 이런 차이로 인해 <code>JPA</code>에서는 두 객체 연관관계 중 하나를 정해서 테이블의 외래키를 관리해야 하는데 이것을 연관관계의 주인<code>(OWNER)</code>이라 한다.</p>
+<p><code>연관관계</code>의 주인만이 데이터베이스 연관관계와 매핑되고 외래 키를 관리(등록, 수정, 삭제)할 수 있다. 반면에 주인이 아닌 쪽은 읽기만 할 수 있다.</p>
+<p>연관관계의 주인을 정한다는 것은 사실 외래 키 관리자를 선택하는 것이다.</p>
+<h3 id="연관관계의-주인은-외래-키가-있는-곳">연관관계의 주인은 외래 키가 있는 곳</h3>
+<p>연관관계의 주인은 테이블에 외래 키가 있는 곳으로 정해야 한다. 여기서는 회원 테이블이 외래 키를 가지고 있으므로 <code>Member.team</code>이 주인이 된다.</p>
+<p><img src="https://user-images.githubusercontent.com/2491418/81809579-93f41c00-955c-11ea-9406-5e9d3ba67f3b.png" alt="https://user-images.githubusercontent.com/2491418/81809579-93f41c00-955c-11ea-9406-5e9d3ba67f3b.png"></p>
+<h2 id="양방향-연관관계의-주의점">양방향 연관관계의 주의점</h2>
+<p>양방향 연관관계를 설정하고 가장 흔히 하는 실수는 연관관계의 <code>주인</code>에는 값을 입력하지 않고, 주인이 아닌 곳에만 값을 입력하는 것이다. <strong>데이터베이스에 외래 키값이 정상적으로 저장되지 않으면 이것부터 의심해보자.</strong></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">testSaveNonOwner</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+  <span style="color:#75715e">//회원1 저장
+</span><span style="color:#75715e"></span>  Member member 1 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Member <span style="color:#f92672">(</span><span style="color:#e6db74">&#34;member 1&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;회원1&#34;</span><span style="color:#f92672">);</span>
+  em<span style="color:#f92672">.</span><span style="color:#a6e22e">persist</span><span style="color:#f92672">(</span>member1<span style="color:#f92672">);</span>
+  
+  <span style="color:#75715e">//회원2 저장
+</span><span style="color:#75715e"></span>  Member member2 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Member <span style="color:#f92672">(</span><span style="color:#e6db74">&#34;member2&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;회원2&#34;</span><span style="color:#f92672">);</span>
+  em<span style="color:#f92672">.</span><span style="color:#a6e22e">persist</span><span style="color:#f92672">(</span>member2<span style="color:#f92672">);</span>
+  
+  Team teaml <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Team<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;teaml&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;팀 1&#34;</span><span style="color:#f92672">);</span>    <span style="color:#75715e">//주인이 아닌 곳만 연관관계 설정
+</span><span style="color:#75715e"></span>  teaml<span style="color:#f92672">.</span><span style="color:#a6e22e">getMembers</span><span style="color:#f92672">().</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>member1<span style="color:#f92672">);</span>
+  teaml<span style="color:#f92672">.</span><span style="color:#a6e22e">getMembers</span><span style="color:#f92672">().</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>member2<span style="color:#f92672">);</span>
+  
+  em<span style="color:#f92672">.</span><span style="color:#a6e22e">persist</span><span style="color:#f92672">(</span>teaml<span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>이는 연관관계의 주인이 아닌 <code>Team.members</code>에만 값을 저장했기 때문이다. 예제 코드는 연관관계의 주인인 <code>Member.team</code>에 아무 값도 입력하지 않았다. 따라서 <code>TEAM_ID</code> 외래 키의 값도 <code>null</code>이 저장된다.</p>
+<h2 id="순수한-객체까지-고려한-양방향-연관관계">순수한 객체까지 고려한 양방향 연관관계</h2>
+<p>객체 관점에서 양쪽 방향에 모두 값을 입력해주는 것이 가장 안전하다. 양쪽 방향 모두 값을 입력하지 않으면 <code>JPA</code>를 사용하지 않는 순수한 객체 상태에서 심각한 문제가 발생할 수 있다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">testORM_양방향</span> <span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+  <span style="color:#75715e">//팀1 저장 
+</span><span style="color:#75715e"></span>  Team teaml <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Team <span style="color:#f92672">(</span><span style="color:#e6db74">&#34;teaml&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;팀 1&#34;</span><span style="color:#f92672">);</span>
+  em<span style="color:#f92672">.</span><span style="color:#a6e22e">persist</span><span style="color:#f92672">(</span>team1<span style="color:#f92672">);</span>
+
+  Member member 1 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Member <span style="color:#f92672">(</span><span style="color:#e6db74">&#34;member 1&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;회원1&#34;</span><span style="color:#f92672">);</span>  <span style="color:#75715e">//양방향 연관관계 설정
+</span><span style="color:#75715e"></span>  member1<span style="color:#f92672">.</span><span style="color:#a6e22e">setTeam</span><span style="color:#f92672">(</span>teaml<span style="color:#f92672">)</span> <span style="color:#f92672">;</span> <span style="color:#75715e">//연관관계 설정 member 1 -&gt; teaml
+</span><span style="color:#75715e"></span>  team1<span style="color:#f92672">.</span><span style="color:#a6e22e">getMembers</span><span style="color:#f92672">().</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>member1<span style="color:#f92672">);</span> <span style="color:#75715e">//연관관계 설정 teaml -&gt; member 1
+</span><span style="color:#75715e"></span>
+  em<span style="color:#f92672">.</span><span style="color:#a6e22e">persist</span><span style="color:#f92672">(</span>member1<span style="color:#f92672">);</span>
+
+  Member member2 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Member <span style="color:#f92672">(</span><span style="color:#e6db74">&#34;meinber2&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;회원2&#34;</span><span style="color:#f92672">);</span>    <span style="color:#75715e">//양방향 연관관계 설정
+</span><span style="color:#75715e"></span>  member2<span style="color:#f92672">.</span><span style="color:#a6e22e">setTeam</span> <span style="color:#f92672">(</span>teaml<span style="color:#f92672">);</span> <span style="color:#75715e">//연관관계 설정 member2 -&gt; teaml
+</span><span style="color:#75715e"></span>  team1<span style="color:#f92672">.</span><span style="color:#a6e22e">getMembers</span><span style="color:#f92672">().</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>member2<span style="color:#f92672">);</span> <span style="color:#75715e">//연관관계 설정 teaml -&gt; member2
+</span><span style="color:#75715e"></span>
+  em<span style="color:#f92672">.</span><span style="color:#a6e22e">persist</span><span style="color:#f92672">(</span>member2<span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h2 id="연관관계-편의-메소드">연관관계 편의 메소드</h2>
+<p>양방향 연관관계는 결국 양쪽 다 신경 써야 한다. 이전에는 <code>member.setTeam(team)</code>과 <code>team.getMembers.add(member)</code>를 각각 호출하다 보면 실수로 둘 중 하나만 호출해서 양방향이 깨질 수 있다. 양방향 관계에서 두 코드는 하나인 것처럼 사용하는 것이 안전하다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Member</span> <span style="color:#f92672">{</span>
+  <span style="color:#66d9ef">private</span> Team team<span style="color:#f92672">;</span>
+
+  <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setTeam</span><span style="color:#f92672">(</span>Team team<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">team</span> <span style="color:#f92672">=</span> team<span style="color:#f92672">;</span>
+    team<span style="color:#f92672">.</span><span style="color:#a6e22e">getMembers</span><span style="color:#f92672">().</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">);</span>
+  <span style="color:#f92672">}</span>
+  <span style="color:#f92672">...</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h2 id="정리">정리</h2>
+<p><strong>연관관계가 하나인 단방향 매핑은 언제나 연관관계의 주인이라는 점이다.</strong> 양방향은 여기에 주인이 아닌 연관관계를 하나 추가했을 뿐이다. 결국 단방향과 비교해서 양방향의 장점은 반대방향으로 객체 그래프 탐색 기능이 추가된 것뿐이다.</p>
+<ul>
+<li><strong>단방향 매핑만으로 테이블과 객체의 연관관계 매핑은 이미 완료되었다.</strong></li>
+<li><strong>단방향을 양방향으로 만들면 반대방향으로 객체 그래프 탐색 기능이 추가된다.</strong></li>
+<li><strong>양방향 연관관계를 매핑하려면 객체에서 양쪽 방향을 모두 관리해야 한다.</strong></li>
+</ul>
+<h3 id="연관관계의-주인을-정하는-기준">연관관계의 주인을 정하는 기준</h3>
+<p>단방향은 항상 <code>외래 키</code>가 있는 곳을 기준으로 매핑하면 된다. 하지만 양방향은 연관관계의 <code>주인(Owner)</code>이라는 이름으로 인해 오해가 있을 수 있다. 비즈니스 로직상 더 중요하다고 <code>연관 관계</code>의 주인으로 선택하면 안 된다. 비즈니스 중요도를 배제하고 단순히 외래 키 관리자 정도의 의미만 부여해야 한다. <strong>따라서 <code>연관 관계</code>의 주인은 외래 키의 위치와 관련해서 정해야지 비즈니스 중요도로 접근하면 안 된다.</strong></p>
+<h3 id="양방향-매핑-시에는-무한-루프에-빠지지-않게-조심해야-한다">양방향 매핑 시에는 무한 루프에 빠지지 않게 조심해야 한다.</h3>
+<p><code>Member.toString()</code>에서 getTeam()을 호출하고 <code>Team.toString()</code>에서 getMember()를 호출하면 <code>무한 루프</code>에 빠질 수 있다.</p>
+<h3 id="일대다를-연관관계의-주인으로-선택하는-것이-불가능한-것만은-아니다">일대다를 연관관계의 주인으로 선택하는 것이 불가능한 것만은 아니다.</h3>
+<p>팀 엔티티의 <code>Team.members</code>를 연관관계의 주인으로 선택할 수는 있다. 하지만 성능과 관리 측면에서 권장하지 않는다. 될 수 있으면 외래 키가 있는 곳을 연관관계의 주인으로 선택하자</p>
+<h3 id="질문">질문</h3>
+<ul>
+<li>flush()를 사용할때나 안할때 왜 다를까?</li>
+<li>lombok → toString, euqals 이슈</li>
+</ul>
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="https://ddd4117.github.io/tags/spring/">Spring</a>
+
+  <a class="tag tag--primary tag--small" href="https://ddd4117.github.io/tags/jpa/">JPA</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/04/os-3%EC%9E%A5-process/" data-tooltip="[OS] 3장 - Process">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+            
+              
+                <div id="disqus_thread">
+  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2021 <a href="https://github.com/ddd4117">1o2o3o</a>. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="5">
+        <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/04/os-3%EC%9E%A5-process/" data-tooltip="[OS] 3장 - Process">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="5">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://www.gravatar.com/avatar/81f6ab7b1e9e7aa50245c468df481517?s=110" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">1o2o3o</h4>
+    
+      <div id="about-card-bio">마구잡이 코딩맨</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        SW developer
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        Korea
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://ddd4117.github.io/images/cover.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
+
+
+<script src="https://ddd4117.github.io/js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js"></script>
+
+
+<script lang="javascript">
+window.onload = updateMinWidth;
+window.onresize = updateMinWidth;
+document.getElementById("sidebar").addEventListener("transitionend", updateMinWidth);
+function updateMinWidth() {
+  var sidebar = document.getElementById("sidebar");
+  var main = document.getElementById("main");
+  main.style.minWidth = "";
+  var w1 = getComputedStyle(main).getPropertyValue("min-width");
+  var w2 = getComputedStyle(sidebar).getPropertyValue("width");
+  var w3 = getComputedStyle(sidebar).getPropertyValue("left");
+  main.style.minWidth = `calc(${w1} - ${w2} - ${w3})`;
+}
+</script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = 'https:\/\/ddd4117.github.io\/2021\/04\/jpa-5%EC%9E%A5-%EC%97%B0%EA%B4%80%EA%B4%80%EA%B3%84-%EB%A7%A4%ED%95%91\/';
+          
+            this.page.identifier = '\/2021\/04\/jpa-5%EC%9E%A5-%EC%97%B0%EA%B4%80%EA%B4%80%EA%B3%84-%EB%A7%A4%ED%95%91\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'hyuntae';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+
+    
+  </body>
+</html>
+
