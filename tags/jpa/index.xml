@@ -6,7 +6,16 @@
     <description>Recent content in JPA on 1o2o3o&#39;s Tech Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>kr-ko</language>
-    <lastBuildDate>Tue, 13 Apr 2021 22:28:14 +0900</lastBuildDate><atom:link href="https://ddd4117.github.io/tags/jpa/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 14 Apr 2021 23:22:54 +0900</lastBuildDate><atom:link href="https://ddd4117.github.io/tags/jpa/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>[JPA] 6장 - 다양한 연관관계 매핑</title>
+      <link>https://ddd4117.github.io/2021/04/jpa-6%EC%9E%A5-%EB%8B%A4%EC%96%91%ED%95%9C-%EC%97%B0%EA%B4%80%EA%B4%80%EA%B3%84-%EB%A7%A4%ED%95%91/</link>
+      <pubDate>Wed, 14 Apr 2021 23:22:54 +0900</pubDate>
+      
+      <guid>https://ddd4117.github.io/2021/04/jpa-6%EC%9E%A5-%EB%8B%A4%EC%96%91%ED%95%9C-%EC%97%B0%EA%B4%80%EA%B4%80%EA%B3%84-%EB%A7%A4%ED%95%91/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>[JPA] 5장 - 연관관계 매핑</title>
       <link>https://ddd4117.github.io/2021/04/jpa-5%EC%9E%A5-%EC%97%B0%EA%B4%80%EA%B4%80%EA%B3%84-%EB%A7%A4%ED%95%91/</link>
