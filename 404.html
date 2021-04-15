@@ -35,14 +35,14 @@
 
 
 
-  <meta property="og:image" content="https://www.gravatar.com/avatar/81f6ab7b1e9e7aa50245c468df481517?s=640">
-  <meta property="twitter:image" content="https://www.gravatar.com/avatar/81f6ab7b1e9e7aa50245c468df481517?s=640">
+  <meta property="og:image" content="https://ddd4117.github.io/images/profile.jpg">
+  <meta property="twitter:image" content="https://ddd4117.github.io/images/profile.jpg">
 
 
     <title>404 Page not found - 1o2o3o&#39;s Tech Blog</title>
 	<script data-ad-client="ca-pub-7778071856226172" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 
-    <link rel="icon" href="https://ddd4117.github.io/favicon.png">
+    <link rel="icon" href="https://ddd4117.github.io/images/favicon.png">
     
 
     
@@ -76,96 +76,358 @@ if (!doNotTrack) {
     
   </head>
 
-<main class="posts">
-  <article class="post">
-    <h1>404 Not Found</h1>
-    <p>Sorry, but we couldn't find the page you're looking for.</p>
-    <p>Please head back <a href="https://ddd4117.github.io/">home</a>.</p>
-  </article>
-</main>
-    
-    <div id="about">
-  <div id="about-card">
-    <div id="about-btn-close">
-      <i class="fa fa-remove"></i>
-    </div>
-    
-      <img id="about-card-picture" src="https://www.gravatar.com/avatar/81f6ab7b1e9e7aa50245c468df481517?s=110" alt="Author&#39;s picture" />
-    
-    <h4 id="about-card-name">1o2o3o</h4>
-    
-      <div id="about-card-bio">마구잡이 코딩맨</div>
-    
-    
-      <div id="about-card-job">
-        <i class="fa fa-briefcase"></i>
-        <br/>
-        SW developer
-      </div>
-    
-    
-      <div id="about-card-location">
-        <i class="fa fa-map-marker"></i>
-        <br/>
-        Korea
-      </div>
-    
-  </div>
-</div>
-
-    
-
-    
-  
-    
-      <div id="cover" style="background-image:url('https://ddd4117.github.io/images/cover.jpg');"></div>
-    
-  
-
-
-    
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
-
-
-<script src="https://ddd4117.github.io/js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js"></script>
-
-
-<script lang="javascript">
-window.onload = updateMinWidth;
-window.onresize = updateMinWidth;
-document.getElementById("sidebar").addEventListener("transitionend", updateMinWidth);
-function updateMinWidth() {
-  var sidebar = document.getElementById("sidebar");
-  var main = document.getElementById("main");
-  main.style.minWidth = "";
-  var w1 = getComputedStyle(main).getPropertyValue("min-width");
-  var w2 = getComputedStyle(sidebar).getPropertyValue("width");
-  var w3 = getComputedStyle(sidebar).getPropertyValue("left");
-  main.style.minWidth = `calc(${w1} - ${w2} - ${w3})`;
+<style>
+@import url(https://fonts.googleapis.com/css?family=Ubuntu);
+html,
+body {
+  background: #28254c;
+  font-family: "Ubuntu";
 }
-</script>
 
-<script>
-$(document).ready(function() {
-  hljs.configure({ classPrefix: '', useBR: false });
-  $('pre.code-highlight > code, pre > code').each(function(i, block) {
-    if (!$(this).hasClass('codeblock')) {
-      $(this).addClass('codeblock');
-    }
-    hljs.highlightBlock(block);
+* {
+  boxx-sizing: border-boxx;
+}
+
+.boxx {
+  width: 350px;
+  height: 100%;
+  max-height: 600px;
+  min-height: 450px;
+  background: #332f63;
+  border-radius: 20px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 30px 50px;
+}
+.boxx .boxx__ghost {
+  padding: 15px 25px 25px;
+  position: absolute;
+  left: 50%;
+  top: 30%;
+  transform: translate(-50%, -30%);
+}
+.boxx .boxx__ghost .symbol:nth-child(1) {
+  opacity: 0.2;
+  animation: shine 4s ease-in-out 3s infinite;
+}
+.boxx .boxx__ghost .symbol:nth-child(1):before, .boxx .boxx__ghost .symbol:nth-child(1):after {
+  content: "";
+  width: 12px;
+  height: 4px;
+  background: #fff;
+  position: absolute;
+  border-radius: 5px;
+  bottom: 65px;
+  left: 0;
+}
+.boxx .boxx__ghost .symbol:nth-child(1):before {
+  transform: rotate(45deg);
+}
+.boxx .boxx__ghost .symbol:nth-child(1):after {
+  transform: rotate(-45deg);
+}
+.boxx .boxx__ghost .symbol:nth-child(2) {
+  position: absolute;
+  left: -5px;
+  top: 30px;
+  height: 18px;
+  width: 18px;
+  border: 4px solid;
+  border-radius: 50%;
+  border-color: #fff;
+  opacity: 0.2;
+  animation: shine 4s ease-in-out 1.3s infinite;
+}
+.boxx .boxx__ghost .symbol:nth-child(3) {
+  opacity: 0.2;
+  animation: shine 3s ease-in-out 0.5s infinite;
+}
+.boxx .boxx__ghost .symbol:nth-child(3):before, .boxx .boxx__ghost .symbol:nth-child(3):after {
+  content: "";
+  width: 12px;
+  height: 4px;
+  background: #fff;
+  position: absolute;
+  border-radius: 5px;
+  top: 5px;
+  left: 40px;
+}
+.boxx .boxx__ghost .symbol:nth-child(3):before {
+  transform: rotate(90deg);
+}
+.boxx .boxx__ghost .symbol:nth-child(3):after {
+  transform: rotate(180deg);
+}
+.boxx .boxx__ghost .symbol:nth-child(4) {
+  opacity: 0.2;
+  animation: shine 6s ease-in-out 1.6s infinite;
+}
+.boxx .boxx__ghost .symbol:nth-child(4):before, .boxx .boxx__ghost .symbol:nth-child(4):after {
+  content: "";
+  width: 15px;
+  height: 4px;
+  background: #fff;
+  position: absolute;
+  border-radius: 5px;
+  top: 10px;
+  right: 30px;
+}
+.boxx .boxx__ghost .symbol:nth-child(4):before {
+  transform: rotate(45deg);
+}
+.boxx .boxx__ghost .symbol:nth-child(4):after {
+  transform: rotate(-45deg);
+}
+.boxx .boxx__ghost .symbol:nth-child(5) {
+  position: absolute;
+  right: 5px;
+  top: 40px;
+  height: 12px;
+  width: 12px;
+  border: 3px solid;
+  border-radius: 50%;
+  border-color: #fff;
+  opacity: 0.2;
+  animation: shine 1.7s ease-in-out 7s infinite;
+}
+.boxx .boxx__ghost .symbol:nth-child(6) {
+  opacity: 0.2;
+  animation: shine 2s ease-in-out 6s infinite;
+}
+.boxx .boxx__ghost .symbol:nth-child(6):before, .boxx .boxx__ghost .symbol:nth-child(6):after {
+  content: "";
+  width: 15px;
+  height: 4px;
+  background: #fff;
+  position: absolute;
+  border-radius: 5px;
+  bottom: 65px;
+  right: -5px;
+}
+.boxx .boxx__ghost .symbol:nth-child(6):before {
+  transform: rotate(90deg);
+}
+.boxx .boxx__ghost .symbol:nth-child(6):after {
+  transform: rotate(180deg);
+}
+.boxx .boxx__ghost .boxx__ghost-container {
+  background: #fff;
+  width: 100px;
+  height: 100px;
+  border-radius: 100px 100px 0 0;
+  position: relative;
+  margin: 0 auto;
+  animation: upndown 3s ease-in-out infinite;
+}
+.boxx .boxx__ghost .boxx__ghost-container .boxx__ghost-eyes {
+  position: absolute;
+  left: 50%;
+  top: 45%;
+  height: 12px;
+  width: 70px;
+}
+.boxx .boxx__ghost .boxx__ghost-container .boxx__ghost-eyes .boxx__eye-left {
+  width: 12px;
+  height: 12px;
+  background: #332f63;
+  border-radius: 50%;
+  margin: 0 10px;
+  position: absolute;
+  left: 0;
+}
+.boxx .boxx__ghost .boxx__ghost-container .boxx__ghost-eyes .boxx__eye-right {
+  width: 12px;
+  height: 12px;
+  background: #332f63;
+  border-radius: 50%;
+  margin: 0 10px;
+  position: absolute;
+  right: 0;
+}
+.boxx .boxx__ghost .boxx__ghost-container .boxx__ghost-bottom {
+  display: flex;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+}
+.boxx .boxx__ghost .boxx__ghost-container .boxx__ghost-bottom div {
+  flex-grow: 1;
+  position: relative;
+  top: -10px;
+  height: 20px;
+  border-radius: 100%;
+  background-color: #fff;
+}
+.boxx .boxx__ghost .boxx__ghost-container .boxx__ghost-bottom div:nth-child(2n) {
+  top: -12px;
+  margin: 0 0px;
+  border-top: 15px solid #332f63;
+  background: transparent;
+}
+.boxx .boxx__ghost .boxx__ghost-shadow {
+  height: 20px;
+  boxx-shadow: 0 50px 15px 5px #3b3769;
+  border-radius: 50%;
+  margin: 0 auto;
+  animation: smallnbig 3s ease-in-out infinite;
+}
+.boxx .boxx__description {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.boxx .boxx__description .boxx__description-container {
+  color: #fff;
+  text-align: center;
+  width: 200px;
+  font-size: 16px;
+  margin: 0 auto;
+}
+.boxx .boxx__description .boxx__description-container .boxx__description-title {
+  font-size: 24px;
+  letter-spacing: 0.5px;
+}
+.boxx .boxx__description .boxx__description-container .boxx__description-text {
+  color: #8c8aa7;
+  line-height: 20px;
+  margin-top: 20px;
+}
+.boxx .boxx__description .boxx__button {
+  display: block;
+  position: relative;
+  background: #ff5e65;
+  border: 1px solid transparent;
+  border-radius: 50px;
+  height: 50px;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  line-height: 50px;
+  font-size: 18px;
+  padding: 0 70px;
+  white-space: nowrap;
+  margin-top: 25px;
+  transition: background 0.5s ease;
+  overflow: hidden;
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+}
+.boxx .boxx__description .boxx__button:before {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 100px;
+  background: #fff;
+  bottom: -25px;
+  left: 0;
+  border: 2px solid #fff;
+  transform: translateX(-50px) rotate(45deg);
+  transition: transform 0.5s ease;
+}
+.boxx .boxx__description .boxx__button:hover {
+  background: transparent;
+  border-color: #fff;
+}
+.boxx .boxx__description .boxx__button:hover:before {
+  transform: translateX(250px) rotate(45deg);
+}
+
+@keyframes upndown {
+  0% {
+    transform: translateY(5px);
+  }
+  50% {
+    transform: translateY(15px);
+  }
+  100% {
+    transform: translateY(5px);
+  }
+}
+@keyframes smallnbig {
+  0% {
+    width: 90px;
+  }
+  50% {
+    width: 100px;
+  }
+  100% {
+    width: 90px;
+  }
+}
+@keyframes shine {
+  0% {
+    opacity: 0.2;
+  }
+  25% {
+    opacity: 0.1;
+  }
+  50% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 0.2;
+  }
+}
+</style>
+
+
+<div class="boxx">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+var pageX = $(document).width();
+var pageY = $(document).height();
+var mouseY = 0;
+var mouseX = 0;
+
+$(document).mousemove(function (event) {
+  
+  mouseY = event.pageY;
+  yAxis = ((pageY / 2 - mouseY) / pageY) * 300;
+  
+  mouseX = event.pageX / -pageX;
+  xAxis = -mouseX * 100 - 100;
+
+  $(".boxx__ghost-eyes").css({
+    transform: "translate(" + xAxis + "%,-" + yAxis + "%)"
   });
+
+  
 });
 </script>
-
-
-
-
-
+  <div class="boxx__ghost">
+    <div class="symbol"></div>
+    <div class="symbol"></div>
+    <div class="symbol"></div>
+    <div class="symbol"></div>
+    <div class="symbol"></div>
+    <div class="symbol"></div>
     
-  </body>
-</html>
+    <div class="boxx__ghost-container">
+      <div class="boxx__ghost-eyes">
+        <div class="boxx__eye-left"></div>
+        <div class="boxx__eye-right"></div>
+      </div>
+      <div class="boxx__ghost-bottom">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+    <div class="boxx__ghost-shadow"></div>
+  </div>
+  
+  <div class="boxx__description">
+    <div class="boxx__description-container">
+      <div class="boxx__description-title">Whoops!</div>
+      <div class="boxx__description-text">It seems like we couldn't find the page you were looking for</div>
+    </div>
+            
+    <a href="https://ddd4117.github.io/" class="boxx__button">Go back</a>
+  </div>
+</div>
 
