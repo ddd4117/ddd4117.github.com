@@ -6,7 +6,16 @@
     <description>Recent content in JPA on 1o2o3o&#39;s Tech Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>kr-ko</language>
-    <lastBuildDate>Thu, 15 Apr 2021 13:41:13 +0900</lastBuildDate><atom:link href="https://ddd4117.github.io/tags/jpa/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 16 Apr 2021 14:32:04 +0900</lastBuildDate><atom:link href="https://ddd4117.github.io/tags/jpa/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>[JPA] 8장 - 프로식와 연관관계 정리</title>
+      <link>https://ddd4117.github.io/2021/04/jpa-8%EC%9E%A5-%ED%94%84%EB%A1%9C%EC%8B%9D%EC%99%80-%EC%97%B0%EA%B4%80%EA%B4%80%EA%B3%84-%EC%A0%95%EB%A6%AC/</link>
+      <pubDate>Fri, 16 Apr 2021 14:32:04 +0900</pubDate>
+      
+      <guid>https://ddd4117.github.io/2021/04/jpa-8%EC%9E%A5-%ED%94%84%EB%A1%9C%EC%8B%9D%EC%99%80-%EC%97%B0%EA%B4%80%EA%B4%80%EA%B3%84-%EC%A0%95%EB%A6%AC/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>[JPA] 7장 - 고급매핑</title>
       <link>https://ddd4117.github.io/2021/04/jpa-7%EC%9E%A5-%EA%B3%A0%EA%B8%89%EB%A7%A4%ED%95%91/</link>
