@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="kr-ko">
+  <head>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.82.0 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="author" content="1o2o3o">
+<meta name="keywords" content="">
+<meta name="description" content="">
+
+
+<meta property="og:description" content="">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[JPA] 10장 - 객체지향 쿼리언어">
+<meta name="twitter:title" content="[JPA] 10장 - 객체지향 쿼리언어">
+<meta property="og:url" content="https://ddd4117.github.io/2021/04/jpa-10%EC%9E%A5-%EA%B0%9D%EC%B2%B4%EC%A7%80%ED%96%A5-%EC%BF%BC%EB%A6%AC%EC%96%B8%EC%96%B4/">
+<meta property="twitter:url" content="https://ddd4117.github.io/2021/04/jpa-10%EC%9E%A5-%EA%B0%9D%EC%B2%B4%EC%A7%80%ED%96%A5-%EC%BF%BC%EB%A6%AC%EC%96%B8%EC%96%B4/">
+<meta property="og:site_name" content="1o2o3o&#39;s Tech Blog">
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+<meta property="og:locale" content="en-us">
+
+  
+    <meta property="article:published_time" content="2021-04-18T23:24:43">
+  
+  
+    <meta property="article:modified_time" content="2021-04-18T23:24:43">
+  
+  
+  
+    
+      <meta property="article:section" content="Spring">
+    
+  
+  
+    
+      <meta property="article:tag" content="Spring">
+    
+      <meta property="article:tag" content="JPA">
+    
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://user-images.githubusercontent.com/28971015/113664175-3e7dac00-96e6-11eb-97f2-b143f4e60d4a.jpg">
+  <meta property="twitter:image" content="https://user-images.githubusercontent.com/28971015/113664175-3e7dac00-96e6-11eb-97f2-b143f4e60d4a.jpg">
+
+
+
+
+
+  <meta property="og:image" content="https://ddd4117.github.io/images/profile.jpg">
+  <meta property="twitter:image" content="https://ddd4117.github.io/images/profile.jpg">
+
+
+    <title>[JPA] 10장 - 객체지향 쿼리언어 - 1o2o3o&#39;s Tech Blog</title>
+	<script data-ad-client="ca-pub-7778071856226172" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+    <link rel="icon" href="https://ddd4117.github.io/images/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://ddd4117.github.io/2021/04/jpa-10%EC%9E%A5-%EA%B0%9D%EC%B2%B4%EC%A7%80%ED%96%A5-%EC%BF%BC%EB%A6%AC%EC%96%B8%EC%96%B4/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css" integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
+    
+    
+    <link rel="stylesheet" href="https://ddd4117.github.io/css/style-twzjdbqhmnnacqs0pwwdzcdbt8yhv8giawvjqjmyfoqnvazl0dalmnhdkvp7.min.css" />
+    
+    
+
+    
+      
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LJYW9800LT"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-LJYW9800LT', { 'anonymize_ip': false });
+}
+</script>
+
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="5">
+ 
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LJYW9800LT"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-LJYW9800LT', { 'anonymize_ip': false });
+}
+</script>
+ 
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://ddd4117.github.io/">1o2o3o&#39;s Tech Blog</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://ddd4117.github.io/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="https://ddd4117.github.io/images/profile.jpg" alt="Author&#39;s picture" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="5">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://ddd4117.github.io/#about">
+          <img class="sidebar-profile-picture" src="https://ddd4117.github.io/images/profile.jpg" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">1o2o3o</h4>
+        
+          <h5 class="sidebar-profile-bio">마구잡이 코딩맨</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/categories/os">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-linux"></i>
+      
+      <span class="sidebar-button-desc">OS</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/categories/spring">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-linux"></i>
+      
+      <span class="sidebar-button-desc">spring</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/ddd4117" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/index.xml">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/#about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="5"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      [JPA] 10장 - 객체지향 쿼리언어
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2021-04-18T23:24:43&#43;09:00">
+        
+  April 18, 2021
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://ddd4117.github.io/categories/spring">Spring</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              <h1 id="10장---객체지향-쿼리언어">10장 - 객체지향 쿼리언어</h1>
+<blockquote>
+<p>자바 ORM 표준 JPA 프로그래밍 10장을 요약한 내용 입니다.</p>
+</blockquote>
+<p>JPA는 복잡한 검색 조건을 사용해서 엔티티 객체를 조회할 수 있는 다양한 쿼리 기술을 지원한다.</p>
+<h1 id="객체지향-쿼리-소개">객체지향 쿼리 소개</h1>
+<p><code>EntityManager.find()</code> 메소드를 사용하면 식별자로 엔티티 하나를 조회할 수 있다.</p>
+<ul>
+<li>식별자로 조회 <code>EntityManager.find()</code></li>
+<li>객체 그래프 탐색</li>
+</ul>
+<p>ORM을 사용하면 데이터베이스 테이블이 아닌 엔티티 객체를 대상으로 개발하므로 검색도 테이블이 엔티티 객체를 대상으로 하는 방법이 필요하다. JPQL은 이런 문제를 해결하기 위해 다음과 같은 특징이 있다.</p>
+<ul>
+<li>테이블이 아닌 객체를 대상으로 검색하는 객체지향 쿼리다</li>
+<li>SQL을 추상화해서 특정 데이터베이스 SQL에 의존하지 않는다</li>
+</ul>
+<p>다음은 JPA가 공식 지원하는 기능이다.</p>
+<ul>
+<li>JPQL</li>
+<li>Criteria 쿼리 : JPQL을 편하게 작성하도록 도와주는 API, 빌더 클래스 모음</li>
+<li>네이티브 SQL : JPA에서 JPQL 대신 직접 SQL을 사용할 수 있다.</li>
+</ul>
+<p>다음은 JPA가 공식 지원하지는 않지만 알아둘 가치가 있다.</p>
+<ul>
+<li>QueryDSL : Criteria 쿼리처럼 JPQL을 편하게 작성하도록 도와주는 빌더 클래스 모음, 비표준 오픈소스 프레임워크</li>
+<li>JDBC 직접 사용, MyBatis 같은 SQL 매퍼 프레임워크 사용 : 필요하면 JDBC를 직접 사용할 수 있다.</li>
+</ul>
+<h2 id="jpql-소개">JPQL 소개</h2>
+<p>JPQL은 엔티티 객체를 조회하는 객체지향 쿼리다. JPQL은 SQL을 추상화해서 특정 데이터베이스에 의존하지 않는다. 그리고 데이터베이스 방언만 변경하면 JPQL을 수정하지 않아도 자연스럽게 데이터베이스를 변경할 수 있다. JPQL은 SQL보다 간결하다</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">//쿼리 생성
+</span><span style="color:#75715e"></span>String jpql <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;select m from Member as m where m.username = &#39;kim&#39;&#34;</span><span style="color:#f92672">;</span>
+List<span style="color:#f92672">&lt;</span>Member<span style="color:#f92672">&gt;</span> resultList <span style="color:#f92672">=</span> em<span style="color:#f92672">.</span><span style="color:#a6e22e">createQuery</span><span style="color:#f92672">(</span>jpql<span style="color:#f92672">,</span> Member<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">).</span><span style="color:#a6e22e">getResultList</span><span style="color:#f92672">();</span>
+</code></pre></div><h2 id="criteria-쿼리-소개">Criteria 쿼리 소개</h2>
+<p>Criteria의 장점은 문자가 아닌 <code>query.select(m).where(…)</code>처럼 프로그래밍 코드로 JPQL을 작성할 수 있다는 점이다. JPQL은 오타가 있어도 컴파일은 성공하고 애플리케이션을 서버에 배포할 수 있다. 문제는 해당 쿼리가 실행되는 런타임 시점에 오류가 발생한다는 점이다. Criteria의 장점은 다음과 같다.</p>
+<ul>
+<li>컴파일 시점에 오류를 발견할 수 있다.</li>
+<li>IDE를 사용하면 코드 자동완성을 지원한다.</li>
+<li>동적 쿼리를 작성하기 편하다</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">//Criteria 사용준비
+</span><span style="color:#75715e"></span>CriteriaBuilder cb <span style="color:#f92672">=</span> em<span style="color:#f92672">.</span><span style="color:#a6e22e">getCriteriaBuilder</span><span style="color:#f92672">();</span>
+CriteriaQuery<span style="color:#f92672">&lt;</span>Member<span style="color:#f92672">&gt;</span> query <span style="color:#f92672">=</span> cb<span style="color:#f92672">.</span><span style="color:#a6e22e">createQuery</span><span style="color:#f92672">(</span>Member<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+
+<span style="color:#75715e">//루트 클래스 (조회를 시작할 클래스)
+</span><span style="color:#75715e"></span>Root<span style="color:#f92672">&lt;</span>Member<span style="color:#f92672">&gt;</span> m <span style="color:#f92672">=</span> query<span style="color:#f92672">.</span><span style="color:#a6e22e">from</span><span style="color:#f92672">(</span>Member<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+
+<span style="color:#75715e">//쿼리 생성
+</span><span style="color:#75715e"></span>CriteriaQuery<span style="color:#f92672">&lt;</span>Member<span style="color:#f92672">&gt;</span> cq <span style="color:#f92672">=</span>  query<span style="color:#f92672">.</span><span style="color:#a6e22e">select</span><span style="color:#f92672">(</span>m<span style="color:#f92672">)</span>
+								<span style="color:#f92672">.</span><span style="color:#a6e22e">where</span><span style="color:#f92672">(</span>cb<span style="color:#f92672">.</span><span style="color:#a6e22e">equal</span><span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;usernamen&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;kim&#34;</span><span style="color:#f92672">));</span>
+
+List<span style="color:#f92672">&lt;</span>Meinber<span style="color:#f92672">&gt;</span> resultList <span style="color:#f92672">=</span> em<span style="color:#f92672">.</span><span style="color:#a6e22e">createQuery</span><span style="color:#f92672">(</span>cq<span style="color:#f92672">).</span><span style="color:#a6e22e">getResultList</span><span style="color:#f92672">();</span>
+</code></pre></div><h2 id="querydsl-소개">QueryDSL 소개</h2>
+<p>QueryDSL도 Criteria처럼 JPQL 빌더 역할을 한다. QueryDSL의 장점은 코드 기반이면서 단순하고 사용하기 쉽다. QeuryDSL과 Criteria를 비교하면 Criteria는 너무 복잡하다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">//준비J
+</span><span style="color:#75715e"></span>PAQuery query <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> JPAQuery<span style="color:#f92672">(</span>em<span style="color:#f92672">);</span>
+QMember member <span style="color:#f92672">=</span> QMember<span style="color:#f92672">.</span><span style="color:#a6e22e">member</span><span style="color:#f92672">;</span>
+
+<span style="color:#75715e">//쿼리, 결과조회
+</span><span style="color:#75715e"></span>List<span style="color:#f92672">&lt;</span>Member<span style="color:#f92672">&gt;</span> members <span style="color:#f92672">=</span>  query<span style="color:#f92672">.</span><span style="color:#a6e22e">from</span><span style="color:#f92672">(</span>member<span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">where</span><span style="color:#f92672">(</span>member<span style="color:#f92672">.</span><span style="color:#a6e22e">username</span><span style="color:#f92672">.</span><span style="color:#a6e22e">eq</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;kim&#34;</span><span style="color:#f92672">))</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">list</span><span style="color:#f92672">(</span>member<span style="color:#f92672">);</span>
+</code></pre></div><h2 id="네이티브-sql-소개">네이티브 SQL 소개</h2>
+<p>JPA는 SQL을 직접 사용할 수 있는 기능을 지원하는데 이것을 네이티브 SQL이라 한다. JPQL을 사용해도 가끔은 특정 데이터베이스에 의존하는 기능을 사용해야 할 때가 있다. 예를 들어 오라클 데이터베이스만 사용하는 CONNECT BY 기능이나 특정 데이터베이스에서만 동작하는 SQL 힌트는 같을 것이다.</p>
+<p>네이티브 SQL의 단점은 특정 데이터베이스에 의존하는 SQL을 작성해야 한다는것이다. 따라서 데이터베이스를 변경하면 네이티브 SQL도 수정해야 한다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">String sql <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;SELECT ID, AGE, TEAM_ID, NAME FROM MEMBER WHERE NAME = &#39;kim&#39;&#34;</span><span style="color:#f92672">;</span>
+List<span style="color:#f92672">&lt;</span>Member<span style="color:#f92672">&gt;</span> resultList <span style="color:#f92672">=</span>  em<span style="color:#f92672">.</span><span style="color:#a6e22e">createNativeQuery</span><span style="color:#f92672">(</span>sql<span style="color:#f92672">,</span> Member<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">).</span><span style="color:#a6e22e">getResultList</span><span style="color:#f92672">();</span>
+</code></pre></div><h2 id="jdbc-직접-사용-마이바티스-같은-sql-매퍼-프레임워크-사용">JDBC 직접 사용, 마이바티스 같은 SQL 매퍼 프레임워크 사용</h2>
+<p>JDBC 커넥션에 직접 접근하고 싶으면 JPA는 JDBC 커넥션을 획득하는 API를 제공하지 않으므로 JPA 구현체가 제공하는 방법을 사용해야 한다. JDBC나 마이바티스를 JPA와 함께 사용하면 영속성 컨텍스트를 적절한 시점에 강제로 플러시해야 한다. 문제는 JPA를 우회하는 SQL에 대해서는 JPA가 전혀 인식하지 못한다는 점이다. 최악의 시나리오는 영속성 컨텍스트와 데이터베이스를 불일치 상태로 만들어 데이터 무결성을 훼손할 수 있다.</p>
+<p>이런 이슈를 해결하는 방법은 JPA를 우회해서 SQL을 실행하기 직전에 영속성 컨텍스트를 수동으로 플러시해서 데이터베이스와 영속성 컨텍스트를 동기화하면 된다.</p>
+<h1 id="jpql">JPQL</h1>
+<h2 id="jpql-select-문">JPQL SELECT 문</h2>
+<ul>
+<li>대소문자 구분 : 엔티티와 속성은 대소문자를 구분한다.</li>
+<li>엔티티 이름 : JPQL에서 사용하는 객체는 클래스 명이 아니라 엔티티 명이다. 엔티티 명은 @Entity(name = “xxx”)로 지정할 수 있다.</li>
+<li>별칭은 필수 : JPQL은 별칭은 필수로 사용해야 한다.</li>
+</ul>
+<h2 id="페치-조인">페치 조인</h2>
+<p>페치(Fetch)조인은 SQL에서 이야기하는 조인의 종류는 아니고 JPQL에서 성능 최적화를 위해 제공하는 기능이다. 이것은 연관된 엔티티나 컬렉션을 한 번에 같이 조회하는 기능인데 join fetch 명령어로 사용할 수 있다.</p>
+<h3 id="엔티티-페치-조인">엔티티 페치 조인</h3>
+<p>엔티티 페치 조인 JPQL에서 select m 으로 회원 엔티티만 선택했는데 실행된 SQL을 보면 SELECT M.*, T.*로 회원과 연관된 팀도 함께 조회된 것을 확인할 수 있다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">String jpql <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;select m from Member m join fetch m.team&#34;</span><span style="color:#f92672">;</span>
+List<span style="color:#f92672">&lt;</span>Member<span style="color:#f92672">&gt;</span> members <span style="color:#f92672">=</span> em<span style="color:#f92672">.</span><span style="color:#a6e22e">createQuery</span><span style="color:#f92672">(</span>jpql<span style="color:#f92672">,</span> Member<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">).</span><span style="color:#a6e22e">getResultList</span><span style="color:#f92672">();</span>
+<span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Member member <span style="color:#f92672">:</span> members<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+  <span style="color:#75715e">//페치 조인으로 회원과 팀을 함께 조회해서 지연 로딩 발생 안 함
+</span><span style="color:#75715e"></span>  Systern<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">printin</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;username = &#34;</span> <span style="color:#f92672">+</span> member<span style="color:#f92672">.</span><span style="color:#a6e22e">getUsername</span> <span style="color:#f92672">()</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;, &#34;</span> <span style="color:#f92672">+</span>
+    <span style="color:#e6db74">&#34;teamname = &#34;</span> <span style="color:#f92672">+</span> member<span style="color:#f92672">.</span><span style="color:#a6e22e">getTeam</span><span style="color:#f92672">().</span><span style="color:#a6e22e">name</span><span style="color:#f92672">());</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h2 id="페치-조인과-일반-조인의-차이">페치 조인과 일반 조인의 차이</h2>
+<p>페치 조인을 사용하지 않고 조인만 사용하면 어떻게 될까?</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">select</span> t
+<span style="color:#66d9ef">from</span> Team t <span style="color:#66d9ef">join</span> t.members m
+<span style="color:#66d9ef">where</span> t.name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;팀A&#39;</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">SELECT</span>  T.<span style="color:#f92672">*</span>
+<span style="color:#66d9ef">FROM</span> TEAM TINNER <span style="color:#66d9ef">JOIN</span> MEMBER M 
+<span style="color:#66d9ef">ON</span> T.ID<span style="color:#f92672">=</span>M.TEAM_ID
+<span style="color:#66d9ef">WHERE</span> T.NAME <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;팀A*&#39;</span>
+</code></pre></div><p>JPQL은 결과를 반환할 때 연관관계까지 고려하지 않는다. 단지 SELECT 절에 지정한 엔티티만 조회할 뿐이다. 따라서 팀 엔티티만 조회하고 연관된 회원 컬렉션은 조회하지 않는다.</p>
+<p>반면에 페치 조인을 사용하면 연관된 엔티티도 함께 조회한다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">select</span> t
+<span style="color:#66d9ef">from</span> Team t <span style="color:#66d9ef">join</span> <span style="color:#66d9ef">fetch</span> t.members
+<span style="color:#66d9ef">where</span> t.name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;팀A&#39;</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">SELECT</span>  T.<span style="color:#f92672">*</span>, M.<span style="color:#f92672">*</span>
+<span style="color:#66d9ef">FROM</span> TEAM TINNER <span style="color:#66d9ef">JOIN</span> MEMBER M
+ <span style="color:#66d9ef">ON</span> T.ID<span style="color:#f92672">=</span>M.TEAM_ID
+<span style="color:#66d9ef">WHERE</span> T.NAME <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;팀A*&#39;</span>
+</code></pre></div><h2 id="페치-조인의-특징과-한계">페치 조인의 특징과 한계</h2>
+<p>페치 조인을 사용하면 SQL 한 번으로 연관된 엔티티들을 함께 조회할 수 있어서 SQL 호출 횟수를 줄여 성능을 최적화할 수 있다. 따라서 글로벌 로딩 전략은 지연 로딩을 사용하고 최적화가 필요하면 페치 조인을 적용하는 것이 효과적이다. 또한 페치 조인을 사용하면 연관된 엔티티를 쿼리 시점에 조회하므로 지연 로딩이 발생하지 않는다. 따라서 준영속 상태에서도 객체 그래프를 탐색할 수 있다.</p>
+<p>페치 조인은 다음과 같은 한계가 있다.</p>
+<h3 id="페치-조인-대상에는-별칭을-줄-수-없다">페치 조인 대상에는 별칭을 줄 수 없다.</h3>
+<p>JPA 표준에서는 지원하지 않지만 하이버네이트를 포함한 몇몇 구현체들은 페치 조인에 별칭을 지원한다. 하지만 별칭을 잘못 사용하면 연관된 데이터 수가 달라져서 데이터 무결성이 깨질 수 있으므로 조심해서 사용해야 한다. 특히 2차 캐시와 함께 사용할 때 조심해야 하는데, 연관된 데이터 수가 달라진 상태에서 2차 캐시에 저장되면 다른 곳에서 조회할 때도 연관된 데이터 수가 달라지는 문제가 발생할 수 있다.</p>
+<h3 id="둘-이상의-컬렉션을-페치할-수-없다">둘 이상의 컬렉션을 페치할 수 없다.</h3>
+<p>구현체에 따라 되기도 하는데 컬렉션 * 컬렉션의 카테시안 곱이 만들어지므로 주의해야 한다.</p>
+<h3 id="컬렉션을-페치-조인하면-페이징-api를-사용할-수-없다">컬렉션을 페치 조인하면 페이징 API를 사용할 수 없다.</h3>
+<p>하이버네이트에서 컬렉션을 페치 조인하고 페이징 API를 사용하면 경고 로그를 남기면서 메모리에서 페이징 처리를 한다. 데이터가 적으면 상관없겠지만 데이터가 많으면 성능 이슈와 메모리 초과 예외가 발생할 수 있어서 위험하다. 페치 조인은 객체 그래프를 유지할 때 사용하면 효과적이다. 반면에 여러 테이블을 조인해서 엔티티가 가진 모양이 아닌 전혀 다른 결과를 내야 한다면 억지로 페치 조인을 사용하기보다는 여러 테이블에서 필요한 필드들만 조회해서 DTO로 반환하는 것이 더 효과적일 수 있다.</p>
+<h2 id="named-쿼리-정적-쿼리">Named 쿼리: 정적 쿼리</h2>
+<p>JPQL 쿼리는 크게 동적 쿼리와 정적 쿼리로 나눌 수 있다.</p>
+<ul>
+<li>동적 쿼리 : <code>em.createQuery(&quot;select …&quot;)</code> 처럼 JPQL을 문자로 완성해서 직접 넘기는 것을 동적 쿼리라 한다. 런타임에 특정 조건에 따라 JPQL을 동적으로 구성할 수 있다.</li>
+<li>정적 쿼리 : 미리 정의한 쿼리에 이름을 부여해서 필요할 때 사용할 수 있는데 이를 Named 쿼리라 한다.</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Entity</span>
+<span style="color:#a6e22e">@NamedQuery</span><span style="color:#f92672">(</span>
+    name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Member.findByUsername&#34;</span><span style="color:#f92672">,</span>
+    query <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;select m from Member m where m.username = :username&#34;</span><span style="color:#f92672">)</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Member</span> <span style="color:#f92672">{</span>
+    <span style="color:#f92672">...</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>@NamedQuery.query에 사용할 쿼리를 입력한다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">List<span style="color:#f92672">&lt;</span>Member<span style="color:#f92672">&gt;</span> resultList <span style="color:#f92672">=</span> em<span style="color:#f92672">.</span><span style="color:#a6e22e">createNamedQuery</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Member.findByUsername&#34;</span><span style="color:#f92672">,</span> Member<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">setParameter</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;username&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;회원1&#34;</span><span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">getResultList</span><span style="color:#f92672">();</span>
+</code></pre></div><blockquote>
+<p>Named 쿼리는 영속성 유닛 단위로 관리되므로 충돌을 방지하기 위해 엔티티 이름을 앞에 주었다. 그리고 엔티티 이름이 앞에 있으면 관리하기가 쉽다.</p>
+</blockquote>
+<h1 id="criteria">Criteria</h1>
+<p>Criteria 쿼리는 JPQL을 자바 코드로 작성하도록 도와주는 빌더 클래스 API다. Criteria를 사용하면 문자가 아닌 코드로 JPQL을 작성하므로 문법 오류를 컴파일 단계에서 잡을 수 있고 문자 기반의 JPQL보다 동적 쿼리를 안전하게 생성할 수 있는 장점이 있다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">//JPQL: select m from Member m
+</span><span style="color:#75715e"></span>CriteriaBuilder cb <span style="color:#f92672">=</span> em<span style="color:#f92672">.</span><span style="color:#a6e22e">getCriteriaBuilder</span><span style="color:#f92672">();</span> <span style="color:#75715e">//Criteria 쿼리 빌더 --- 1
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e">//Criteria 생성, 반환타입 지정 --- 2
+</span><span style="color:#75715e"></span>CriteriaQuery<span style="color:#f92672">&lt;</span>Member<span style="color:#f92672">&gt;</span> cq <span style="color:#f92672">=</span> cb<span style="color:#f92672">.</span><span style="color:#a6e22e">createQuery</span><span style="color:#f92672">(</span>Member<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+Root<span style="color:#f92672">&lt;</span>Member<span style="color:#f92672">&gt;</span> m <span style="color:#f92672">=</span> cq<span style="color:#f92672">.</span> <span style="color:#a6e22e">from</span> <span style="color:#f92672">(</span>Member<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span> <span style="color:#75715e">//FROM 절 --- 3
+</span><span style="color:#75715e"></span>cq<span style="color:#f92672">.</span><span style="color:#a6e22e">select</span><span style="color:#f92672">(</span>m<span style="color:#f92672">);</span> <span style="color:#75715e">//SELECT 절 --- 4T
+</span><span style="color:#75715e"></span>ypedQuery<span style="color:#f92672">&lt;</span>Member<span style="color:#f92672">&gt;</span> query <span style="color:#f92672">=</span> em<span style="color:#f92672">.</span><span style="color:#a6e22e">createQuery</span><span style="color:#f92672">(</span>cq<span style="color:#f92672">);</span>
+List<span style="color:#f92672">&lt;</span>Member<span style="color:#f92672">&gt;</span> members <span style="color:#f92672">=</span> query<span style="color:#f92672">.</span><span style="color:#a6e22e">getResultList</span><span style="color:#f92672">();</span>
+</code></pre></div><ol>
+<li>Criteria 쿼리를 생성하려면 먼저 Criteria 빌더(CriteriaBuilder)를 얻어야 한다. Criteria 빌더는 EntityManager나 EntityManagerFactory에서 얻을 수 있다.</li>
+<li>Criteria 쿼리 빌더에서 Criteria 쿼리(CriteriaQuery)를 생성한다. 이때 반환 타입을 지정할 수 있다.</li>
+<li>FROM 절을 생성한다. 반환된 값 m은 Criteria에서 사용하는 특별한 별칭이다. m을 조회의 시작점이라는 의미로 쿼리 루트(Root)라 한다.</li>
+<li>SELECT 절을 생성한다.</li>
+</ol>
+<h2 id="튜플">튜플</h2>
+<p>Criteria는 Map과 비슷한 튜플이라는 특별한 반환 객체를 제공한다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">//JPQL: select m.username, m.age from Member m
+</span><span style="color:#75715e"></span>CriteriaBuilder cb <span style="color:#f92672">=</span> em<span style="color:#f92672">.</span><span style="color:#a6e22e">getCriteriaBuilder</span><span style="color:#f92672">();</span>
+
+CriteriaQuery<span style="color:#f92672">&lt;</span>Tuple<span style="color:#f92672">&gt;</span> cq <span style="color:#f92672">=</span> cb<span style="color:#f92672">.</span><span style="color:#a6e22e">createTupleQuery</span><span style="color:#f92672">();</span>
+<span style="color:#75715e">//CriteriaQuery&lt;Tuple&gt; cq = cb.createQuery(Tuple. class); //위와 같다.
+</span><span style="color:#75715e"></span>
+Root<span style="color:#f92672">&lt;</span>Member<span style="color:#f92672">&gt;</span> m <span style="color:#f92672">=</span> cq<span style="color:#f92672">.</span><span style="color:#a6e22e">from</span><span style="color:#f92672">(</span>Member<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+cq<span style="color:#f92672">.</span><span style="color:#a6e22e">multiselect</span><span style="color:#f92672">(</span>
+    m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span> <span style="color:#f92672">(</span><span style="color:#e6db74">&#34;username&#34;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">alias</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;username&#34;</span><span style="color:#f92672">),</span> <span style="color:#75715e">//튜플에서 사용할튜플 별칭
+</span><span style="color:#75715e"></span>    m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;age&#34;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">alias</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;age&#34;</span><span style="color:#f92672">));</span>
+
+TypedQuery<span style="color:#f92672">&lt;</span>Tuple<span style="color:#f92672">&gt;</span> query <span style="color:#f92672">=</span> em<span style="color:#f92672">.</span><span style="color:#a6e22e">createQuery</span><span style="color:#f92672">(</span>cq<span style="color:#f92672">);</span>
+List<span style="color:#f92672">&lt;</span>Tuple<span style="color:#f92672">&gt;</span> resultList <span style="color:#f92672">=</span> query<span style="color:#f92672">.</span><span style="color:#a6e22e">getResultList</span><span style="color:#f92672">();</span>
+
+<span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Tuple tuple <span style="color:#f92672">:</span> resultList<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">//튜플별칭으로조회
+</span><span style="color:#75715e"></span>    String username <span style="color:#f92672">=</span> tuple<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;username&#34;</span><span style="color:#f92672">,</span> String<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+    
+    Integer age <span style="color:#f92672">=</span> tuple<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;age&#34;</span><span style="color:#f92672">,</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h2 id="조인">조인</h2>
+<p>조인은 join() 메소드와 joinType 클래스를 사용한다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/*
+</span><span style="color:#75715e"> JPQL    select m,t from Member m    inner join m.team t    where t.name = *팀A*
+</span><span style="color:#75715e">*/</span>
+
+Root<span style="color:#f92672">&lt;</span>Member<span style="color:#f92672">&gt;</span> m <span style="color:#f92672">=</span> cq<span style="color:#f92672">.</span><span style="color:#a6e22e">from</span><span style="color:#f92672">(</span>Member<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+Join<span style="color:#f92672">&lt;</span>Member<span style="color:#f92672">,</span> Team<span style="color:#f92672">&gt;</span> t <span style="color:#f92672">=</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">join</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;team&#34;</span> <span style="color:#f92672">,</span> JoinType<span style="color:#f92672">.</span> INNER<span style="color:#f92672">);</span> <span style="color:#75715e">//내부 조인
+</span><span style="color:#75715e"></span>cq<span style="color:#f92672">.</span><span style="color:#a6e22e">multiselect</span><span style="color:#f92672">(</span>m<span style="color:#f92672">,</span> t<span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">where</span><span style="color:#f92672">(</span>cb<span style="color:#f92672">.</span><span style="color:#a6e22e">equal</span><span style="color:#f92672">(</span>t<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">),</span> <span style="color:#e6db74">&#34;팀A&#34;</span><span style="color:#f92672">));</span>
+</code></pre></div><h2 id="서브-쿼리">서브 쿼리</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/*
+</span><span style="color:#75715e"> JPQL:select m from Member m
+</span><span style="color:#75715e">    where m.age &gt;=
+</span><span style="color:#75715e">        (select AVG(m2.age) from Member m2)
+</span><span style="color:#75715e">*/</span>
+
+CriteriaBuilder cb <span style="color:#f92672">=</span> em<span style="color:#f92672">.</span><span style="color:#a6e22e">getCriteriaBuilder</span><span style="color:#f92672">();</span>
+CriteriaQuery<span style="color:#f92672">&lt;</span>Member<span style="color:#f92672">&gt;</span> mainQuery <span style="color:#f92672">=</span> cb<span style="color:#f92672">.</span><span style="color:#a6e22e">createQuery</span><span style="color:#f92672">(</span>Member<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+
+<span style="color:#75715e">//서브쿼리생성 --- 1
+</span><span style="color:#75715e"></span>Subquery<span style="color:#f92672">&lt;</span>Double<span style="color:#f92672">&gt;</span> subQuery <span style="color:#f92672">=</span> mainQuery<span style="color:#f92672">.</span><span style="color:#a6e22e">subquery</span><span style="color:#f92672">(</span>Double<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+Root<span style="color:#f92672">&lt;</span>Member<span style="color:#f92672">&gt;</span> m2 <span style="color:#f92672">=</span> subQuery<span style="color:#f92672">.</span><span style="color:#a6e22e">from</span><span style="color:#f92672">(</span>Member<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+subQuery<span style="color:#f92672">.</span><span style="color:#a6e22e">select</span><span style="color:#f92672">(</span>cb<span style="color:#f92672">.</span><span style="color:#a6e22e">avg</span><span style="color:#f92672">(</span>m2<span style="color:#f92672">.&lt;</span>Integer<span style="color:#f92672">&gt;</span>get<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;age&#34;</span><span style="color:#f92672">)));</span>
+
+<span style="color:#75715e">//메인쿼리생성 --- 2
+</span><span style="color:#75715e"></span>Root<span style="color:#f92672">&lt;</span>Member<span style="color:#f92672">&gt;</span> m <span style="color:#f92672">=</span> mainQuery<span style="color:#f92672">.</span><span style="color:#a6e22e">from</span><span style="color:#f92672">(</span>Member<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+mainQuery<span style="color:#f92672">.</span><span style="color:#a6e22e">select</span><span style="color:#f92672">(</span>m<span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">where</span><span style="color:#f92672">(</span>cb<span style="color:#f92672">.</span><span style="color:#a6e22e">ge</span><span style="color:#f92672">(</span>m<span style="color:#f92672">.&lt;</span>Integer<span style="color:#f92672">&gt;</span>get<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;age&#34;</span><span style="color:#f92672">),</span> subQuery<span style="color:#f92672">));</span>
+</code></pre></div><h2 id="case">CASE</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/* JPQL
+</span><span style="color:#75715e">    select m.username,
+</span><span style="color:#75715e">        case when m.age&gt;=60 then 600
+</span><span style="color:#75715e">            when m.age&lt;=15 then 500
+</span><span style="color:#75715e">            else 1000
+</span><span style="color:#75715e">        end
+</span><span style="color:#75715e">    from Member m
+</span><span style="color:#75715e">*/</span>
+
+Root<span style="color:#f92672">&lt;</span>Member<span style="color:#f92672">&gt;</span> m <span style="color:#f92672">=</span> cq<span style="color:#f92672">.</span><span style="color:#a6e22e">from</span><span style="color:#f92672">(</span>Member<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+cq<span style="color:#f92672">.</span><span style="color:#a6e22e">multiselect</span><span style="color:#f92672">(</span>
+    m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;username&#34;</span><span style="color:#f92672">),</span>
+    cb<span style="color:#f92672">.</span><span style="color:#a6e22e">selectCase</span><span style="color:#f92672">()</span>
+        <span style="color:#f92672">.</span><span style="color:#a6e22e">when</span><span style="color:#f92672">(</span>cb<span style="color:#f92672">.</span><span style="color:#a6e22e">ge</span><span style="color:#f92672">(</span>m<span style="color:#f92672">.&lt;</span>Integer<span style="color:#f92672">&gt;</span>get<span style="color:#f92672">(</span>Hagen<span style="color:#f92672">),</span> 60<span style="color:#f92672">),</span> 600<span style="color:#f92672">)</span>
+        <span style="color:#f92672">.</span><span style="color:#a6e22e">when</span><span style="color:#f92672">(</span>cb<span style="color:#f92672">.</span><span style="color:#a6e22e">le</span><span style="color:#f92672">(</span>m<span style="color:#f92672">.&lt;</span>Integer<span style="color:#f92672">&gt;</span>get<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;age&#34;</span><span style="color:#f92672">),</span> 15<span style="color:#f92672">),</span> 500<span style="color:#f92672">)</span>
+        <span style="color:#f92672">.</span><span style="color:#a6e22e">otherwise</span><span style="color:#f92672">(</span>1000<span style="color:#f92672">));</span>
+</code></pre></div><h2 id="동적-쿼리">동적 쿼리</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">//검색 조건
+</span><span style="color:#75715e"></span>Integer age <span style="color:#f92672">=</span> 10<span style="color:#f92672">;</span>
+String username <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>String teamName <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;팀A&#34;</span><span style="color:#f92672">;</span>
+
+<span style="color:#75715e">//JPQL 동적 쿼리 생성
+</span><span style="color:#75715e"></span>StringBuilder jpql <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuilder<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;select m from Member m join m.team t&#34;</span><span style="color:#f92672">);</span>
+List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> criteria <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;();</span>
+<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>age <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> criteria<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34; m.age = :age &#34;</span><span style="color:#f92672">);</span>
+<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>username <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> criteria<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span> <span style="color:#e6db74">&#34;m.username = :username &#34;</span><span style="color:#f92672">);</span>
+<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>teamName <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> criteria<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34; t.name = :teamName &#34;</span><span style="color:#f92672">);</span>
+<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>criteria<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()</span> <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> jpql<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34; where &#34;</span><span style="color:#f92672">);</span>
+
+<span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> criteria<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">();</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> jpql<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34; and &#34;</span><span style="color:#f92672">);</span>
+    jpql<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>criter丄a<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>i<span style="color:#f92672">));</span>
+<span style="color:#f92672">}</span>
+
+TypedQuery<span style="color:#f92672">&lt;</span>Member<span style="color:#f92672">&gt;</span> query <span style="color:#f92672">=</span> em<span style="color:#f92672">.</span><span style="color:#a6e22e">createQuery</span><span style="color:#f92672">(</span>jpql<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">(),</span> Member<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>age <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> query<span style="color:#f92672">.</span><span style="color:#a6e22e">setParameter</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;age&#34;</span><span style="color:#f92672">,</span> age<span style="color:#f92672">);</span>
+<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>username <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> query<span style="color:#f92672">.</span><span style="color:#a6e22e">setParameter</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;username&#34;</span><span style="color:#f92672">,</span> username<span style="color:#f92672">);</span>
+<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>teamName <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> query<span style="color:#f92672">.</span><span style="color:#a6e22e">setParameter</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;teamName&#34;</span><span style="color:#f92672">,</span> teamName<span style="color:#f92672">);</span>
+List<span style="color:#f92672">&lt;</span>Member<span style="color:#f92672">&gt;</span> resultList <span style="color:#f92672">=</span> query<span style="color:#f92672">.</span><span style="color:#a6e22e">getResultList</span><span style="color:#f92672">();</span>
+</code></pre></div><h2 id="criteria-메타-모델-api">Criteria 메타 모델 API</h2>
+<p>Criteria는 코드 기반이므로 컴파일 시점에 오류를 발견할 수 있다. 하지만 m.get(“age”)에서 age는 문자다. ‘age’대신에 실수로 ’ageaaa’ 이렇게 잘못 적어도 컴파일 시점에 에러를 발견하지 못한다. 따라서 완전한 코드 기반이라 할 수 없다. 이런 부분까지 코드로 작성하려면 메타 모델 API를 사용하면 된다.</p>
+<ul>
+<li>
+<p>메타 모델 API 적용 전</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">cq<span style="color:#f92672">.</span><span style="color:#a6e22e">select</span><span style="color:#f92672">(</span>m<span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">where</span><span style="color:#f92672">(</span>cb<span style="color:#f92672">.</span><span style="color:#a6e22e">gt</span><span style="color:#f92672">(</span>m<span style="color:#f92672">.&lt;</span>Integer<span style="color:#960050;background-color:#1e0010">〉</span>get<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;username&#34;</span><span style="color:#f92672">),</span> 20<span style="color:#f92672">))</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">orderBy</span><span style="color:#f92672">(</span>cb<span style="color:#f92672">.</span><span style="color:#a6e22e">desc</span><span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;age&#34;</span><span style="color:#f92672">)));</span>
+</code></pre></div></li>
+<li>
+<p>메타 모델 API 적용 후</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">cq<span style="color:#f92672">.</span><span style="color:#a6e22e">select</span><span style="color:#f92672">(</span>m<span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">where</span><span style="color:#f92672">(</span>cb<span style="color:#f92672">.</span><span style="color:#a6e22e">gt</span><span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>Member_<span style="color:#f92672">.</span><span style="color:#a6e22e">age</span><span style="color:#f92672">),</span> 20<span style="color:#f92672">))</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">orderBy</span><span style="color:#f92672">(</span>cb<span style="color:#f92672">.</span><span style="color:#a6e22e">desc</span><span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>Member_<span style="color:#f92672">.</span><span style="color:#a6e22e">age</span><span style="color:#f92672">)));</span>
+</code></pre></div></li>
+</ul>
+<h1 id="querydsl">QueryDSL</h1>
+<p>Criteria의 가장 큰 단점은 너무 복잡하고 어렵다는 것이다. QueryDSL도 Criteria처럼 JPQL 빌더 역할을 하는데 JPA Criteria를 대체할 수 있다.</p>
+<h2 id="검색-조건-쿼리">검색 조건 쿼리</h2>
+<p>쿼리 작성이 끝나고 결과 조회 메소드를 호출하면 실제 데이터베이스를 조회한다. 대표적인 결과 조회 메소드는 다음과 같다.</p>
+<ul>
+<li><code>uniqueResult()</code> : 조회 결과가 한 건일 때 사용한다. 조회 결과가 없으면 null을 반환하고 결과가 하나 이상이면 <code>NonUniqueResultException</code> 예외가 발생한다.</li>
+<li><code>singleResult()</code> : <code>uniqueResult()</code>와 같지만 결과가 하나 이상이면 처음 데이터를 반환한다.</li>
+<li><code>list()</code> : 결과가 하나 이상일 때 사용한다. 결과가 없으면 빈 컬렉션을 반환한다.</li>
+</ul>
+<h2 id="페이징과-정렬">페이징과 정렬</h2>
+<p>실제 페이징 처리를 하려면 검색된 전체 데이터 수를 알아야 한다. 이때는 list() 대신에 listResults()를 사용한다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">SearchResults<span style="color:#f92672">&lt;</span>Item<span style="color:#f92672">&gt;</span> result <span style="color:#f92672">=</span> query<span style="color:#f92672">.</span><span style="color:#a6e22e">from</span><span style="color:#f92672">(</span>item<span style="color:#f92672">)</span>
+        <span style="color:#f92672">.</span><span style="color:#a6e22e">where</span><span style="color:#f92672">(</span>item<span style="color:#f92672">.</span><span style="color:#a6e22e">price</span><span style="color:#f92672">.</span><span style="color:#a6e22e">gt</span><span style="color:#f92672">(</span>10000<span style="color:#f92672">))</span>
+        <span style="color:#f92672">.</span><span style="color:#a6e22e">offset</span><span style="color:#f92672">(</span>10<span style="color:#f92672">).</span><span style="color:#a6e22e">limit</span><span style="color:#f92672">(</span>20<span style="color:#f92672">)</span>
+        <span style="color:#f92672">.</span><span style="color:#a6e22e">listResults</span><span style="color:#f92672">(</span>item<span style="color:#f92672">);</span>
+
+<span style="color:#66d9ef">long</span> total <span style="color:#f92672">=</span> result<span style="color:#f92672">.</span><span style="color:#a6e22e">getTotal</span><span style="color:#f92672">();</span> <span style="color:#75715e">//검색된 전체 데이터 수
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">long</span> limit <span style="color:#f92672">=</span> result<span style="color:#f92672">.</span><span style="color:#a6e22e">getLimit</span><span style="color:#f92672">();</span>
+<span style="color:#66d9ef">long</span> offset <span style="color:#f92672">=</span> result<span style="color:#f92672">.</span><span style="color:#a6e22e">getOffset</span><span style="color:#f92672">();</span>
+List<span style="color:#f92672">&lt;</span>Item<span style="color:#f92672">&gt;</span> results <span style="color:#f92672">=</span> result<span style="color:#f92672">.</span><span style="color:#a6e22e">getResults</span><span style="color:#f92672">();</span> <span style="color:#75715e">//조회된 데이터
+</span></code></pre></div><h2 id="서브-쿼리-1">서브 쿼리</h2>
+<p>서브 쿼리의 결과가 하나면 unique(), 여러 건이면 list()를 사용할 수 있다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">QItem item <span style="color:#f92672">=</span> QItem<span style="color:#f92672">.</span><span style="color:#a6e22e">item</span><span style="color:#f92672">;</span>
+QItem itemSub <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> QItem<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;itemSub&#34;</span><span style="color:#f92672">);</span>
+query<span style="color:#f92672">.</span><span style="color:#a6e22e">from</span><span style="color:#f92672">(</span>item<span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">where</span><span style="color:#f92672">(</span>item<span style="color:#f92672">.</span><span style="color:#a6e22e">price</span><span style="color:#f92672">.</span><span style="color:#a6e22e">eq</span><span style="color:#f92672">(</span>
+        <span style="color:#66d9ef">new</span> JPASubQuery<span style="color:#f92672">()</span>
+				<span style="color:#f92672">.</span><span style="color:#a6e22e">from</span><span style="color:#f92672">(</span>itemSub<span style="color:#f92672">)</span>
+				<span style="color:#f92672">.</span><span style="color:#a6e22e">unique</span><span style="color:#f92672">(</span>itemSub<span style="color:#f92672">.</span><span style="color:#a6e22e">price</span><span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">())))</span>
+		<span style="color:#f92672">.</span><span style="color:#a6e22e">list</span><span style="color:#f92672">(</span>item<span style="color:#f92672">);</span>
+
+QItem item <span style="color:#f92672">=</span> QItem<span style="color:#f92672">.</span><span style="color:#a6e22e">item</span><span style="color:#f92672">;</span>
+QItem itemSub <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> QItem<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;itemSub&#34;</span><span style="color:#f92672">);</span>
+query<span style="color:#f92672">.</span><span style="color:#a6e22e">from</span><span style="color:#f92672">(</span>item<span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">where</span><span style="color:#f92672">(</span>item<span style="color:#f92672">.</span><span style="color:#a6e22e">in</span><span style="color:#f92672">(</span>
+        <span style="color:#66d9ef">new</span> JPASubQuery<span style="color:#f92672">().</span><span style="color:#a6e22e">from</span><span style="color:#f92672">(</span>itemSub<span style="color:#f92672">)</span>
+            <span style="color:#f92672">.</span><span style="color:#a6e22e">where</span><span style="color:#f92672">(</span>item<span style="color:#f92672">.</span> name<span style="color:#f92672">.</span><span style="color:#a6e22e">eq</span><span style="color:#f92672">(</span>itemSub<span style="color:#f92672">.</span> name<span style="color:#f92672">))</span>
+            <span style="color:#f92672">.</span><span style="color:#a6e22e">list</span><span style="color:#f92672">(</span>itemSub<span style="color:#f92672">)))</span>
+		<span style="color:#f92672">.</span><span style="color:#a6e22e">list</span><span style="color:#f92672">(</span>item<span style="color:#f92672">);</span>
+</code></pre></div><h2 id="여러-컬럼-반환과-튜플">여러 컬럼 반환과 튜플</h2>
+<p>프로젝션 대상으로 여러 필드를 선택하면 QueryDSL은 기본으로 Tuple이라는 Map과 비슷한 내부 타입을 사용한다. 조회 결과는 tuple.get() 메소드에 조회한 쿼리 타입을 지정하면 된다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">QItem item <span style="color:#f92672">=</span> QItem<span style="color:#f92672">.</span><span style="color:#a6e22e">item</span><span style="color:#f92672">;</span>
+List<span style="color:#f92672">&lt;</span>Tuple<span style="color:#f92672">&gt;</span> result <span style="color:#f92672">=</span> query<span style="color:#f92672">.</span><span style="color:#a6e22e">from</span><span style="color:#f92672">(</span>item<span style="color:#f92672">).</span><span style="color:#a6e22e">list</span><span style="color:#f92672">(</span>item<span style="color:#f92672">.</span><span style="color:#a6e22e">name</span><span style="color:#f92672">,</span> item<span style="color:#f92672">,</span> price<span style="color:#f92672">);</span>
+<span style="color:#75715e">//List&lt;Tuple&gt; result = query.from(item).list(new QTuple(item.name, item.price));//같다.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Tuple tuple <span style="color:#f92672">:</span> result<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;name = &#34;</span> <span style="color:#f92672">+</span> tuple<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>item<span style="color:#f92672">.</span><span style="color:#a6e22e">name</span><span style="color:#f92672">));</span>
+    System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;price = &#34;</span> <span style="color:#f92672">+</span> tuple<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>item<span style="color:#f92672">.</span><span style="color:#a6e22e">price</span><span style="color:#f92672">));</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h2 id="빈-생성">빈 생성</h2>
+<p>쿼리 결과를 엔티티가 아닌 특정 객체로 받고 싶으면 빈 생성(Bean population)기능을 사용한다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">QItem item <span style="color:#f92672">=</span> QItem<span style="color:#f92672">.</span><span style="color:#a6e22e">item</span><span style="color:#f92672">;</span>
+List<span style="color:#f92672">&lt;</span>ItemDTO<span style="color:#f92672">&gt;</span> result <span style="color:#f92672">=</span> query<span style="color:#f92672">.</span><span style="color:#a6e22e">from</span><span style="color:#f92672">(</span>item<span style="color:#f92672">).</span><span style="color:#a6e22e">list</span><span style="color:#f92672">(</span>
+    Projections<span style="color:#f92672">.</span><span style="color:#a6e22e">bean</span><span style="color:#f92672">(</span>ItemDTO<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">,</span> item<span style="color:#f92672">.</span><span style="color:#a6e22e">name</span><span style="color:#f92672">.</span><span style="color:#a6e22e">as</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;username&#34;</span><span style="color:#f92672">),</span> item<span style="color:#f92672">.</span><span style="color:#a6e22e">price</span><span style="color:#f92672">));</span>
+</code></pre></div><h2 id="동적-쿼리-1">동적 쿼리</h2>
+<p>BooleanBuilder를 사용하면 특정 조건에 따른 동적 쿼리를 편리하게 생성할 수 있다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">SearchParam param <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> SearchParam<span style="color:#f92672">();</span>
+param<span style="color:#f92672">.</span><span style="color:#a6e22e">setName</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;시골개발자&#34;</span><span style="color:#f92672">);</span>
+param<span style="color:#f92672">.</span><span style="color:#a6e22e">setPrice</span><span style="color:#f92672">(</span>10000<span style="color:#f92672">);</span>
+QItem item <span style="color:#f92672">=</span> QItem<span style="color:#f92672">.</span><span style="color:#a6e22e">item</span><span style="color:#f92672">;</span>
+BooleanBuilder builder <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BooleanBuilder<span style="color:#f92672">();</span>
+
+<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>StringUtils<span style="color:#f92672">.</span><span style="color:#a6e22e">hasText</span><span style="color:#f92672">(</span>param<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">()))</span> <span style="color:#f92672">{</span>
+    builder<span style="color:#f92672">.</span><span style="color:#a6e22e">and</span><span style="color:#f92672">(</span>item<span style="color:#f92672">.</span><span style="color:#a6e22e">name</span><span style="color:#f92672">.</span><span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span>param<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">()));</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>param<span style="color:#f92672">.</span><span style="color:#a6e22e">getPrice</span><span style="color:#f92672">()</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    builder<span style="color:#f92672">.</span><span style="color:#a6e22e">and</span><span style="color:#f92672">(</span>item<span style="color:#f92672">.</span><span style="color:#a6e22e">price</span><span style="color:#f92672">.</span><span style="color:#a6e22e">gt</span><span style="color:#f92672">(</span>param<span style="color:#f92672">.</span><span style="color:#a6e22e">getPrice</span><span style="color:#f92672">()));</span>
+<span style="color:#f92672">}</span>
+
+List<span style="color:#f92672">&lt;</span>Item<span style="color:#f92672">&gt;</span> result <span style="color:#f92672">=</span> query<span style="color:#f92672">.</span><span style="color:#a6e22e">from</span><span style="color:#f92672">(</span>item<span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">where</span><span style="color:#f92672">(</span>builder<span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">list</span><span style="color:#f92672">(</span>item<span style="color:#f92672">);</span>
+</code></pre></div><h2 id="메소드-위임">메소드 위임</h2>
+<p>메소드 위임기능을 사용하면 쿼리 타입에 검색 조건을 직접 정의할 수 있다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ItemExpression</span> <span style="color:#f92672">{</span>
+    <span style="color:#a6e22e">@QueryDelegate</span><span style="color:#f92672">(</span>Item<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> BooleanExpression <span style="color:#a6e22e">isExpensive</span><span style="color:#f92672">(</span>Qltem item<span style="color:#f92672">,</span> Integer price<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> item<span style="color:#f92672">.</span><span style="color:#a6e22e">price</span><span style="color:#f92672">.</span><span style="color:#a6e22e">gt</span><span style="color:#f92672">(</span>price<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>메소드 위임 기능을 사용하려면 위와 같이 정적 메소드를 만들고 QueryDeldate 어노테이션에 속성으로 이 기능을 적용할 엔티티를 지정한다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">query<span style="color:#f92672">.</span><span style="color:#a6e22e">from</span><span style="color:#f92672">(</span>item<span style="color:#f92672">).</span><span style="color:#a6e22e">where</span><span style="color:#f92672">(</span>item<span style="color:#f92672">.</span><span style="color:#a6e22e">isExpensive</span><span style="color:#f92672">(</span>30000<span style="color:#f92672">)).</span><span style="color:#a6e22e">list</span><span style="color:#f92672">(</span>item<span style="color:#f92672">);</span>
+</code></pre></div><h1 id="네이티브-sql">네이티브 SQL</h1>
+<p>JPQL은 표준 SQL이 지원하는 대부분의 문법과 SQL 함수들을 지원하지만 특정 데이터베이스에 종속적인 기능은 지원하지 않는다.</p>
+<ul>
+<li>특정 데이터베이스만 지원하는 함수, 문법, SQL 쿼리 힌트</li>
+<li>인라인 뷰, UNION, INTERSECT</li>
+<li>스토어드 프로시저</li>
+</ul>
+<p>특정 데이터베이스에 종속적인 기능을 지원하는 방법은 다음과 같다.</p>
+<h3 id="특정-데이터베이스만-사용하는-함수">특정 데이터베이스만 사용하는 함수</h3>
+<ul>
+<li>JPQL에서 네이티브 SQL 함수를 호출할 수 있다.</li>
+<li>하이버네이트는 데이터베이스 방언에 각 데이터베이스에 종속적인 함수들을 정의해두었다. 또한 직접 호출할 함수를 정의할 수도 있다.</li>
+</ul>
+<h3 id="특정-데이터베이스만-지원하는-sql-쿼리-힌트">특정 데이터베이스만 지원하는 SQL 쿼리 힌트</h3>
+<ul>
+<li>하이버네이트를 포함한 몇몇 JPA 구현체들이 지원한다.</li>
+</ul>
+<h3 id="인라인-뷰from-절에서-사용하는-서브쿼리-union-intersect">인라인 뷰(From 절에서 사용하는 서브쿼리), UNION, INTERSECT</h3>
+<ul>
+<li>하이버네이트는 지원하지 않지만 일부 JPA 구현체들이 지원한다.</li>
+</ul>
+<h3 id="스토어-프로시저">스토어 프로시저</h3>
+<ul>
+<li>JPQL에서 스토어드 프로시저를 호출할 수 있다.</li>
+</ul>
+<h3 id="특정-데이터베이스만-지원하는-문법">특정 데이터베이스만 지원하는 문법</h3>
+<ul>
+<li>오라클의 CONNECT BY처럼 특정 데이터베이스에 너무 종속적인 SQL 문법은 지원하지는 않는다. 이때는 네이티브 SQL을 사용해야 한다.</li>
+</ul>
+<h2 id="네이티브-sql과-jdbc의-차이는-무엇일까">네이티브 SQL과 JDBC의 차이는 무엇일까?</h2>
+<p>네이티브 SQL을 사용하면 엔티티를 조회할 수 있고 JPA가 지원하는 영속성 컨텍스트의 기능을 그대로 사용할 수 있다. 반면에 JDBC API를 직접 사용하면 단순히 데이터의 나열을 조회할 뿐이다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">//SQL 정의
+</span><span style="color:#75715e"></span>
+String sql <span style="color:#f92672">=</span>
+		<span style="color:#e6db74">&#34;SELECT M.ID, AGE, NAME, TEAM_ID, I.ORDER_COUNT &#34;</span> <span style="color:#f92672">+</span>
+    <span style="color:#e6db74">&#34;FROM MEMBER M &#34;</span> <span style="color:#f92672">+</span>
+    <span style="color:#e6db74">&#34;LEFT JOIN &#34;</span> <span style="color:#f92672">+</span>
+    <span style="color:#e6db74">&#34;(SELECT IM.ID, COUNT(*) AS ORDER_COUNT &#34;</span> <span style="color:#f92672">+</span>
+    <span style="color:#e6db74">&#34;FROM ORDERS 0, MEMBER IM &#34;</span> <span style="color:#f92672">+</span>
+    <span style="color:#e6db74">&#34;WHERE O.MEMBER_ID = IM.ID) I &#34;</span> <span style="color:#f92672">+</span>
+    <span style="color:#e6db74">&#34;ON M.ID = I.ID&#34;</span><span style="color:#f92672">;</span>
+
+Query nativeQuery <span style="color:#f92672">=</span> em<span style="color:#f92672">.</span><span style="color:#a6e22e">createNativeQuery</span><span style="color:#f92672">(</span>sql<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;memberWithOrderCount&#34;</span><span style="color:#f92672">);</span>
+
+List<span style="color:#f92672">&lt;</span>Object<span style="color:#f92672">[]&gt;</span> resultList <span style="color:#f92672">=</span> nativeQuery<span style="color:#f92672">.</span><span style="color:#a6e22e">getResultList</span><span style="color:#f92672">();</span>
+<span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Object<span style="color:#f92672">[]</span> row <span style="color:#f92672">:</span> resultList<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    Member member <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>Member<span style="color:#f92672">)</span> row<span style="color:#f92672">[</span>0<span style="color:#f92672">];</span>
+    Biginteger orderCount <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>Biginteger<span style="color:#f92672">)</span>row<span style="color:#f92672">[</span>1<span style="color:#f92672">];</span>
+    System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">printin</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;member = &#34;</span> <span style="color:#f92672">+</span> member<span style="color:#f92672">);</span>
+    System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">printin</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;orderCount = &#34;</span> <span style="color:#f92672">+</span> orderCount<span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p><code>memberWithOrderCount</code>의 결과 매핑을 잘 보면 회원 엔티티와 ORDER_COUNT 컬럼을 매핑했다. 예제 10.109에서 사용한 쿼리 결과에서 ID, AGE, NAME, TEAM_ID는 Member 엔티티와 매핑하고 ORDER_COUNT는 단순히 값으로 매핑한다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Entity</span>
+<span style="color:#a6e22e">@SqlResultSetMapping</span><span style="color:#f92672">(</span>name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;memberWithOrderCount&#34;</span><span style="color:#f92672">,</span>
+    entities <span style="color:#f92672">=</span> <span style="color:#f92672">{</span><span style="color:#a6e22e">@EntityResult</span><span style="color:#f92672">(</span>ent丄tyClass <span style="color:#f92672">=</span> Member<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)},</span>
+    columns <span style="color:#f92672">=</span> <span style="color:#f92672">{</span><span style="color:#a6e22e">@ColumnResult</span><span style="color:#f92672">(</span>name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;ORDER_COUNT&#34;</span><span style="color:#f92672">)})</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Member</span> <span style="color:#f92672">{...}</span>
+</code></pre></div><p>네이티브 SQL은 관리하기 쉽지 않고 자주 사용하면 특정 데이터베이스에 종속적인 쿼리가 증가해서 이식성이 떨어진다.</p>
+<h1 id="객체지향-쿼리-심화">객체지향 쿼리 심화</h1>
+<p>한 번에 여러 데이터를 수정할 수 있는 벌크 연산에 대해 알아보고 다음으로 JPQL과 영속성 컨텍스트에 대해 다뤄보자.</p>
+<h2 id="벌크-연산">벌크 연산</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">String qlString <span style="color:#f92672">=</span>
+    <span style="color:#e6db74">&#34;update Product p &#34;</span> <span style="color:#f92672">+</span>
+    <span style="color:#e6db74">&#34;set p.price = p.price * 1.1 &#34;</span> <span style="color:#f92672">+</span>
+    <span style="color:#e6db74">&#34;where p.stockAmount &lt; :stockAmount&#34;</span><span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">int</span> resultcount <span style="color:#f92672">=</span> em<span style="color:#f92672">.</span><span style="color:#a6e22e">createQuery</span><span style="color:#f92672">(</span>qlString<span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">setParameter</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;stockAmount&#34;</span><span style="color:#f92672">,</span> 10<span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">executeUpdate</span><span style="color:#f92672">();</span>
+</code></pre></div><p>벌크 연산은 <code>executeUpdate()</code> 메소드를 사용한다. 이 메소드는 벌크 연산으로 영향을 받은 엔티티 건수를 반환한다.</p>
+<h2 id="벌크-연산의-주의점">벌크 연산의 주의점</h2>
+<p>벌크 연산을 사용할 때는 벌크 연산이 영속성 컨텍스트를 무시하고 데이터베이스에 직접 쿼리한다는 점에 주의해야 한다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">//상품A 조회(상품A의 가격은 1000원이다. ) --- 1
+</span><span style="color:#75715e"></span>Product productA <span style="color:#f92672">=</span>
+    em<span style="color:#f92672">.</span><span style="color:#a6e22e">createQuery</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;select p from Product p where p.name = :name&#34;</span><span style="color:#f92672">,</span> Product<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
+        <span style="color:#f92672">.</span><span style="color:#a6e22e">setParameter</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;productA&#34;</span><span style="color:#f92672">)</span>
+        <span style="color:#f92672">.</span><span style="color:#a6e22e">getSingleResult</span><span style="color:#f92672">();</span>
+
+<span style="color:#75715e">//출력 결과: 1000
+</span><span style="color:#75715e"></span>System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">printin</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;productA 수정 전 = &#34;</span> <span style="color:#f92672">+</span> productA<span style="color:#f92672">.</span><span style="color:#a6e22e">getPrice</span> <span style="color:#f92672">());</span>
+
+<span style="color:#75715e">//벌크연산 수행으로 모든 상품 가격 10% 상승 --- 2
+</span><span style="color:#75715e"></span>em<span style="color:#f92672">.</span><span style="color:#a6e22e">createQuery</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;update Product p set p.price = p.price * 1.1&#34;</span><span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">executeUpdate</span><span style="color:#f92672">();</span>
+
+<span style="color:#75715e">//출력 결과: 1000 --- 3
+</span><span style="color:#75715e"></span>System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">printin</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;productA 수정 후 = &#34;</span> <span style="color:#f92672">+</span> productA<span style="color:#f92672">.</span><span style="color:#a6e22e">getPrice</span><span style="color:#f92672">());</span>
+</code></pre></div><ol>
+<li>가격이 1000원인 상품A를 조회했다. 조회된 상품A는 영속성 컨텍스트에서 관리된다.</li>
+<li>벌크 연산으로 모든 상품의 가격을 10% 상승시켰다. 따라서 상품A의 가격은 1100원이 되어야 한다.</li>
+<li>벌크 연산을 수행한 후에 상품A의 가격을 출력하면 기대했던 1100원이 아니라 1000원이 출력된다.</li>
+</ol>
+<p>벌크 연산은 영속성 컨텍스트를 통하지 않고 데이터베이스에 직접 쿼리한다. 따라서 영속성 컨텍스트에 있는 상품A와 데이터베이스에 있는 상품A의 가격이 다를 수 있다.</p>
+<h2 id="이를-해결할-수-있는-다양한-방법이-있다">이를 해결할 수 있는 다양한 방법이 있다.</h2>
+<h3 id="emrefresh-사용">em.refresh() 사용</h3>
+<p>벌크 연산을 수행한 직후에 정확한 상품A 엔티티를 사용해야 한다면 em.refresh() 를 사용해서 데이터베이스에서 상품A를 다시 조회하면 된다.</p>
+<h3 id="벌크-연산-먼저-실행">벌크 연산 먼저 실행</h3>
+<p>가장 실용적인 해결책은 벌크 연산을 가장 먼저 실행하는 것이다.</p>
+<h3 id="벌크-연산-수행후-영속성-컨텍스트-초기화">벌크 연산 수행후 영속성 컨텍스트 초기화</h3>
+<p>벌크 연산을 수행한 직후에 바로 영속성 컨텍스트를 초기화해서 영속성 컨텍스트에 남아 있는 엔티티를 제거하는 것도 좋은 방법이다.</p>
+<h2 id="영속성-컨텍스트와-jpql">영속성 컨텍스트와 JPQL</h2>
+<p>JPQL로 데이터베이스에서 조회한 엔티티가 영속성 컨텍스트에 이미 있으면 JPQL로 데이터베이스에서 조회한 결과를 버리고 대신에 영속성 컨텍스트에 있던 엔티티를 반환한다.</p>
+<h3 id="기존-엔티티를-새로운-엔티티로-대체하면-어떤-문제가-있을까">기존 엔티티를 새로운 엔티티로 대체하면 어떤 문제가 있을까?</h3>
+<ol>
+<li>새로운 엔티티를 영속성 컨텍스트에 하나 더 추가한다.</li>
+<li>기존 엔티티를 새로 검색한 엔티티로 대체한다.</li>
+<li>기존 엔티티는 그대로 두고 새로 검색한 엔티티를 버린다.</li>
+</ol>
+<p>영속성 컨텍스트는 기본 키 값을 기준으로 엔티티를 관리한다. 따라서 같은 기본키 값을 가진 엔티티는 등록할 수 없으므로 1번은 아니다. 2번은 언뜻 보면 합리적인 것 같지만, 영속성 컨텍스트에 수정 중인 데이터가 사라질 수 있으므로 위험하다. 영속성 컨텍스트는 엔티티의 동일성을 보장한다. 따라서 영속성 컨텍스트는 3번으로 동작한다.</p>
+<p>영속성 컨텍스트는 영속 상태인 엔티티의 동일성을 보장한다. em.find()로 조회하든 JPQL을 사용하든 영속성 컨텍스트가 같으면 동일한 엔티티를 반환한다.</p>
+<h2 id="jpql과-플러시-모드">JPQL과 플러시 모드</h2>
+<p>JPQL을 실행하기 전에 영속성 컨텍스트의 내용을 데이터베이스에 반영해야 한다. 그렇지 않으면 의도하지 않은 결과가 발생할 수 있다. 만약 쿼리 실행 전에 플러시를 호출하고 싶으면 em.flush()를 수동으로 플러시 하거나 아니면 setFlushMode()로 해당 쿼리에서만 사용할 플러시 모드를 AUTO로 변경하면 된다.</p>
+<h2 id="정리">정리</h2>
+<ul>
+<li>JPQL은 SQL을 추상화해서 특정 데이터베이스 기술에 의존하지 않는다.</li>
+<li>Criteria나 QueryDSL은 JPQL을 만들어주는 빌더 역할을 할 뿐이므로 핵심은 JPQL을 잘 알아야 한다.</li>
+<li>Criteria나 QueryDSL을 사용하면 동적으로 변하는 쿼리를 편리하게 작성할 수 있다.</li>
+<li>Criteria는 JPA가 공식 지원하는 기능이지만 직관적이지 않고 사용하기에 불편하다. 반면에 QueryDSL은 JPA가 공식 지원하는 기능은 아니지만 직관적이고 편리하다.</li>
+<li>JPA도 네이티브 SQL을 제공하므로 직접 SQL을 사용할 수 있다. 하지만 특정 데이터베이스에 종속적인 SQL을 사용하면 다른 데이터베이스로 변경하기 쉽지 않다. 따라서 최대한 JPQL을 사용하고 그래도 방법이 없을 때 네이티브 SQL을 사용하자</li>
+<li>JPQL은 대량에 데이터를 수정하거나 삭제하는 벌크 연산을 지원한다.</li>
+</ul>
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="https://ddd4117.github.io/tags/spring/">Spring</a>
+
+  <a class="tag tag--primary tag--small" href="https://ddd4117.github.io/tags/jpa/">JPA</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/04/jpa-9%EC%9E%A5-%EA%B0%92-%ED%83%80%EC%9E%85/" data-tooltip="[JPA] 9장 - 값 타입">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+            
+              
+                <script src="https://utteranc.es/client.js"
+        repo="ddd4117/ddd4117.github.com"
+        issue-term="[ENTER TERM HERE]"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2021 <a href="https://github.com/ddd4117">1o2o3o</a>. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="5">
+        <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/04/jpa-9%EC%9E%A5-%EA%B0%92-%ED%83%80%EC%9E%85/" data-tooltip="[JPA] 9장 - 값 타입">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="5">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://ddd4117.github.io/images/profile.jpg" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">1o2o3o</h4>
+    
+      <div id="about-card-bio">마구잡이 코딩맨</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        SW developer
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        Korea
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://ddd4117.github.io/images/cover.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
+
+
+<script src="https://ddd4117.github.io/js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js"></script>
+
+
+<script lang="javascript">
+window.onload = updateMinWidth;
+window.onresize = updateMinWidth;
+document.getElementById("sidebar").addEventListener("transitionend", updateMinWidth);
+function updateMinWidth() {
+  var sidebar = document.getElementById("sidebar");
+  var main = document.getElementById("main");
+  main.style.minWidth = "";
+  var w1 = getComputedStyle(main).getPropertyValue("min-width");
+  var w2 = getComputedStyle(sidebar).getPropertyValue("width");
+  var w3 = getComputedStyle(sidebar).getPropertyValue("left");
+  main.style.minWidth = `calc(${w1} - ${w2} - ${w3})`;
+}
+</script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = 'https:\/\/ddd4117.github.io\/2021\/04\/jpa-10%EC%9E%A5-%EA%B0%9D%EC%B2%B4%EC%A7%80%ED%96%A5-%EC%BF%BC%EB%A6%AC%EC%96%B8%EC%96%B4\/';
+          
+            this.page.identifier = '\/2021\/04\/jpa-10%EC%9E%A5-%EA%B0%9D%EC%B2%B4%EC%A7%80%ED%96%A5-%EC%BF%BC%EB%A6%AC%EC%96%B8%EC%96%B4\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'hyuntae';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+
+    
+  </body>
+</html>
+
