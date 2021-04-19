@@ -13,20 +13,20 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="[OS] 3장 - Process">
-<meta name="twitter:title" content="[OS] 3장 - Process">
-<meta property="og:url" content="https://ddd4117.github.io/2021/04/os-3%EC%9E%A5-process/">
-<meta property="twitter:url" content="https://ddd4117.github.io/2021/04/os-3%EC%9E%A5-process/">
+<meta property="og:title" content="[OS] 4장 - 프로세스 관리">
+<meta name="twitter:title" content="[OS] 4장 - 프로세스 관리">
+<meta property="og:url" content="https://ddd4117.github.io/2021/04/os-4%EC%9E%A5-%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4-%EA%B4%80%EB%A6%AC/">
+<meta property="twitter:url" content="https://ddd4117.github.io/2021/04/os-4%EC%9E%A5-%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4-%EA%B4%80%EB%A6%AC/">
 <meta property="og:site_name" content="1o2o3o&#39;s Tech Blog">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2021-04-12T20:48:52">
+    <meta property="article:published_time" content="2021-04-19T22:03:56">
   
   
-    <meta property="article:modified_time" content="2021-04-12T20:48:52">
+    <meta property="article:modified_time" content="2021-04-19T22:03:56">
   
   
   
@@ -64,7 +64,7 @@
   <meta property="twitter:image" content="https://ddd4117.github.io/images/profile.jpg">
 
 
-    <title>[OS] 3장 - Process - 1o2o3o&#39;s Tech Blog</title>
+    <title>[OS] 4장 - 프로세스 관리 - 1o2o3o&#39;s Tech Blog</title>
 	<script data-ad-client="ca-pub-7778071856226172" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 
     <link rel="icon" href="https://ddd4117.github.io/images/favicon.png">
@@ -72,7 +72,7 @@
 
     
 
-    <link rel="canonical" href="https://ddd4117.github.io/2021/04/os-3%EC%9E%A5-process/">
+    <link rel="canonical" href="https://ddd4117.github.io/2021/04/os-4%EC%9E%A5-%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4-%EA%B4%80%EB%A6%AC/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -255,15 +255,15 @@ if (!doNotTrack) {
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      [OS] 3장 - Process
+      [OS] 4장 - 프로세스 관리
     </h1>
   
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2021-04-12T20:48:52&#43;09:00">
+      <time itemprop="datePublished" datetime="2021-04-19T22:03:56&#43;09:00">
         
-  April 12, 2021
+  April 19, 2021
 
       </time>
     
@@ -282,228 +282,232 @@ if (!doNotTrack) {
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="3장---process">3장 - Process</h1>
-<p>프로세스는 실행중인 프로그램이다.</p>
+              <h1 id="4장---프로세스-관리">4장 - 프로세스 관리</h1>
+<h2 id="프로세스-생성">프로세스 생성</h2>
 <ul>
 <li>
-<p>프로세스의 문맥(Context)</p>
-<ul>
-<li>Context란 특정 시점을 잘라놓고 봤을 때 현재 시점을 규명하기 위한 상태를 의미한다</li>
-<li>CPU 수행 상태를 나타내는 하드웨어 문맥
-<ul>
-<li>Program Counter</li>
-<li>각종 Register</li>
-</ul>
-</li>
-<li>프로그램의 주소 공간
-<ul>
-<li>code, data, stack</li>
-</ul>
-</li>
-<li>프로세스 관련 커널 자료 구조
-<ul>
-<li>PCB(Process Control Block)
-<ul>
-<li>운영체제 역할 중 하나가 프로세스를 관리하는 것인데, 프로세스가 생길 때 관리하기 위한 데이터 영역</li>
-</ul>
-</li>
-<li>Kernel stack
-<ul>
-<li>각 프로세스가 운영체제에 대신 요청한 일을 kernel stack에서 실행 함</li>
-<li>커널 스택은 프로세스마다 별도로 가지고 있음</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p>현대의 컴퓨터 시스템은 Time sharing, Multi tasking이므로 프로세스의 내용을 백업해놓지 않으면 다음 process가 실행 될 때 다음 시점의 instruction을 실행할 수 없기 때문</p>
-<h2 id="프로세스의-상태process-state">프로세스의 상태(Process State)</h2>
-<p><img src="https://user-images.githubusercontent.com/28971015/114367166-22cb4780-9bb7-11eb-814b-f1f4ab697fe0.png" alt="https://user-images.githubusercontent.com/28971015/114367166-22cb4780-9bb7-11eb-814b-f1f4ab697fe0.png"></p>
-<ul>
-<li>Running
-<ul>
-<li>CPU를 잡고 instruction을 수행중인 상태</li>
-</ul>
-</li>
-<li>Ready
-<ul>
-<li>CPU를 기다리는 상태</li>
-<li>모든 준비가 끝나있고 CPU만 얻으면 되는 상태</li>
-<li>보통은 Ready에 있는 Process가 번갈아 실행되는 형태</li>
-</ul>
-</li>
-<li>Blocked(wait, sleep)
-<ul>
-<li>CPU를 줘도 instrcution을 실행 못하는 상태</li>
-<li>code가 메모리에 올라와 있지 않고 디스크에 있을 경우</li>
-</ul>
-</li>
-</ul>
-<p>번외로 New, Terminated가 있음</p>
-<p><img src="https://user-images.githubusercontent.com/28971015/114367472-7047b480-9bb7-11eb-9c2b-96cc94ca6b55.png" alt="https://user-images.githubusercontent.com/28971015/114367472-7047b480-9bb7-11eb-9c2b-96cc94ca6b55.png"></p>
-<p>프로세스의 상태</p>
-<ul>
-<li>
-<p>공유데이터를 여러 프로세스가 접근하면 일관성이 깨질 수 있음</p>
+<p>부모 프로세스가 자식 프로세스 생성</p>
 </li>
 <li>
-<p>오래 기다리는 작업이 필요하면 blocked</p>
+<p>부모의 context를 복사함을 의미</p>
+<p>→ 부모의 code, stack, data를 그대로 복사하여 생성
+→ cpu에서 instruction을 어디까지 수행하였는가(Program counter)</p>
 </li>
 <li>
-<p>놀이동산에 가서 줄 기다리는 것과 비슷함</p>
+<p>프로세스의 트리(계층 구조) 형성</p>
 </li>
 <li>
-<p>CPU는 타는 것은 짧지만 기다리는 것은 긴 롤러코스터와 비슷</p>
+<p>프로세스는 자원을 필요로 함</p>
+<ul>
+<li>운영체제로부터 받음</li>
+<li>부모와 공유</li>
+</ul>
 </li>
 <li>
-<p>Queue라는 것은 커널에 Data영역에 만들어 놓은 자료구조다</p>
-</li>
-</ul>
-<h2 id="process-control-block">Process Control Block</h2>
+<p>자원의 공유</p>
 <ul>
-<li>운영체제가 각 프로세스를 관리하기 위해 프로세스당 유지하는 정보</li>
-<li>구성 요소(구조체로 가짐)
+<li>부모와 자식이 모든 자원을 공유하는 모델
 <ul>
-<li>OS가 관리상 사용하는 정보
-<ul>
-<li>Process State, Process ID</li>
+<li>부모와 자식이 같은 메모리를 가지기 때문에 낭비가 됨</li>
+<li>효율성을 위해 PC(Program Counter)만 복사해 놓고 있다가 각자의 길을 갈 때(code, stack, data에서 변경이 일어 날 때) 복사함 → copy-on-write(COW) 기법</li>
+<li>write가 발생하기 전까진 공유하겠다라는 생각</li>
+<li>하지만 원칙은 서로 다른 프로세스는 독립적으로 메모리 공간을 가져야 함</li>
 </ul>
 </li>
-<li>CPU 수행 관련 하드웨어 값
-<ul>
-<li>Program Counter, Registers</li>
+<li>일부를 공유하는 모델</li>
+<li><strong>전혀 공유하지 않는 모델 → 일반적인 모델</strong></li>
 </ul>
 </li>
-<li>메모리 관련
+<li>
+<p>수행</p>
 <ul>
-<li>Code, Data, Stack의 위치정보</li>
+<li>부모와 자식이 공존하며 수행되는 모델</li>
+<li>자식이 종료될 때까지 기다리는 모델</li>
 </ul>
 </li>
-<li>파일 관련
+<li>
+<p>주소 공간(Address Space)</p>
 <ul>
-<li>Open file descriptors</li>
+<li>자식은 부모의 공간을 복사함(binary and OS data)</li>
+<li>자식은 그 공간에 새로운 프로그램을 올림</li>
 </ul>
 </li>
+<li>
+<p>유닉스의 예</p>
+<ul>
+<li><code>fork()</code>
+<ul>
+<li>프로세스를 복제하는 과정</li>
+<li>부모를 그대로 복사(OS data except PID + binary)</li>
+<li>주소 공간 할당</li>
 </ul>
 </li>
-</ul>
-<h2 id="문맥-교환context-switch">문맥 교환(Context Switch)</h2>
+<li><code>exec()</code>
 <ul>
-<li>CPU를 한 프로세스에서 다른 프로세스로 넘겨주는 과정</li>
-<li>CPU가 다른 프로세스에게 넘어갈 때 운영체제는 다음 과정을 수행
-<ul>
-<li>CPU를 내어주는 프로세스의 상태를 그 프로세스의 PCB에 저장(save)</li>
-<li>CPU를 새롭게 얻는 프로세스의 상태를 PCB에서 읽어옴(load)</li>
-</ul>
-</li>
-</ul>
-<p><img src="https://user-images.githubusercontent.com/28971015/114384973-5cf21480-9bca-11eb-83cb-7414b022ba9e.png" alt="https://user-images.githubusercontent.com/28971015/114384973-5cf21480-9bca-11eb-83cb-7414b022ba9e.png"></p>
-<ul>
-<li>System call이나 interrupt가 발생했을 때 반드시 context switch가 일어나는 것은 아님</li>
-<li>사용자 Process에서 OS Process로 넘어가는 것은 context switch가 아님</li>
-<li>A process에서 B process로 넘어가야 context switch가 발생했다고 하는 것</li>
-<li>timer interrupt는 보통 다른 프로세스로 넘길 때 사용하는 것</li>
-<li>(1)의 경우에도 context의 일부를 PCB에 저장하지만, (2)의 경우 그 부담이 더 큼(cache memory flush 등), A → B로 넘어갈 때 cache memory를 비워야 함</li>
+<li>새로운 프로그램을 메모리에 올림</li>
+<li>자식을 생성하지 않고 <code>exec()</code> 을 하면 현재 프로세스가 새로운 프로그램이 될 수 도있음</li>
 </ul>
 </li>
 </ul>
-<h2 id="queue의-종류">Queue의 종류</h2>
+<p><strong>프로세스 생성은 보통 fork() + exec() 임</strong></p>
+</li>
+</ul>
+<h2 id="프로세스-종료">프로세스 종료</h2>
 <ul>
-<li>Job Queue
+<li><code>exit()</code>
 <ul>
-<li>현재 시스템 내에 있는 모든 프로세스의 집합</li>
-<li>Ready Queue와 Device Queue를 포함함</li>
+<li>프로세스가 마지막 명령을 수행한 후 운영체제에게 이를 알려 줌</li>
+<li>자식이 부모에게 output data를 보냄(via <code>wait</code>).</li>
+<li>프로세스의 각종 자원들이 운영체제에게 반납 됨</li>
 </ul>
 </li>
-<li>Ready Queue
+<li><code>abort()</code>
 <ul>
-<li>현재 메모리 내에 있으면서 CPU를 잡아서 실행되기를 기다리는 프로세스의 집합</li>
-</ul>
-</li>
-<li>Device Queue
+<li>부모 프로세스가 자식의 수행을 종료시킴</li>
+<li>자식이 할당 자원의 한계치를 넘어섬</li>
+<li>자식에게 할당된 task가 더 이상 필요하지 않음</li>
+<li>부모가 종료(exit)하는 경우
 <ul>
-<li>I/O device의 처리를 기다리는 프로세스의 집합</li>
-</ul>
-</li>
-<li>Interrupt가 발생할 때 ready queue에서 기다리는 것처럼 표현 되었지만 사실은 ready queue에 들어가지는 않음(뒷 장에 나옴)</li>
-</ul>
-<p><img src="https://user-images.githubusercontent.com/28971015/114386107-c0307680-9bcb-11eb-9991-d8401e8f58a3.png" alt="https://user-images.githubusercontent.com/28971015/114386107-c0307680-9bcb-11eb-9991-d8401e8f58a3.png"></p>
-<h2 id="스케쥴러scheduler">스케쥴러(Scheduler)</h2>
-<ul>
-<li>Long-term scheduler
-<ul>
-<li>프로세스가 생성되었을 때 memory에 올릴지 말지 결정하는 스케줄러</li>
-<li>프로세스에 memory를 주는 문제</li>
-<li>time sharing system에는 보통 장기 스케줄러가 없음(무조건 ready)
-<ul>
-<li>100개 실행시키면 100개다 켜짐</li>
-<li>medium-term scheduler를 사용함</li>
-</ul>
-</li>
-<li>degree of Multi-Programming을 제어(메모리에 프로그램이 몇 개 올라가 있는가)</li>
-</ul>
-</li>
-<li>Short-term scheduler(CPU scheduler)
-<ul>
-<li>ms 단위</li>
-<li>어떤 프로세스를 다음번에 실행할지 결정</li>
-</ul>
-</li>
-<li>Medium-term scheduler(Swapper)
-<ul>
-<li>메모리에 너무 많은 프로그램이 올라가 있으면 메모리에서 쫓아냄</li>
-<li>프로세스에게서 memory를 뺏는 문제</li>
-<li>degree of Multiprogramming을 제어</li>
-<li>Swapper때문에 Suspended라는 상태가 생김
-<ul>
-<li>외부적인 이유로 프로세스의 수행이 정지된 상태</li>
-<li>프로세스는 통째로 디스크에 swap out됨</li>
+<li>운영체제는 부모 프로세스가 종료하는 경우 자식이 더 이상 수행되도록 두지 않음</li>
+<li>단계적 종료(맨 아래 자식 → 자식 → 자신순)</li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
-<p>Blocked : 자신이 요청한 event가 만족되면 Ready</p>
-<p>Suspended : 외부에서 Resume해 주어야 Active</p>
-<p><img src="https://user-images.githubusercontent.com/28971015/114387582-96784f00-9bcd-11eb-969b-fa8ac2664452.png" alt="https://user-images.githubusercontent.com/28971015/114387582-96784f00-9bcd-11eb-969b-fa8ac2664452.png"></p>
-<p>동기식 입출력과 비동기식 입출력</p>
+<h2 id="fork-시스템-콜">fork() 시스템 콜</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(){
+	<span style="color:#66d9ef">int</span> pid;
+	pid <span style="color:#f92672">=</span> fork();
+	<span style="color:#66d9ef">if</span>(pid <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>)
+		printf(<span style="color:#e6db74">&#34;child&#34;</span>);
+	<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span>(pid <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>)
+		printf(<span style="color:#e6db74">&#34;parent&#34;</span>);
+}
+</code></pre></div><ul>
+<li><code>fork()</code>를 실행한 이후 부터 분기가 되고 그 다음 시점 부터 실행이 됨
 <ul>
-<li>어떤 프로세스가 입출력 OS에 요청 입출력이 끝날 때까지 아무것도 안하면 동기식 입출력</li>
-<li>입출력 요청을하고 다른 일을 하면 비동기식 입출력</li>
-</ul>
-<h2 id="thread">Thread</h2>
-<ul>
-<li>쓰레드는 프로스세 내부의 CPU 수행 단위</li>
-<li>thread마다 PC와 register, stack이 존재 함</li>
-<li>PC를 통해 각 thread는 어떤 명령어를 처리하고 있는지 알 수 있음</li>
-<li>공유 하는 부분 code section, data section, OS resources</li>
-</ul>
-<h2 id="thread의-장점">Thread의 장점</h2>
-<ul>
-<li>응답성 : thread 하나가 blocked(waiting) 상태일 때 다른 thread가 실행(running)하여 응답속도를 높일 수 있음</li>
-<li>동일한 일을 수행하는 다중 thread가 협력하여 높은 처리율(throughput)과 성능 향상을 얻을 수 있음</li>
-<li>병렬성을 높일 수 있음</li>
-<li>자원 공유</li>
-<li>경제성 : 생성/CPU switching의 경우 overhead가 줄어듬(생성 30배, switching 5배)</li>
-<li>Multi Processor일때 유용성</li>
-</ul>
-<h2 id="구현-방법">구현 방법</h2>
-<ul>
-<li>Kernel에서 지원하는 방법
-<ul>
-<li>커널의 지원을 받음</li>
+<li>그 이유는 부모의 context를 복제하기 때문에 같은 instruction을 보고 있음</li>
 </ul>
 </li>
-<li>Library에서 제공하는 방법
+<li>부모/자식을 구분은 <code>fork()</code> 의 return 값을 통해 구분
 <ul>
-<li>커널이 모름</li>
-<li>POSIX</li>
+<li>부모 : 양수 값(자식의 pid값)</li>
+<li>자식 : 0</li>
 </ul>
 </li>
 </ul>
-<h2 id="참고-자료">참고 자료</h2>
+<h2 id="exec-시스템-콜">exec() 시스템 콜</h2>
+<ul>
+<li>replaces the memory image of the caller with a new program</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(){
+	<span style="color:#66d9ef">int</span> pid;
+	pid <span style="color:#f92672">=</span> fork();
+	<span style="color:#66d9ef">if</span>(pid <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>)
+		execlp(<span style="color:#e6db74">&#34;/bin/data&#34;</span>, <span style="color:#e6db74">&#34;/bin/data&#34;</span>, (<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span>) <span style="color:#ae81ff">0</span>);
+	<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span>(pid <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>)
+		printf(<span style="color:#e6db74">&#34;parent&#34;</span>);
+}
+
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(){
+	printf(<span style="color:#e6db74">&#34;1&#34;</span>);
+	execlp(<span style="color:#e6db74">&#34;echo&#34;</span>, <span style="color:#e6db74">&#34;echo&#34;</span>, <span style="color:#e6db74">&#34;hello&#34;</span>, <span style="color:#e6db74">&#34;3&#34;</span>, (<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span>) <span style="color:#ae81ff">0</span>);
+	printf(<span style="color:#e6db74">&#34;2&#34;</span>);
+}
+
+<span style="color:#75715e">//결과
+</span><span style="color:#75715e"></span><span style="color:#ae81ff">1</span>
+hello <span style="color:#ae81ff">3</span>
+
+<span style="color:#75715e">/* 참고 execlp()
+</span><span style="color:#75715e">int execlp( const char *file, const char *arg, ...);
+</span><span style="color:#75715e">1. 명령어 또는 실행할 파일 명
+</span><span style="color:#75715e">2. 프로그램 명령어 부터 parameter 전달
+</span><span style="color:#75715e">3. 마지막은 NULL로 전달
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">execlp(&#34;ls&#34;, &#34;ls&#34;, &#34;-al&#34;, NULL);
+</span><span style="color:#75715e">*/</span>
+</code></pre></div><ul>
+<li><code>exec()</code>을 하고 끝나면 다시 돌아올 수 없음</li>
+<li><code>exec()</code>은 꼭 <code>fork()</code>를 하지 않고 실행해도 됨</li>
+</ul>
+<h2 id="wait-시스템-콜">wait() 시스템 콜</h2>
+<ul>
+<li>커널은 child가 종료될 때까지 프로세스 A를 sleep 시킨다(block 상태)</li>
+<li>Child process가 종료되면 커널은 프로세스 A를 깨운다(ready 상태)</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/28971015/115235661-642e9a80-a155-11eb-83c6-88d9f053499b.png" alt="https://user-images.githubusercontent.com/28971015/115235661-642e9a80-a155-11eb-83c6-88d9f053499b.png"></p>
+<h2 id="exit-시스템-콜">exit() 시스템 콜</h2>
+<ul>
+<li>
+<p>자발적 종료</p>
+<ul>
+<li>마지막 statement 수행 후 exit() 시스템 콜을 통해 프로그램에 명시적으로 적어주지 않아도 main 함수가 return 되는 위치에 컴파일러가 넣어 줌</li>
+</ul>
+</li>
+<li>
+<p>비자발적 종료</p>
+<ul>
+<li>부모 프로세스가 자식 프로세스를 강제 종료시킴
+<ul>
+<li>자식 프로세스가 한계치를 넘어서는 자원 요청</li>
+<li>자식에게 할당된 task가 더 이상 필요없을 경우</li>
+</ul>
+</li>
+<li>kill, break 등을 친 경우</li>
+<li>부모가 종료되는 경우
+<ul>
+<li>부모 프로세스가 종료되기 전에 자식들이 먼저 종료</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><code>?</code> : frees all the resuorces, notify parent</p>
+</li>
+<li>
+<p><code>?</code> : overlay new image</p>
+</li>
+<li>
+<p><code>?</code> : sleep until child is done</p>
+</li>
+<li>
+<p><code>?</code> : create a child(copy)</p>
+</li>
+</ul>
+<h2 id="프로세스-간-협력">프로세스 간 협력</h2>
+<ul>
+<li>독립적 프로세스(Independent Process)</li>
+<li>협력 프로세스(Cooperating Process)</li>
+<li>프로세스 간 협력 메커니즘(IPC : Inter-Process Communication)
+<ul>
+<li>
+<p>Message Passing</p>
+<ul>
+<li>커널을 통해 메시지 전달</li>
+<li>프로세스 사이에 공유 변수(shared variable)를 일체 사용하지 않고 통신</li>
+<li>Direct Communication : 통신하려는 프로세스의 이름을 명시적으로 표시</li>
+<li>Indirect Communication : mailbox(or port)를 통해 메시지를 간접 전달</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/28971015/115238025-2c752200-a158-11eb-90d4-8bbb1b6938fc.png" alt="https://user-images.githubusercontent.com/28971015/115238025-2c752200-a158-11eb-90d4-8bbb1b6938fc.png"></p>
+</li>
+<li>
+<p>Shared Memory</p>
+<ul>
+<li>서로 다른 프로세스 간에도 일부 주소 공간을 공유하게 하는 메커니즘</li>
+<li>시작할 때 kernel에 공유 영역에 대한 도움을 받지만 그 뒤부터는 둘이서 작업을 함</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/28971015/115238080-3b5bd480-a158-11eb-8198-63e3e2e6a30a.png" alt="https://user-images.githubusercontent.com/28971015/115238080-3b5bd480-a158-11eb-8198-63e3e2e6a30a.png"></p>
+<p>⭐thread는 사실상 하나의 프로세스이므로 IPC라고 보기는 어렵지만 동일한 process를 구성하는 thread들 간에는 주소 공간을 공유하므로 협력이 가능</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="참고자료">참고자료</h2>
 <p>반효경 교수님의 운영체제 강의를 참고하였습니다.
-(<a href="https://core.ewha.ac.kr/publicview/C0101020140318134023355997?vmode=f">https://core.ewha.ac.kr/publicview/C0101020140318134023355997?vmode=f</a>)</p>
+(<a href="https://core.ewha.ac.kr/publicview/C0101020140318134023355997?vmode=f">https://core.ewha.ac.kr/publicview/C0101020140318134023355997?vmode=f</a>)
+<a href="https://ehpub.co.kr/tag/execlp/">https://ehpub.co.kr/tag/execlp/</a></p>
               
             </div>
           </div>
@@ -532,7 +536,7 @@ if (!doNotTrack) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/04/jpa-5%EC%9E%A5-%EC%97%B0%EA%B4%80%EA%B4%80%EA%B3%84-%EB%A7%A4%ED%95%91/" data-tooltip="[JPA] 5장 - 연관관계 매핑">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/04/os-5%EC%9E%A5-cpu-%EC%8A%A4%EC%BC%80%EC%A5%B4%EB%A7%81/" data-tooltip="[OS] 5장 - CPU 스케쥴링">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -540,7 +544,7 @@ if (!doNotTrack) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/04/jpa-4%EC%9E%A5-%EB%A7%A4%ED%95%91/" data-tooltip="[JPA] 4장 - 매핑">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/04/jpa-10%EC%9E%A5-%EA%B0%9D%EC%B2%B4%EC%A7%80%ED%96%A5-%EC%BF%BC%EB%A6%AC%EC%96%B8%EC%96%B4/" data-tooltip="[JPA] 10장 - 객체지향 쿼리언어">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -604,7 +608,7 @@ if (!doNotTrack) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/04/jpa-5%EC%9E%A5-%EC%97%B0%EA%B4%80%EA%B4%80%EA%B3%84-%EB%A7%A4%ED%95%91/" data-tooltip="[JPA] 5장 - 연관관계 매핑">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/04/os-5%EC%9E%A5-cpu-%EC%8A%A4%EC%BC%80%EC%A5%B4%EB%A7%81/" data-tooltip="[OS] 5장 - CPU 스케쥴링">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -612,7 +616,7 @@ if (!doNotTrack) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/04/jpa-4%EC%9E%A5-%EB%A7%A4%ED%95%91/" data-tooltip="[JPA] 4장 - 매핑">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/04/jpa-10%EC%9E%A5-%EA%B0%9D%EC%B2%B4%EC%A7%80%ED%96%A5-%EC%BF%BC%EB%A6%AC%EC%96%B8%EC%96%B4/" data-tooltip="[JPA] 10장 - 객체지향 쿼리언어">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -740,9 +744,9 @@ $(document).ready(function() {
     
       <script>
         var disqus_config = function () {
-          this.page.url = 'https:\/\/ddd4117.github.io\/2021\/04\/os-3%EC%9E%A5-process\/';
+          this.page.url = 'https:\/\/ddd4117.github.io\/2021\/04\/os-4%EC%9E%A5-%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4-%EA%B4%80%EB%A6%AC\/';
           
-            this.page.identifier = '\/2021\/04\/os-3%EC%9E%A5-process\/'
+            this.page.identifier = '\/2021\/04\/os-4%EC%9E%A5-%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4-%EA%B4%80%EB%A6%AC\/'
           
         };
         (function() {

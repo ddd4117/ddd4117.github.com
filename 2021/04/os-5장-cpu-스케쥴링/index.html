@@ -13,20 +13,20 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="[OS] 3장 - Process">
-<meta name="twitter:title" content="[OS] 3장 - Process">
-<meta property="og:url" content="https://ddd4117.github.io/2021/04/os-3%EC%9E%A5-process/">
-<meta property="twitter:url" content="https://ddd4117.github.io/2021/04/os-3%EC%9E%A5-process/">
+<meta property="og:title" content="[OS] 5장 - CPU 스케쥴링">
+<meta name="twitter:title" content="[OS] 5장 - CPU 스케쥴링">
+<meta property="og:url" content="https://ddd4117.github.io/2021/04/os-5%EC%9E%A5-cpu-%EC%8A%A4%EC%BC%80%EC%A5%B4%EB%A7%81/">
+<meta property="twitter:url" content="https://ddd4117.github.io/2021/04/os-5%EC%9E%A5-cpu-%EC%8A%A4%EC%BC%80%EC%A5%B4%EB%A7%81/">
 <meta property="og:site_name" content="1o2o3o&#39;s Tech Blog">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2021-04-12T20:48:52">
+    <meta property="article:published_time" content="2021-04-19T22:03:58">
   
   
-    <meta property="article:modified_time" content="2021-04-12T20:48:52">
+    <meta property="article:modified_time" content="2021-04-19T22:03:58">
   
   
   
@@ -64,7 +64,7 @@
   <meta property="twitter:image" content="https://ddd4117.github.io/images/profile.jpg">
 
 
-    <title>[OS] 3장 - Process - 1o2o3o&#39;s Tech Blog</title>
+    <title>[OS] 5장 - CPU 스케쥴링 - 1o2o3o&#39;s Tech Blog</title>
 	<script data-ad-client="ca-pub-7778071856226172" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 
     <link rel="icon" href="https://ddd4117.github.io/images/favicon.png">
@@ -72,7 +72,7 @@
 
     
 
-    <link rel="canonical" href="https://ddd4117.github.io/2021/04/os-3%EC%9E%A5-process/">
+    <link rel="canonical" href="https://ddd4117.github.io/2021/04/os-5%EC%9E%A5-cpu-%EC%8A%A4%EC%BC%80%EC%A5%B4%EB%A7%81/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -255,15 +255,15 @@ if (!doNotTrack) {
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      [OS] 3장 - Process
+      [OS] 5장 - CPU 스케쥴링
     </h1>
   
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2021-04-12T20:48:52&#43;09:00">
+      <time itemprop="datePublished" datetime="2021-04-19T22:03:58&#43;09:00">
         
-  April 12, 2021
+  April 19, 2021
 
       </time>
     
@@ -282,226 +282,59 @@ if (!doNotTrack) {
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="3장---process">3장 - Process</h1>
-<p>프로세스는 실행중인 프로그램이다.</p>
+              <h1 id="5장---cpu-scheduling">5장 - CPU Scheduling</h1>
+<p><img src="https://user-images.githubusercontent.com/28971015/115238841-1ddb3a80-a159-11eb-9c1a-e880153ead73.png" alt="https://user-images.githubusercontent.com/28971015/115238841-1ddb3a80-a159-11eb-9c1a-e880153ead73.png"></p>
 <ul>
-<li>
-<p>프로세스의 문맥(Context)</p>
+<li>보통 프로그램은 CPU 작업과 IO작업이 번갈아 일어남</li>
+<li>CPU burst : CPU 작업이 연속적으로 실행되는 구간</li>
+<li>I/O burst : I/O작업이 연속적으로 실행되는 구간</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/28971015/115239253-7ca0b400-a159-11eb-8de8-7b8c816df889.png" alt="https://user-images.githubusercontent.com/28971015/115239253-7ca0b400-a159-11eb-8de8-7b8c816df889.png"></p>
 <ul>
-<li>Context란 특정 시점을 잘라놓고 봤을 때 현재 시점을 규명하기 위한 상태를 의미한다</li>
-<li>CPU 수행 상태를 나타내는 하드웨어 문맥
+<li>Interactive job에게 적절한 response 제공 요망</li>
+<li>CPU와 I/O 장치 등 시스템 자원을 골고루 효율적으로 사용</li>
+<li>여러 종류의 job(process)이 섞여 있기 때문에 CPU Scheduling이 필요함
 <ul>
-<li>Program Counter</li>
-<li>각종 Register</li>
+<li>CPU job은 문제가 되지 않으나, I/O job은 사람과 interactive하기 때문에 I/O job에게 cpu를 줘야 함</li>
 </ul>
 </li>
-<li>프로그램의 주소 공간
+<li>I/O Bound Process
 <ul>
-<li>code, data, stack</li>
+<li>CPU를 잡고 계산하는 시간보다 I/O에 많은 시간이 필요한 job</li>
+<li>many short CPU bursts</li>
 </ul>
 </li>
-<li>프로세스 관련 커널 자료 구조
+<li>CPU Bound Process
 <ul>
-<li>PCB(Process Control Block)
-<ul>
-<li>운영체제 역할 중 하나가 프로세스를 관리하는 것인데, 프로세스가 생길 때 관리하기 위한 데이터 영역</li>
-</ul>
-</li>
-<li>Kernel stack
-<ul>
-<li>각 프로세스가 운영체제에 대신 요청한 일을 kernel stack에서 실행 함</li>
-<li>커널 스택은 프로세스마다 별도로 가지고 있음</li>
+<li>계산 위주의 job</li>
+<li>few very long CPU bursts</li>
 </ul>
 </li>
 </ul>
-</li>
-</ul>
-<p>현대의 컴퓨터 시스템은 Time sharing, Multi tasking이므로 프로세스의 내용을 백업해놓지 않으면 다음 process가 실행 될 때 다음 시점의 instruction을 실행할 수 없기 때문</p>
-<h2 id="프로세스의-상태process-state">프로세스의 상태(Process State)</h2>
-<p><img src="https://user-images.githubusercontent.com/28971015/114367166-22cb4780-9bb7-11eb-814b-f1f4ab697fe0.png" alt="https://user-images.githubusercontent.com/28971015/114367166-22cb4780-9bb7-11eb-814b-f1f4ab697fe0.png"></p>
+<h2 id="cpu-scheduler--dispatcher">CPU Scheduler &amp; Dispatcher</h2>
 <ul>
-<li>Running
+<li>CPU Scheduler
 <ul>
-<li>CPU를 잡고 instruction을 수행중인 상태</li>
+<li>Ready 상태의 프로세스 중에서 이번에 CPU를 줄 프로세스를 고름</li>
+<li>운영체제 안에서 CPU Scheduling하는 코드</li>
 </ul>
 </li>
-<li>Ready
+<li>Dispatcher
 <ul>
-<li>CPU를 기다리는 상태</li>
-<li>모든 준비가 끝나있고 CPU만 얻으면 되는 상태</li>
-<li>보통은 Ready에 있는 Process가 번갈아 실행되는 형태</li>
+<li>CPU를 누구한테 줄지 결정을 했으면 실제로 주는 과정</li>
+<li>이 과정이 context switch</li>
 </ul>
 </li>
-<li>Blocked(wait, sleep)
+<li>CPU 스케쥴링이 필요한 경우
 <ul>
-<li>CPU를 줘도 instrcution을 실행 못하는 상태</li>
-<li>code가 메모리에 올라와 있지 않고 디스크에 있을 경우</li>
-</ul>
-</li>
-</ul>
-<p>번외로 New, Terminated가 있음</p>
-<p><img src="https://user-images.githubusercontent.com/28971015/114367472-7047b480-9bb7-11eb-9c2b-96cc94ca6b55.png" alt="https://user-images.githubusercontent.com/28971015/114367472-7047b480-9bb7-11eb-9c2b-96cc94ca6b55.png"></p>
-<p>프로세스의 상태</p>
-<ul>
-<li>
-<p>공유데이터를 여러 프로세스가 접근하면 일관성이 깨질 수 있음</p>
-</li>
-<li>
-<p>오래 기다리는 작업이 필요하면 blocked</p>
-</li>
-<li>
-<p>놀이동산에 가서 줄 기다리는 것과 비슷함</p>
-</li>
-<li>
-<p>CPU는 타는 것은 짧지만 기다리는 것은 긴 롤러코스터와 비슷</p>
-</li>
-<li>
-<p>Queue라는 것은 커널에 Data영역에 만들어 놓은 자료구조다</p>
-</li>
-</ul>
-<h2 id="process-control-block">Process Control Block</h2>
-<ul>
-<li>운영체제가 각 프로세스를 관리하기 위해 프로세스당 유지하는 정보</li>
-<li>구성 요소(구조체로 가짐)
-<ul>
-<li>OS가 관리상 사용하는 정보
-<ul>
-<li>Process State, Process ID</li>
-</ul>
-</li>
-<li>CPU 수행 관련 하드웨어 값
-<ul>
-<li>Program Counter, Registers</li>
-</ul>
-</li>
-<li>메모리 관련
-<ul>
-<li>Code, Data, Stack의 위치정보</li>
-</ul>
-</li>
-<li>파일 관련
-<ul>
-<li>Open file descriptors</li>
+<li>Running → Blocked (예: I/O 요청하는 시스템 콜) → nonpreemptive(자진 반납)</li>
+<li>Running → Ready (예: timer interrupt) → preemptive(강제로 빼앗음)</li>
+<li>Blocked → Ready (예: I/O 완료 후 interrupt) → preemptive</li>
+<li>Terminate → nonpreemptive</li>
 </ul>
 </li>
 </ul>
-</li>
-</ul>
-<h2 id="문맥-교환context-switch">문맥 교환(Context Switch)</h2>
-<ul>
-<li>CPU를 한 프로세스에서 다른 프로세스로 넘겨주는 과정</li>
-<li>CPU가 다른 프로세스에게 넘어갈 때 운영체제는 다음 과정을 수행
-<ul>
-<li>CPU를 내어주는 프로세스의 상태를 그 프로세스의 PCB에 저장(save)</li>
-<li>CPU를 새롭게 얻는 프로세스의 상태를 PCB에서 읽어옴(load)</li>
-</ul>
-</li>
-</ul>
-<p><img src="https://user-images.githubusercontent.com/28971015/114384973-5cf21480-9bca-11eb-83cb-7414b022ba9e.png" alt="https://user-images.githubusercontent.com/28971015/114384973-5cf21480-9bca-11eb-83cb-7414b022ba9e.png"></p>
-<ul>
-<li>System call이나 interrupt가 발생했을 때 반드시 context switch가 일어나는 것은 아님</li>
-<li>사용자 Process에서 OS Process로 넘어가는 것은 context switch가 아님</li>
-<li>A process에서 B process로 넘어가야 context switch가 발생했다고 하는 것</li>
-<li>timer interrupt는 보통 다른 프로세스로 넘길 때 사용하는 것</li>
-<li>(1)의 경우에도 context의 일부를 PCB에 저장하지만, (2)의 경우 그 부담이 더 큼(cache memory flush 등), A → B로 넘어갈 때 cache memory를 비워야 함</li>
-</ul>
-</li>
-</ul>
-<h2 id="queue의-종류">Queue의 종류</h2>
-<ul>
-<li>Job Queue
-<ul>
-<li>현재 시스템 내에 있는 모든 프로세스의 집합</li>
-<li>Ready Queue와 Device Queue를 포함함</li>
-</ul>
-</li>
-<li>Ready Queue
-<ul>
-<li>현재 메모리 내에 있으면서 CPU를 잡아서 실행되기를 기다리는 프로세스의 집합</li>
-</ul>
-</li>
-<li>Device Queue
-<ul>
-<li>I/O device의 처리를 기다리는 프로세스의 집합</li>
-</ul>
-</li>
-<li>Interrupt가 발생할 때 ready queue에서 기다리는 것처럼 표현 되었지만 사실은 ready queue에 들어가지는 않음(뒷 장에 나옴)</li>
-</ul>
-<p><img src="https://user-images.githubusercontent.com/28971015/114386107-c0307680-9bcb-11eb-9991-d8401e8f58a3.png" alt="https://user-images.githubusercontent.com/28971015/114386107-c0307680-9bcb-11eb-9991-d8401e8f58a3.png"></p>
-<h2 id="스케쥴러scheduler">스케쥴러(Scheduler)</h2>
-<ul>
-<li>Long-term scheduler
-<ul>
-<li>프로세스가 생성되었을 때 memory에 올릴지 말지 결정하는 스케줄러</li>
-<li>프로세스에 memory를 주는 문제</li>
-<li>time sharing system에는 보통 장기 스케줄러가 없음(무조건 ready)
-<ul>
-<li>100개 실행시키면 100개다 켜짐</li>
-<li>medium-term scheduler를 사용함</li>
-</ul>
-</li>
-<li>degree of Multi-Programming을 제어(메모리에 프로그램이 몇 개 올라가 있는가)</li>
-</ul>
-</li>
-<li>Short-term scheduler(CPU scheduler)
-<ul>
-<li>ms 단위</li>
-<li>어떤 프로세스를 다음번에 실행할지 결정</li>
-</ul>
-</li>
-<li>Medium-term scheduler(Swapper)
-<ul>
-<li>메모리에 너무 많은 프로그램이 올라가 있으면 메모리에서 쫓아냄</li>
-<li>프로세스에게서 memory를 뺏는 문제</li>
-<li>degree of Multiprogramming을 제어</li>
-<li>Swapper때문에 Suspended라는 상태가 생김
-<ul>
-<li>외부적인 이유로 프로세스의 수행이 정지된 상태</li>
-<li>프로세스는 통째로 디스크에 swap out됨</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p>Blocked : 자신이 요청한 event가 만족되면 Ready</p>
-<p>Suspended : 외부에서 Resume해 주어야 Active</p>
-<p><img src="https://user-images.githubusercontent.com/28971015/114387582-96784f00-9bcd-11eb-969b-fa8ac2664452.png" alt="https://user-images.githubusercontent.com/28971015/114387582-96784f00-9bcd-11eb-969b-fa8ac2664452.png"></p>
-<p>동기식 입출력과 비동기식 입출력</p>
-<ul>
-<li>어떤 프로세스가 입출력 OS에 요청 입출력이 끝날 때까지 아무것도 안하면 동기식 입출력</li>
-<li>입출력 요청을하고 다른 일을 하면 비동기식 입출력</li>
-</ul>
-<h2 id="thread">Thread</h2>
-<ul>
-<li>쓰레드는 프로스세 내부의 CPU 수행 단위</li>
-<li>thread마다 PC와 register, stack이 존재 함</li>
-<li>PC를 통해 각 thread는 어떤 명령어를 처리하고 있는지 알 수 있음</li>
-<li>공유 하는 부분 code section, data section, OS resources</li>
-</ul>
-<h2 id="thread의-장점">Thread의 장점</h2>
-<ul>
-<li>응답성 : thread 하나가 blocked(waiting) 상태일 때 다른 thread가 실행(running)하여 응답속도를 높일 수 있음</li>
-<li>동일한 일을 수행하는 다중 thread가 협력하여 높은 처리율(throughput)과 성능 향상을 얻을 수 있음</li>
-<li>병렬성을 높일 수 있음</li>
-<li>자원 공유</li>
-<li>경제성 : 생성/CPU switching의 경우 overhead가 줄어듬(생성 30배, switching 5배)</li>
-<li>Multi Processor일때 유용성</li>
-</ul>
-<h2 id="구현-방법">구현 방법</h2>
-<ul>
-<li>Kernel에서 지원하는 방법
-<ul>
-<li>커널의 지원을 받음</li>
-</ul>
-</li>
-<li>Library에서 제공하는 방법
-<ul>
-<li>커널이 모름</li>
-<li>POSIX</li>
-</ul>
-</li>
-</ul>
-<h2 id="참고-자료">참고 자료</h2>
+<h2 id="참고자료">참고자료</h2>
 <p>반효경 교수님의 운영체제 강의를 참고하였습니다.
 (<a href="https://core.ewha.ac.kr/publicview/C0101020140318134023355997?vmode=f">https://core.ewha.ac.kr/publicview/C0101020140318134023355997?vmode=f</a>)</p>
               
@@ -532,7 +365,7 @@ if (!doNotTrack) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/04/jpa-5%EC%9E%A5-%EC%97%B0%EA%B4%80%EA%B4%80%EA%B3%84-%EB%A7%A4%ED%95%91/" data-tooltip="[JPA] 5장 - 연관관계 매핑">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -540,7 +373,7 @@ if (!doNotTrack) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/04/jpa-4%EC%9E%A5-%EB%A7%A4%ED%95%91/" data-tooltip="[JPA] 4장 - 매핑">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/04/os-4%EC%9E%A5-%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4-%EA%B4%80%EB%A6%AC/" data-tooltip="[OS] 4장 - 프로세스 관리">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -604,7 +437,7 @@ if (!doNotTrack) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/04/jpa-5%EC%9E%A5-%EC%97%B0%EA%B4%80%EA%B4%80%EA%B3%84-%EB%A7%A4%ED%95%91/" data-tooltip="[JPA] 5장 - 연관관계 매핑">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -612,7 +445,7 @@ if (!doNotTrack) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/04/jpa-4%EC%9E%A5-%EB%A7%A4%ED%95%91/" data-tooltip="[JPA] 4장 - 매핑">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/04/os-4%EC%9E%A5-%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4-%EA%B4%80%EB%A6%AC/" data-tooltip="[OS] 4장 - 프로세스 관리">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -740,9 +573,9 @@ $(document).ready(function() {
     
       <script>
         var disqus_config = function () {
-          this.page.url = 'https:\/\/ddd4117.github.io\/2021\/04\/os-3%EC%9E%A5-process\/';
+          this.page.url = 'https:\/\/ddd4117.github.io\/2021\/04\/os-5%EC%9E%A5-cpu-%EC%8A%A4%EC%BC%80%EC%A5%B4%EB%A7%81\/';
           
-            this.page.identifier = '\/2021\/04\/os-3%EC%9E%A5-process\/'
+            this.page.identifier = '\/2021\/04\/os-5%EC%9E%A5-cpu-%EC%8A%A4%EC%BC%80%EC%A5%B4%EB%A7%81\/'
           
         };
         (function() {
