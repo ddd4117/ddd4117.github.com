@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="kr-ko">
+  <head>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.82.0 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="author" content="1o2o3o">
+<meta name="keywords" content="">
+<meta name="description" content="">
+
+
+<meta property="og:description" content="">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[JPA] 14장 - 컬렉션과 부가 기능">
+<meta name="twitter:title" content="[JPA] 14장 - 컬렉션과 부가 기능">
+<meta property="og:url" content="https://ddd4117.github.io/2021/04/jpa-14%EC%9E%A5-%EC%BB%AC%EB%A0%89%EC%85%98%EA%B3%BC-%EB%B6%80%EA%B0%80-%EA%B8%B0%EB%8A%A5/">
+<meta property="twitter:url" content="https://ddd4117.github.io/2021/04/jpa-14%EC%9E%A5-%EC%BB%AC%EB%A0%89%EC%85%98%EA%B3%BC-%EB%B6%80%EA%B0%80-%EA%B8%B0%EB%8A%A5/">
+<meta property="og:site_name" content="1o2o3o&#39;s Tech Blog">
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+<meta property="og:locale" content="en-us">
+
+  
+    <meta property="article:published_time" content="2021-04-23T15:44:49">
+  
+  
+    <meta property="article:modified_time" content="2021-04-23T15:44:49">
+  
+  
+  
+    
+      <meta property="article:section" content="Spring">
+    
+  
+  
+    
+      <meta property="article:tag" content="Spring">
+    
+      <meta property="article:tag" content="JPA">
+    
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://user-images.githubusercontent.com/28971015/113664175-3e7dac00-96e6-11eb-97f2-b143f4e60d4a.jpg">
+  <meta property="twitter:image" content="https://user-images.githubusercontent.com/28971015/113664175-3e7dac00-96e6-11eb-97f2-b143f4e60d4a.jpg">
+
+
+
+
+
+  <meta property="og:image" content="https://ddd4117.github.io/images/profile.jpg">
+  <meta property="twitter:image" content="https://ddd4117.github.io/images/profile.jpg">
+
+
+    <title>[JPA] 14장 - 컬렉션과 부가 기능 - 1o2o3o&#39;s Tech Blog</title>
+	<script data-ad-client="ca-pub-7778071856226172" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+    <link rel="icon" href="https://ddd4117.github.io/images/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://ddd4117.github.io/2021/04/jpa-14%EC%9E%A5-%EC%BB%AC%EB%A0%89%EC%85%98%EA%B3%BC-%EB%B6%80%EA%B0%80-%EA%B8%B0%EB%8A%A5/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css" integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
+    
+    
+    <link rel="stylesheet" href="https://ddd4117.github.io/css/style-twzjdbqhmnnacqs0pwwdzcdbt8yhv8giawvjqjmyfoqnvazl0dalmnhdkvp7.min.css" />
+    
+    
+
+    
+      
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LJYW9800LT"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-LJYW9800LT', { 'anonymize_ip': false });
+}
+</script>
+
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="5">
+ 
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LJYW9800LT"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-LJYW9800LT', { 'anonymize_ip': false });
+}
+</script>
+ 
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://ddd4117.github.io/">1o2o3o&#39;s Tech Blog</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://ddd4117.github.io/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="https://ddd4117.github.io/images/profile.jpg" alt="Author&#39;s picture" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="5">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://ddd4117.github.io/#about">
+          <img class="sidebar-profile-picture" src="https://ddd4117.github.io/images/profile.jpg" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">1o2o3o</h4>
+        
+          <h5 class="sidebar-profile-bio">마구잡이 코딩맨</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/categories/os">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-linux"></i>
+      
+      <span class="sidebar-button-desc">OS</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/categories/spring">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-linux"></i>
+      
+      <span class="sidebar-button-desc">spring</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/ddd4117" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/index.xml">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/#about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="5"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      [JPA] 14장 - 컬렉션과 부가 기능
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2021-04-23T15:44:49&#43;09:00">
+        
+  April 23, 2021
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://ddd4117.github.io/categories/spring">Spring</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              <h1 id="14장---컬렉션과-부가-기능">14장 - 컬렉션과 부가 기능</h1>
+<h2 id="컬렉션">컬렉션</h2>
+<p>JPA는 자바에서 기본으로 제공하는 Collection, List, Set, Map 컬렉션을 지원합니다.</p>
+<ul>
+<li><code>@OneToMany</code>, <code>@ManyToMany</code>, <code>@ElementCollection</code>에 사용</li>
+<li>Collection : 자바가 제공하는 최상위 컬렉션.
+<ul>
+<li>하이버네이트는 중복을 허용하고 순서를 보장하지 않는다고 가정한다.</li>
+</ul>
+</li>
+<li>Set : 중복을 허용하지 않는 컬렉션. 순서를 보장하지 않음.</li>
+<li>List : 순서가 있는 컬렉션. 순서를 보장하고 중복을 허용한다.</li>
+<li>Map : Key, Value 구조로 되어 있는 특수한 컬렉션</li>
+</ul>
+<h3 id="jpa와-컬렉션">JPA와 컬렉션</h3>
+<p>하이버네이트는 엔티티를 영속 상태로 만들 때 컬렉션 필드를 하이버네이트에서 준비한 컬렉션으로 감싸 사용한다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@OneToMany</span>
+<span style="color:#a6e22e">@JoinColumn</span>
+<span style="color:#66d9ef">private</span> Collection<span style="color:#f92672">&lt;</span>Member<span style="color:#f92672">&gt;</span> members <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span>Member<span style="color:#f92672">&gt;();</span>
+Team team <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Team<span style="color:#f92672">();</span>
+System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;before persist =&#34;</span> <span style="color:#f92672">+</span> team<span style="color:#f92672">.</span><span style="color:#a6e22e">getMembers</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getClass</span><span style="color:#f92672">());</span>
+em<span style="color:#f92672">.</span><span style="color:#a6e22e">persist</span><span style="color:#f92672">(</span>parent<span style="color:#f92672">);</span>
+Systme<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;after persist = &#34;</span> <span style="color:#f92672">+</span> team<span style="color:#f92672">.</span><span style="color:#a6e22e">getMembers</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getClass</span><span style="color:#f92672">());</span>
+
+<span style="color:#f92672">--&gt;</span>
+before persist <span style="color:#f92672">=</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">java</span><span style="color:#f92672">.</span><span style="color:#a6e22e">util</span><span style="color:#f92672">.</span><span style="color:#a6e22e">ArrayList</span>
+after persist <span style="color:#f92672">=</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">org</span><span style="color:#f92672">.</span><span style="color:#a6e22e">hibernate</span><span style="color:#f92672">.</span><span style="color:#a6e22e">collection</span><span style="color:#f92672">.</span><span style="color:#a6e22e">internal</span><span style="color:#f92672">.</span><span style="color:#a6e22e">PersistnetBag</span>
+</code></pre></div><ul>
+<li>ArrayList 타입이었던 컬렉션이 엔티티 영속 상태로 만든 직후 하이버네이트가 제공하는 PersistentBag 타입으로 변경되었다.</li>
+</ul>
+<p>즉 하이버네이트는 컬렉션을 효율적으로 관리하기 위해 엔티티를 영속 상태로 만들 때 원본 컬렉션을 깜싸고 있는 내장 컬렉션을 생성해서 이 내장 컬렉션을 사용하도록 참조를 변경한다.</p>
+<p>하이버네이트가 제공하는 내장 컬렉션은 원본 컬렉션을 감싸고 있어서 래퍼 컬렉션으로도 부른다. <code>Collection, List, Set, Map 모두 래퍼 컬렉션이 다르다.</code></p>
+<p>결과적으로 이런 특징 때문에 컬렉션을 사용할 때 초기화해서 사용하는 것을 권장한다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Collection<span style="color:#f92672">&lt;</span>Member<span style="color:#f92672">&gt;</span> members <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span>Member<span style="color:#f92672">&gt;();</span>
+</code></pre></div><p><strong>이제 Collection, List, Set, Map에 대한 래퍼 컬렉션에 대해서 알아보자.</strong></p>
+<hr>
+<h3 id="collection-list">Collection, List</h3>
+<ul>
+<li>내장 컬렉션 : PersistenceBag</li>
+<li>중복 허용 : O</li>
+<li>순서 보관 : X</li>
+<li>ArrayList로 초기화</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Entity</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Parent</span> <span style="color:#f92672">{</span>
+   <span style="color:#a6e22e">@Id</span> <span style="color:#a6e22e">@GeneratedValue</span>
+   <span style="color:#66d9ef">private</span> Long id<span style="color:#f92672">;</span>
+   
+   <span style="color:#a6e22e">@OneToMany</span>
+   <span style="color:#a6e22e">@JoinColumn</span>
+   <span style="color:#66d9ef">private</span> Collection<span style="color:#f92672">&lt;</span>CollectionChild<span style="color:#f92672">&gt;</span> collection <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span>CollectionChild<span style="color:#f92672">&gt;();</span>      <span style="color:#a6e22e">@OneToMany</span>   <span style="color:#a6e22e">@JoinColumn</span>   <span style="color:#66d9ef">private</span> List<span style="color:#f92672">&lt;</span>ListChild<span style="color:#f92672">&gt;</span> list <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span>ListChild<span style="color:#f92672">&gt;();}</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">   List<span style="color:#f92672">&lt;</span>Comment<span style="color:#f92672">&gt;</span> comments <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span>Comment<span style="color:#f92672">&gt;();</span>
+      <span style="color:#75715e">//단순히 추가만 한다. 결과는 항상 true다.
+</span><span style="color:#75715e"></span>   <span style="color:#66d9ef">boolean</span> result <span style="color:#f92672">=</span> commtents<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>data<span style="color:#f92672">)</span>
+   comments<span style="color:#f92672">.</span><span style="color:#a6e22e">contaions</span><span style="color:#f92672">(</span>comment<span style="color:#f92672">);</span> 
+   comments<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>comment<span style="color:#f92672">);</span>
+</code></pre></div><p>Collection, List는 엔티티를 추가할 때 중복된 엔티티가 있는지 비교하지 않고, 단순히 저장만 하면 된다. 따라서 엔티티를 추가해도 지연 로딩된 컬렉션을 초기화 하지 않는다.</p>
+<p>Q1. 왜 지연 로딩된 컬렉션을 초기화 하지 않을까?</p>
+<h3 id="list--ordercolumn">List + @OrderColumn</h3>
+<ul>
+<li>내장 컬렉션 : PersistentList</li>
+<li>중복 허용 : O</li>
+<li>순서 보관 : O</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"> <span style="color:#a6e22e">@Entity</span>
+ <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Board</span> <span style="color:#f92672">{</span>
+     
+   <span style="color:#a6e22e">@Id</span> <span style="color:#a6e22e">@GeneratedValue</span>
+   <span style="color:#66d9ef">private</span> Long id<span style="color:#f92672">;</span>
+   
+   <span style="color:#66d9ef">private</span> String title<span style="color:#f92672">;</span>
+   <span style="color:#66d9ef">private</span> String content<span style="color:#f92672">;</span>
+   
+   <span style="color:#a6e22e">@OneToMany</span><span style="color:#f92672">(</span>mappedBy <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;board&#34;</span><span style="color:#f92672">)</span>
+   <span style="color:#a6e22e">@OrderColumn</span><span style="color:#f92672">(</span>name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;POSITION&#34;</span><span style="color:#f92672">)</span>
+   <span style="color:#66d9ef">private</span> List<span style="color:#f92672">&lt;</span>Commnet<span style="color:#f92672">&gt;</span> comments <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span>Comment<span style="color:#f92672">&gt;();</span>
+         <span style="color:#f92672">...</span>
+<span style="color:#f92672">}</span>
+<span style="color:#a6e22e">@Entity</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Comment</span> <span style="color:#f92672">{</span>
+   <span style="color:#a6e22e">@Id</span> <span style="color:#a6e22e">@GeneratedValue</span>
+   <span style="color:#66d9ef">private</span> Long id<span style="color:#f92672">;</span>
+
+   <span style="color:#66d9ef">private</span> String comment<span style="color:#f92672">;</span>
+
+   <span style="color:#a6e22e">@ManyToOne</span>
+   <span style="color:#a6e22e">@JoinColumn</span><span style="color:#f92672">(</span>name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;BOARD_ID&#34;</span><span style="color:#f92672">)</span>
+   <span style="color:#66d9ef">private</span> Board board<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><ol>
+<li><code>Board.comments</code>에 List 인터페이스를 사용하고 <code>@OrderColumn</code>을 추가했다.</li>
+<li><code>Board.comments</code>는 순서가 있는 컬렉션으로 인식된다.</li>
+</ol>
+<p>자바가 제공하는 List 컬렉션은 내부에 위치 값을 가지고 있다. 따라서 다음 코드처럼 List의 위치 값을 활용할 수 있다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">   List<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>1<span style="color:#f92672">,</span>data1<span style="color:#f92672">);</span> <span style="color:#75715e">// 1번 위치에 data1을 저장하라.
+</span><span style="color:#75715e"></span>   List<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>10<span style="color:#f92672">);</span> <span style="color:#75715e">// 10번 위치에 있는 값을 조회하라.   
+</span></code></pre></div><p>순서가 있는 컬렉션은 데이터베이스에 순서 값도 함께 관리한다.</p>
+<p>즉 POSITION이라는 속성값이 바로 순서를 나타내는 순서값이다.</p>
+<p><img src="https://k.kakaocdn.net/dn/bG02et/btqEUFQ2vvb/3YBgaetEfWLTvieSN7krhk/img.png" alt="https://k.kakaocdn.net/dn/bG02et/btqEUFQ2vvb/3YBgaetEfWLTvieSN7krhk/img.png"></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Board board <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Board<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;제목1&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;내용1&#34;</span><span style="color:#f92672">);</span>
+em<span style="color:#f92672">.</span><span style="color:#a6e22e">persist</span><span style="color:#f92672">(</span>board<span style="color:#f92672">);</span>
+
+Comment comment1 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Comment<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;댓글1&#34;</span><span style="color:#f92672">);</span>
+comment1<span style="color:#f92672">.</span><span style="color:#a6e22e">setBoard</span><span style="color:#f92672">(</span>board<span style="color:#f92672">);</span>
+board<span style="color:#f92672">.</span><span style="color:#a6e22e">getComments</span><span style="color:#f92672">().</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>comment1<span style="color:#f92672">);</span> <span style="color:#75715e">//POSITION 0
+</span><span style="color:#75715e"></span>em<span style="color:#f92672">.</span><span style="color:#a6e22e">persist</span><span style="color:#f92672">(</span>comment1<span style="color:#f92672">);</span>
+
+Comment comment2 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Comment<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;댓글2&#34;</span><span style="color:#f92672">);</span>
+comment2<span style="color:#f92672">.</span><span style="color:#a6e22e">setBoard</span><span style="color:#f92672">(</span>board<span style="color:#f92672">);</span>
+board<span style="color:#f92672">.</span><span style="color:#a6e22e">getCOmments</span><span style="color:#f92672">().</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>comment2<span style="color:#f92672">);</span> <span style="color:#75715e">// POSITION 1
+</span><span style="color:#75715e"></span>em<span style="color:#f92672">.</span><span style="color:#a6e22e">persist</span><span style="color:#f92672">(</span>comment2<span style="color:#f92672">);</span> 
+</code></pre></div><p><code>@OrderColumn</code>을 사용해서 List의 위치 값을 보관하면 편리할 것 같지만 실무에서 사용하기에는 단점이 많다.</p>
+<ul>
+<li><code>@OrderColumn</code>을 Board 엔티티에서 매핑하므로 Comment는 position의 값을 알 수 없다. 그래서 Comment를 insert할 때는 position값이 저장되지 않는다.
+<ul>
+<li>position은 Board.comments의 위치 값이므로, 이 값을 사용해서 POSITION의 값을 UPDATE 하는 SQL이 추가로 발생한다.</li>
+</ul>
+</li>
+<li>List를 변경하면 연관된 많은 위치 값을 변경해야 한다.
+<ul>
+<li>댓글2를 삭제하면 댓글3, 댓글 4의 POSITION 값을 각각 하나씩 줄이는 UPDATE SQL이 2번 추가로 실행된다.</li>
+</ul>
+</li>
+<li>중간에 POSITION값이 없으면 조회한 LIST에는 null이 보관된다.
+<ul>
+<li><code>NullPointerException</code>이 발생한다.</li>
+</ul>
+</li>
+</ul>
+<p>이러한 단점을 가지고 있기 때문에 <code>@OrderColumn</code>을 매핑하지 말고 개발자가 직접 POSITION 값을 관리하거나 다음에 설명하는 <code>@OrderBy</code>를 사용하길 권장한다.</p>
+<h3 id="orderby">OrderBy</h3>
+<p><code>@OrderBy</code>는 데이터베이스의 ORDER BY절을 사용해서 컬렉션을 정렬한다.</p>
+<ul>
+<li>순서용 컬럼을 매핑하지 않아도 된다.</li>
+<li><code>@OrderBy</code>는 모든 컬렉션에 사용할 수 있다.</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Entity</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Team</span> <span style="color:#f92672">{</span>  
+    <span style="color:#a6e22e">@Id</span> <span style="color:#a6e22e">@GeneratedValue</span>
+    <span style="color:#66d9ef">private</span> Long id<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> String name<span style="color:#f92672">;</span>
+   
+    <span style="color:#a6e22e">@OneToMany</span><span style="color:#f92672">(</span>mappedBy <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;team&#34;</span><span style="color:#f92672">)</span>
+    <span style="color:#a6e22e">@OrderBy</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;username desc, id asc&#34;</span><span style="color:#f92672">)</span>
+    <span style="color:#66d9ef">private</span> Set<span style="color:#f92672">&lt;</span>Member<span style="color:#f92672">&gt;</span> members <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashSet<span style="color:#f92672">&lt;</span>Member<span style="color:#f92672">&gt;();</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p><code>@OrderBy</code>의 값으로 <code>username desc, id asc</code>를 사용해서 Member의 username 필드로 내림차순으로 정렬하고 id로 오름차순 정렬 했다.</p>
+<p><code>@OrderBy</code>의 값은 JPQL의 order by절처럼 엔티티의 필드를 대상으로 한다.</p>
+<p>추가로 하이버네이트는 Set에 <code>@OrderBy</code>를 적용해서 결과를 조회하면 순서를 유지하기 위해 HashSet 대신에 <code>LinkedHashSet</code>을 내부에서 사용한다.</p>
+<h2 id="리스너">리스너</h2>
+<p>모든 엔티티를 대상으로 언제 어떤 사용자가 삭제를 요청했는지 모두 로그로 남겨야 하는 요구사항이 있다.</p>
+<p>JPA 리스터 기능을 사용하면 엔티티의 생명주기에 따른 이벤트를 처리할 수 있다.</p>
+<h3 id="이벤트의-종류">이벤트의 종류</h3>
+<p><img src="https://k.kakaocdn.net/dn/tOvl4/btqEVXcxItQ/eomcVKxWEmkxFMJytldZz1/img.png" alt="https://k.kakaocdn.net/dn/tOvl4/btqEVXcxItQ/eomcVKxWEmkxFMJytldZz1/img.png"></p>
+<ol>
+<li>PostLoad
+<ul>
+<li>엔티티가 영속성 컨텍스트에 조회된 직후 또는 refresh를 호출 한 후(2차 캐시에 저장되어 있어도 호출된다.)</li>
+</ul>
+</li>
+<li>PrePsersist
+<ul>
+<li>persist() 메소드를 호출해서 엔티티를 영속성 컨텍스트에 관리하기 직전에 호출된다.
+<ul>
+<li>식별자 생성 전략을 사용한 경우 엔티티에 식별자는 아직 존재하지 않는다.</li>
+<li>새로운 인스턴스를 merge할 때도 수행된다.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>preUpdate
+<ul>
+<li>flush나 commit 호출해서 엔티티를 데이터베이스에 수정하기 직전에 호출된다.</li>
+</ul>
+</li>
+<li>PreRemove
+<ul>
+<li>remove() 메소드를 호출해서 엔티티를 영속성 컨텍스트에서 삭제하기 직전에 호출된다.</li>
+</ul>
+</li>
+<li>PostPersist
+<ul>
+<li>flush나 commit을 호출해서 엔티티를 데이터베이스에 저장한 직후에 호출된다.
+<ul>
+<li>식별자가 항상 존재한다.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>PostUpdate
+<ul>
+<li>flush나 commit을 호출해서 엔티티를 데이터베이스에 수정한 직후에 호출된다.</li>
+</ul>
+</li>
+<li>PostRemove
+<ul>
+<li>flush나 commit을 호출해서 엔티티를 데이터베이스에 삭제한 직후에 호출 된다.</li>
+</ul>
+</li>
+</ol>
+<h3 id="이벤트-적용-위치">이벤트 적용 위치</h3>
+<p>이벤트는 엔티티에서 직접 받거나 별도의 리스너를 등록해서 받을 수 있다.</p>
+<ul>
+<li>엔티티에 직접 적용</li>
+<li>별도의 리스너 등록</li>
+<li>기본 리스너 사용</li>
+</ul>
+<h3 id="엔티티에-직접-사용">엔티티에 직접 사용</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Entity</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Duck</span> <span style="color:#f92672">{</span>
+    <span style="color:#a6e22e">@PostPersist</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">prePersist</span><span style="color:#f92672">(){</span>   
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Duck.prePersist id= &#34;</span> <span style="color:#f92672">+</span> id<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>엔티티에 이벤트가 발생할 때마다 어노테이션으로 지정한 메소드가 실행된다.</p>
+<h3 id="별도의-리스너-등록">별도의 리스너 등록</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Entity</span>
+<span style="color:#a6e22e">@EntityListeners</span><span style="color:#f92672">(</span>DuckListener<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Duck</span> <span style="color:#f92672">{</span>
+	<span style="color:#f92672">...</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DuckListener</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#a6e22e">@PrePersist</span>
+	<span style="color:#75715e">// 특정 타입이 확실하면 특정 타입을 받을 수 있다. 
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">perPersist</span><span style="color:#f92672">(</span>Object obj<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;DuckListener.prePersist obj = [&#34;</span> <span style="color:#f92672">+</span> obj <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;]&#34;</span><span style="color:#f92672">);</span>
+	<span style="color:#f92672">}</span>
+
+	<span style="color:#a6e22e">@PostPersist</span>
+	<span style="color:#75715e">// 특정 타입이 확실하면 특정 타입을 받을 수 있다. 
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">postPersist</span><span style="color:#f92672">(</span>Object obj<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;DuckListener.postPersist obj = [&#34;</span> <span style="color:#f92672">+</span> obj <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;]&#34;</span><span style="color:#f92672">);</span>
+	<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>리스너는 대상 엔티티를 파라미터로 받을 수 있다 .반환타입은 void로 설정해야 한다.</p>
+<h3 id="기본-리스너-사용-모든-엔티티의-이벤트를-처리하려면-meta-informxml에-기본-리스너로-등록하면-된다">기본 리스너 사용 모든 엔티티의 이벤트를 처리하려면 META-INF/orm.xml에 기본 리스너로 등록하면 된다.</h3>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;&lt;entity-mappings xmlns=&quot;http://java.sun.com/xml/ns/persistence/orm&quot; version=&quot;2.0&quot;&gt;      &lt;persistence-unit-metadata&gt;       &lt;persistence-unit-defaults&gt;           &lt;entity-listeners&gt;               &lt;entity-listener class=&quot;jpabook.jpashop.domain.test.listener.DefaultListener&quot;/&gt;           &lt;/entity-listeners&gt;       &lt;/persistence-unit-defaults&gt;&lt;/persistence-unit-metadata&gt;&lt;/entity-mappings&gt;
+</code></pre><p>여러 리스너를 등록 했을 때 이벤트 호출 순서는 다음과 같다.</p>
+<ol>
+<li>기본리스너</li>
+<li>부모 클래스 리스너</li>
+<li>리스너</li>
+<li>엔티티</li>
+</ol>
+<h3 id="더-세밀한-설정">더 세밀한 설정</h3>
+<p>더 세밀한 설정을 위한 어노테이션도 있다.</p>
+<ul>
+<li><code>@ExcludeDefaultListners</code> : 기본 리스너 무시</li>
+<li><code>@ExcludeSuperclassListeners</code> : 상위 클래스 이벤트 리스너 무시</li>
+</ul>
+<p>이벤트를 잘 활용하면 대부분의 엔티티에 공통으로 적용하는 등록 일자, 수정일자 처리와 해당 엔티티를 누가 등록하고 수정했는지에 대한 기록을 리스너 하나로 처리할 수 있다.</p>
+<hr>
+<h2 id="엔티티-그래프">엔티티 그래프</h2>
+<p>엔티티를 조회할 때 연관된 엔티티를 함께 조회하려면 글로벌 fetch옵션을 <code>FetchType.EAGER</code>로 설정한다.</p>
+<p>글로벌 fetch옵션은 애플리케이션 전체에 영향을 주고 변경할 수 없는 단점이 있다.</p>
+<p>그래서 <code>FetchType.LAZY</code>를 사용하고, 엔티티를 조회할 때 연관된 엔티티를 함께 조회할 필요가 있으면 JPQL의 패치 조인을 사용한다.</p>
+<p>그런데 페치 조인을 사용하면 JPQL을 중복해서 작성하는 경우가 많다.</p>
+<p>그래서 이것을 해결하기 위해 나온 개념이 바로 JPA 2.1에 추가된 엔티티 그래프 기능이다.</p>
+<p>즉 엔티티를 조회하는 시점에 함께 조회할 연관된 엔티티를 설정 할 수 있다.</p>
+<p><code>엔티티 그래프 기능은 엔티티 조회시점에 연관된 엔티티들을 함께 조회하는 기능이다.</code></p>
+<h3 id="named-엔티티-그래프">Named 엔티티 그래프</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@NamedEntityGraph</span><span style="color:#f92672">(</span>name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Order.withMember&#34;</span><span style="color:#f92672">,</span> attributeNodes <span style="color:#f92672">=</span> <span style="color:#f92672">{</span>
+	<span style="color:#a6e22e">@NamedAttributeNode</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;member&#34;</span><span style="color:#f92672">)</span>
+<span style="color:#f92672">})</span>
+<span style="color:#a6e22e">@Entity</span>
+<span style="color:#a6e22e">@Table</span><span style="color:#f92672">(</span>name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;ORDERS&#34;</span><span style="color:#f92672">)</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Order</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#a6e22e">@Id</span> <span style="color:#a6e22e">@GeneratedValue</span>
+	<span style="color:#66d9ef">private</span> Long id<span style="color:#f92672">;</span>
+
+	<span style="color:#a6e22e">@ManyToOne</span><span style="color:#f92672">(</span>fetch <span style="color:#f92672">=</span> FetchTYpe<span style="color:#f92672">.</span><span style="color:#a6e22e">LAZY</span><span style="color:#f92672">,</span> optional <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">)</span>
+	<span style="color:#a6e22e">@JoinCloumn</span><span style="color:#f92672">(</span>name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;MEMBER_ID&#34;</span><span style="color:#f92672">)</span>
+	<span style="color:#66d9ef">private</span> Member member<span style="color:#f92672">;</span>
+
+	<span style="color:#f92672">...</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>Namde 엔티티 그래프는 <code>@NamedEntityGraph</code>로 정의한다.</p>
+<ul>
+<li>name : 엔티티 그래프의 이름을 정의한다.</li>
+<li>attributeNodes : 함께 조회할 속성을 선택한다.
+<ul>
+<li><code>@NamedAttributeNode</code>를 사용하고 그 값으로 함께 조회할 속성을 선택하면 된다.</li>
+</ul>
+</li>
+</ul>
+<p>Order.member가 지연 로딩으로 설정되어 있지만, 엔티티 그래프에서 함께 조회할 속성으로 member를 선택했으므로 이 엔티티 그래프를 사용하면 Order를 조회할 때 연관된 member도 함께 조회 할 수 있다.</p>
+<p>둘 이상 정의하려면 <code>@NamedEntityGraphs</code>를 사용하면 된다.</p>
+<h3 id="emfind에서-엔티티-그래프-사용">em.find()에서 엔티티 그래프 사용</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">EntityGraph graph <span style="color:#f92672">=</span> em<span style="color:#f92672">.</span><span style="color:#a6e22e">getEntityGraph</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Order.withMember&#34;</span><span style="color:#f92672">);</span>
+
+Map hints <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">();</span>
+hints<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;javax.persistence.fetchgraph&#34;</span><span style="color:#f92672">,</span> graph<span style="color:#f92672">);</span>
+
+Order order <span style="color:#f92672">=</span> em<span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>Order<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">,</span> orderId<span style="color:#f92672">,</span> hints<span style="color:#f92672">);</span>
+</code></pre></div><h3 id="subgraph">subgraph</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@NamedEntityGraph</span><span style="color:#f92672">(</span>name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Order.withAll&#34;</span><span style="color:#f92672">,</span> attributeNodes <span style="color:#f92672">=</span> <span style="color:#f92672">{</span>
+	<span style="color:#a6e22e">@NamedAttributeNode</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;member&#34;</span><span style="color:#f92672">),</span>
+	<span style="color:#a6e22e">@NamedAttributeNode</span><span style="color:#f92672">(</span>value <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;orderItems&#34;</span><span style="color:#f92672">,</span> subgraph <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;orderItems&#34;</span><span style="color:#f92672">)</span>
+	<span style="color:#f92672">},</span>
+	subgraphs <span style="color:#f92672">=</span> <span style="color:#a6e22e">@NamedSubgraph</span><span style="color:#f92672">(</span>name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;orderItems&#34;</span><span style="color:#f92672">,</span> attributeNodes <span style="color:#f92672">=</span> <span style="color:#f92672">{</span>
+		<span style="color:#a6e22e">@NamedAttributeNode</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;item&#34;</span><span style="color:#f92672">)</span>
+	<span style="color:#f92672">})</span>
+<span style="color:#f92672">)</span>
+<span style="color:#a6e22e">@Entity</span>
+<span style="color:#a6e22e">@Table</span><span style="color:#f92672">(</span>name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;ORDERS&#34;</span><span style="color:#f92672">)</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Order</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#a6e22e">@Id</span> <span style="color:#a6e22e">@GeneratedValue</span>
+	<span style="color:#66d9ef">private</span> Long id<span style="color:#f92672">;</span>
+
+	<span style="color:#a6e22e">@ManyToOne</span><span style="color:#f92672">(</span>fetch <span style="color:#f92672">=</span> FetchTYpe<span style="color:#f92672">.</span><span style="color:#a6e22e">LAZY</span><span style="color:#f92672">,</span> optional <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">)</span>
+	<span style="color:#a6e22e">@JoinCloumn</span><span style="color:#f92672">(</span>name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;MEMBER_ID&#34;</span><span style="color:#f92672">)</span>
+	<span style="color:#66d9ef">private</span> Member member<span style="color:#f92672">;</span>
+
+	<span style="color:#a6e22e">@OneToMany</span><span style="color:#f92672">(</span>mappedBy <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;order&#34;</span><span style="color:#f92672">,</span> cascade <span style="color:#f92672">=</span> CascadeType<span style="color:#f92672">.</span><span style="color:#a6e22e">ALL</span><span style="color:#f92672">)</span>
+	<span style="color:#66d9ef">private</span> List<span style="color:#f92672">&lt;</span>OrderItem<span style="color:#f92672">&gt;</span> orderItems <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span>OrderItem<span style="color:#f92672">&gt;();</span>
+	<span style="color:#f92672">...</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#a6e22e">@Entity</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">OrderItem</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#a6e22e">@Id</span> <span style="color:#a6e22e">@GeneratedValue</span>
+	<span style="color:#66d9ef">private</span> Long id<span style="color:#f92672">;</span>
+
+	<span style="color:#a6e22e">@ManyToOne</span><span style="color:#f92672">(</span>fetch <span style="color:#f92672">=</span> FetchType<span style="color:#f92672">.</span><span style="color:#a6e22e">LAZY</span><span style="color:#f92672">)</span>
+	<span style="color:#a6e22e">@JoinColumn</span><span style="color:#f92672">(</span>name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;ITEM_ID&#34;</span><span style="color:#f92672">)</span>
+	<span style="color:#66d9ef">private</span> Item item<span style="color:#f92672">;</span>
+
+	<span style="color:#f92672">...</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p><code>Order.withAll</code>이라는 Named 엔티티 그래프를 정의했다.</p>
+<p>이 엔티티 그래프는 Order -&gt; Member, Order -&gt; OrderItem, OrderItem -&gt; Item의 객체 그래프를 함께 조회한다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Map hints <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">();</span>
+hints<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;javax.persistence.fetchgrah&#34;</span><span style="color:#f92672">,</span> em<span style="color:#f92672">.</span><span style="color:#a6e22e">getEntityGraph</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Order.withAll&#34;</span><span style="color:#f92672">));</span>
+    
+Order order <span style="color:#f92672">=</span> em<span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>Order<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">,</span> orderId<span style="color:#f92672">,</span> hints<span style="color:#f92672">);</span>
+</code></pre></div><p>이렇게 하면 <code>Order.withAll</code>을 실행 한다.</p>
+<h3 id="jpql에서-엔티티-그래프-사용">JPQL에서 엔티티 그래프 사용</h3>
+<p>JPQL에서 엔티티 그래프를 사용하는 방법은 <code>em.find()</code>와 동일하게 힌트만 추가하면 된다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">List<span style="color:#f92672">&lt;</span>Order<span style="color:#f92672">&gt;</span> resultList <span style="color:#f92672">=</span>
+	em<span style="color:#f92672">.</span><span style="color:#a6e22e">createQuery</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;select o from Order o where o.id = :orderId&#34;</span><span style="color:#f92672">,</span> Order<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
+		<span style="color:#f92672">.</span><span style="color:#a6e22e">setParameter</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;orderId&#34;</span><span style="color:#f92672">,</span> orderId<span style="color:#f92672">)</span>
+		<span style="color:#f92672">.</span><span style="color:#a6e22e">setHint</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;javax.persistence.fetchgraph&#34;</span><span style="color:#f92672">,</span> em<span style="color:#f92672">.</span><span style="color:#a6e22e">getEntityGraph</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Order.withAll&#34;</span><span style="color:#f92672">))</span>
+		<span style="color:#f92672">.</span><span style="color:#a6e22e">getResultList</span><span style="color:#f92672">();</span>
+</code></pre></div><h3 id="동적-엔티티-그래프">동적 엔티티 그래프</h3>
+<p>엔티티 그래프를 동적으로 구성하려면 <code>createEntityGraph()</code> 메소드를 사용하면 된다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">EntityGraph<span style="color:#f92672">&lt;</span>Order<span style="color:#f92672">&gt;</span> graph <span style="color:#f92672">=</span> em<span style="color:#f92672">.</span><span style="color:#a6e22e">createEntityGraph</span><span style="color:#f92672">(</span>Order<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+graph<span style="color:#f92672">.</span><span style="color:#a6e22e">addAttributeNodes</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;member&#34;</span><span style="color:#f92672">);</span>
+Subgraph<span style="color:#f92672">&lt;</span>OrderItem<span style="color:#f92672">&gt;</span> orderItems <span style="color:#f92672">=</span> graph<span style="color:#f92672">.</span><span style="color:#a6e22e">addSubgraph</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;orderItems&#34;</span><span style="color:#f92672">);</span>
+orderItems<span style="color:#f92672">.</span><span style="color:#a6e22e">addAttributeNodes</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;item&#34;</span><span style="color:#f92672">);</span>
+
+Map hints <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">();</span>
+hints<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;javax.persistence.fetchgraph&#34;</span><span style="color:#f92672">,</span> graph<span style="color:#f92672">);</span>
+
+Order order <span style="color:#f92672">=</span> em<span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>Order<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">,</span> orderId<span style="color:#f92672">,</span> hints<span style="color:#f92672">);</span>
+</code></pre></div><p><code>em.createEntityGraph(Order.class)</code>를 사용해서 동적으로 엔티티 그래프를 만들었다. 그리고 <code>graph.addAttributeNodes(&quot;member&quot;)</code>를 사용해서 <code>order.member</code> 속성을 엔티티 그래프에 포함했다.</p>
+<h3 id="엔티티-그래프-정리">엔티티 그래프 정리</h3>
+<ul>
+<li>ROOT에서 시작
+<ul>
+<li>엔티티 그래프는 항상 조회하는 엔티티의 ROOT에서 시작해야 한다.</li>
+</ul>
+</li>
+<li>이미 로딩된 엔티티
+<ul>
+<li>영속성 컨텍스트에 해당 엔티티가 이미 로딩되어 있으면 엔티티 그래프가 적용되지 않는다.</li>
+<li>아직 초기화 되지 않은 프록시에는 엔티티 그래프가 적용된다.</li>
+</ul>
+</li>
+<li>fetchgraph, loadgraph의 차이
+<ul>
+<li><strong>fetchgraph</strong>는 엔티티 그래프에 선택한 속성만 함께 조회한다.</li>
+<li><strong>loadgraph</strong>는 엔티티 그래프에 선택한 속성뿐만 아니라 글로벌 fetch 모드가 <code>FetchType.EAGER</code>로 설정된 연관관계도 포함해서 함께 조회한다.</li>
+</ul>
+</li>
+</ul>
+<h2 id="정리">정리</h2>
+<ul>
+<li>컨버터를 사용하면 엔티티의 데이터를 변환해서 데이터베이스에 저장할 수 있다.</li>
+<li>리스너를 사용하면 엔티티에서 발생한 이벤트를 받아서 처리할 수 있다.</li>
+<li>페치 조인은 객체지향 쿼리를 사용해야 하지만 엔티티 그래프를 사용하면 객체지향 쿼리를 사용하지 않아도 원하는 객체 그래프를 한 번에 조회할 수 있다.</li>
+</ul>
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="https://ddd4117.github.io/tags/spring/">Spring</a>
+
+  <a class="tag tag--primary tag--small" href="https://ddd4117.github.io/tags/jpa/">JPA</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/04/jpa-13%EC%9E%A5-%EC%9B%B9-%EC%96%B4%ED%94%8C%EB%A6%AC%EC%BC%80%EC%9D%B4%EC%85%98%EA%B3%BC-%EC%98%81%EC%86%8D%EC%84%B1-%EA%B4%80%EB%A6%AC/" data-tooltip="[JPA] 13장 - 웹 어플리케이션과 영속성 관리">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+            
+              
+                <script src="https://utteranc.es/client.js"
+        repo="ddd4117/ddd4117.github.com"
+        issue-term="[ENTER TERM HERE]"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2021 <a href="https://github.com/ddd4117">1o2o3o</a>. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="5">
+        <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/04/jpa-13%EC%9E%A5-%EC%9B%B9-%EC%96%B4%ED%94%8C%EB%A6%AC%EC%BC%80%EC%9D%B4%EC%85%98%EA%B3%BC-%EC%98%81%EC%86%8D%EC%84%B1-%EA%B4%80%EB%A6%AC/" data-tooltip="[JPA] 13장 - 웹 어플리케이션과 영속성 관리">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="5">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://ddd4117.github.io/images/profile.jpg" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">1o2o3o</h4>
+    
+      <div id="about-card-bio">마구잡이 코딩맨</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        SW developer
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        Korea
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://ddd4117.github.io/images/cover.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
+
+
+<script src="https://ddd4117.github.io/js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js"></script>
+
+
+<script lang="javascript">
+window.onload = updateMinWidth;
+window.onresize = updateMinWidth;
+document.getElementById("sidebar").addEventListener("transitionend", updateMinWidth);
+function updateMinWidth() {
+  var sidebar = document.getElementById("sidebar");
+  var main = document.getElementById("main");
+  main.style.minWidth = "";
+  var w1 = getComputedStyle(main).getPropertyValue("min-width");
+  var w2 = getComputedStyle(sidebar).getPropertyValue("width");
+  var w3 = getComputedStyle(sidebar).getPropertyValue("left");
+  main.style.minWidth = `calc(${w1} - ${w2} - ${w3})`;
+}
+</script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = 'https:\/\/ddd4117.github.io\/2021\/04\/jpa-14%EC%9E%A5-%EC%BB%AC%EB%A0%89%EC%85%98%EA%B3%BC-%EB%B6%80%EA%B0%80-%EA%B8%B0%EB%8A%A5\/';
+          
+            this.page.identifier = '\/2021\/04\/jpa-14%EC%9E%A5-%EC%BB%AC%EB%A0%89%EC%85%98%EA%B3%BC-%EB%B6%80%EA%B0%80-%EA%B8%B0%EB%8A%A5\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'hyuntae';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+
+    
+  </body>
+</html>
+
