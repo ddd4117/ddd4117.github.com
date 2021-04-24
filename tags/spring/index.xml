@@ -6,7 +6,16 @@
     <description>Recent content in Spring on 1o2o3o&#39;s Tech Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>kr-ko</language>
-    <lastBuildDate>Fri, 23 Apr 2021 15:44:49 +0900</lastBuildDate><atom:link href="https://ddd4117.github.io/tags/spring/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 24 Apr 2021 22:25:00 +0900</lastBuildDate><atom:link href="https://ddd4117.github.io/tags/spring/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>[JPA] 15장 - 고급 주제와 성능 최적화</title>
+      <link>https://ddd4117.github.io/2021/04/jpa-15%EC%9E%A5-%EA%B3%A0%EA%B8%89-%EC%A3%BC%EC%A0%9C%EC%99%80-%EC%84%B1%EB%8A%A5-%EC%B5%9C%EC%A0%81%ED%99%94/</link>
+      <pubDate>Sat, 24 Apr 2021 22:25:00 +0900</pubDate>
+      
+      <guid>https://ddd4117.github.io/2021/04/jpa-15%EC%9E%A5-%EA%B3%A0%EA%B8%89-%EC%A3%BC%EC%A0%9C%EC%99%80-%EC%84%B1%EB%8A%A5-%EC%B5%9C%EC%A0%81%ED%99%94/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>[JPA] 14장 - 컬렉션과 부가 기능</title>
       <link>https://ddd4117.github.io/2021/04/jpa-14%EC%9E%A5-%EC%BB%AC%EB%A0%89%EC%85%98%EA%B3%BC-%EB%B6%80%EA%B0%80-%EA%B8%B0%EB%8A%A5/</link>

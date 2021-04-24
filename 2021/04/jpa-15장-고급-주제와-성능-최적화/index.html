@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="kr-ko">
+  <head>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.82.0 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="author" content="1o2o3o">
+<meta name="keywords" content="">
+<meta name="description" content="">
+
+
+<meta property="og:description" content="">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[JPA] 15장 - 고급 주제와 성능 최적화">
+<meta name="twitter:title" content="[JPA] 15장 - 고급 주제와 성능 최적화">
+<meta property="og:url" content="https://ddd4117.github.io/2021/04/jpa-15%EC%9E%A5-%EA%B3%A0%EA%B8%89-%EC%A3%BC%EC%A0%9C%EC%99%80-%EC%84%B1%EB%8A%A5-%EC%B5%9C%EC%A0%81%ED%99%94/">
+<meta property="twitter:url" content="https://ddd4117.github.io/2021/04/jpa-15%EC%9E%A5-%EA%B3%A0%EA%B8%89-%EC%A3%BC%EC%A0%9C%EC%99%80-%EC%84%B1%EB%8A%A5-%EC%B5%9C%EC%A0%81%ED%99%94/">
+<meta property="og:site_name" content="1o2o3o&#39;s Tech Blog">
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+<meta property="og:locale" content="en-us">
+
+  
+    <meta property="article:published_time" content="2021-04-24T22:25:00">
+  
+  
+    <meta property="article:modified_time" content="2021-04-24T22:25:00">
+  
+  
+  
+    
+      <meta property="article:section" content="Spring">
+    
+  
+  
+    
+      <meta property="article:tag" content="Spring">
+    
+      <meta property="article:tag" content="JPA">
+    
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://user-images.githubusercontent.com/28971015/113664175-3e7dac00-96e6-11eb-97f2-b143f4e60d4a.jpg">
+  <meta property="twitter:image" content="https://user-images.githubusercontent.com/28971015/113664175-3e7dac00-96e6-11eb-97f2-b143f4e60d4a.jpg">
+
+
+
+
+
+  <meta property="og:image" content="https://ddd4117.github.io/images/profile.jpg">
+  <meta property="twitter:image" content="https://ddd4117.github.io/images/profile.jpg">
+
+
+    <title>[JPA] 15장 - 고급 주제와 성능 최적화 - 1o2o3o&#39;s Tech Blog</title>
+	<script data-ad-client="ca-pub-7778071856226172" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+    <link rel="icon" href="https://ddd4117.github.io/images/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://ddd4117.github.io/2021/04/jpa-15%EC%9E%A5-%EA%B3%A0%EA%B8%89-%EC%A3%BC%EC%A0%9C%EC%99%80-%EC%84%B1%EB%8A%A5-%EC%B5%9C%EC%A0%81%ED%99%94/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css" integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
+    
+    
+    <link rel="stylesheet" href="https://ddd4117.github.io/css/style-twzjdbqhmnnacqs0pwwdzcdbt8yhv8giawvjqjmyfoqnvazl0dalmnhdkvp7.min.css" />
+    
+    
+
+    
+      
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LJYW9800LT"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-LJYW9800LT', { 'anonymize_ip': false });
+}
+</script>
+
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="5">
+ 
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LJYW9800LT"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-LJYW9800LT', { 'anonymize_ip': false });
+}
+</script>
+ 
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://ddd4117.github.io/">1o2o3o&#39;s Tech Blog</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://ddd4117.github.io/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="https://ddd4117.github.io/images/profile.jpg" alt="Author&#39;s picture" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="5">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://ddd4117.github.io/#about">
+          <img class="sidebar-profile-picture" src="https://ddd4117.github.io/images/profile.jpg" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">1o2o3o</h4>
+        
+          <h5 class="sidebar-profile-bio">마구잡이 코딩맨</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/categories/os">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-linux"></i>
+      
+      <span class="sidebar-button-desc">OS</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/categories/spring">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-linux"></i>
+      
+      <span class="sidebar-button-desc">spring</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/ddd4117" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/index.xml">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/#about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="5"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      [JPA] 15장 - 고급 주제와 성능 최적화
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2021-04-24T22:25:00&#43;09:00">
+        
+  April 24, 2021
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://ddd4117.github.io/categories/spring">Spring</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              <h1 id="15장-고급-주제와-성능최적화">15장-고급 주제와 성능최적화</h1>
+<h2 id="주제">주제</h2>
+<ul>
+<li>예외 처리</li>
+<li>엔티티 비교 주의점과 해결 방법</li>
+<li>프록시 심화 주제</li>
+<li>성능 최적화
+<ul>
+<li>N+1 문제</li>
+<li>읽기 전용 쿼리의 성능</li>
+<li>배치 처리</li>
+<li>SQL 쿼리 힌트 사용</li>
+<li>트랜잭션을 지원하는 쓰기 지연과 성능 최적화</li>
+</ul>
+</li>
+</ul>
+<h2 id="예외-처리">예외 처리</h2>
+<h3 id="jpa-표준-예외-정리">JPA 표준 예외 정리</h3>
+<ul>
+<li>JPA 모든 예외 &lt; <code>PersistenceException</code> &lt; <code>RuntimeException</code>  즉, JPA 예외는 모두 <code>uncheked</code> 예외이다.</li>
+<li>JPA 표준 예외는 크게 2가지로 나눌 수 있다.
+<ul>
+<li>트랜잭션 롤백을 표시하는 예외</li>
+<li>트랜잭션 롤백을 표시하지 않는 예외</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://gblobscdn.gitbook.com/assets%2F-M7KQQ2ZLP5HVNbeQNZi%2F-M9rvhkZUPl1UJlCyCkj%2F-M9rydbHid2jKHKMr_mu%2Fimage.png?alt=media&amp;token=1e2ffdbd-9e4e-4067-9375-00d792556b89" alt="https://gblobscdn.gitbook.com/assets%2F-M7KQQ2ZLP5HVNbeQNZi%2F-M9rvhkZUPl1UJlCyCkj%2F-M9rydbHid2jKHKMr_mu%2Fimage.png?alt=media&token=1e2ffdbd-9e4e-4067-9375-00d792556b89"></p>
+<p><strong>트랜잭션 롤백을 표시하는 예외(빨간색)</strong></p>
+<ul>
+<li>심각한 예외이므로 복구해선 안 된다. 강제로 커밋해도 트랜잭션이 커밋되지 않고 대신에 <code>RollbackException</code>예외가 발생한다.</li>
+</ul>
+<p><img src="https://gblobscdn.gitbook.com/assets%2F-M7KQQ2ZLP5HVNbeQNZi%2F-M9uK9Bk9ry0NAhApFTv%2F-M9uNNxy6YcjGC9gSx6h%2Fimage.png?alt=media&amp;token=a033eda8-41b6-412b-a4ad-7565cae13b1b" alt="https://gblobscdn.gitbook.com/assets%2F-M7KQQ2ZLP5HVNbeQNZi%2F-M9uK9Bk9ry0NAhApFTv%2F-M9uNNxy6YcjGC9gSx6h%2Fimage.png?alt=media&token=a033eda8-41b6-412b-a4ad-7565cae13b1b"></p>
+<p><strong>트랜잭션 롤백을 표시하지 않는 예외</strong></p>
+<ul>
+<li>
+<p>심각한 예외가 아니다. 개발자가 판단해서 트랜잭션 커밋, 롤백한다.</p>
+<p><img src="https://gblobscdn.gitbook.com/assets%2F-M7KQQ2ZLP5HVNbeQNZi%2F-M9uK9Bk9ry0NAhApFTv%2F-M9uNR1ggzVJf76Cs-lu%2Fimage.png?alt=media&amp;token=d80f4df3-cc7c-4385-927a-96d5873af42f" alt="https://gblobscdn.gitbook.com/assets%2F-M7KQQ2ZLP5HVNbeQNZi%2F-M9uK9Bk9ry0NAhApFTv%2F-M9uNR1ggzVJf76Cs-lu%2Fimage.png?alt=media&token=d80f4df3-cc7c-4385-927a-96d5873af42f"></p>
+</li>
+</ul>
+<h3 id="스프링-프레임워크의-jpa-예외-변환">스프링 프레임워크의 JPA 예외 변환</h3>
+<p>서비스 계층에서 JPA의 예외를 직접 사용하면 JPA에 의존하게 된다. 아래는 추상화된 예외들이다.</p>
+<p><img src="https://gblobscdn.gitbook.com/assets%2F-M7KQQ2ZLP5HVNbeQNZi%2F-M9pCpNj-z45mmYbD0ej%2F-M9pD2-SFe5jnL1PK2Wy%2Fimage.png?alt=media&amp;token=1a90cc89-3794-4681-9707-f52ed02a563d" alt="https://gblobscdn.gitbook.com/assets%2F-M7KQQ2ZLP5HVNbeQNZi%2F-M9pCpNj-z45mmYbD0ej%2F-M9pD2-SFe5jnL1PK2Wy%2Fimage.png?alt=media&token=1a90cc89-3794-4681-9707-f52ed02a563d"></p>
+<p>JPA 표준 명세상 발생할 수 있는 다음 두 예외도 추상화 해서 제공한다.</p>
+<p><img src="https://gblobscdn.gitbook.com/assets%2F-M7KQQ2ZLP5HVNbeQNZi%2F-M9pD7WPLmqvl04r2pzr%2F-M9pETbnIoGdwl0qienc%2Fimage.png?alt=media&amp;token=10b763ef-80c2-44b4-a49b-56039ab3f4ab" alt="https://gblobscdn.gitbook.com/assets%2F-M7KQQ2ZLP5HVNbeQNZi%2F-M9pD7WPLmqvl04r2pzr%2F-M9pETbnIoGdwl0qienc%2Fimage.png?alt=media&token=10b763ef-80c2-44b4-a49b-56039ab3f4ab"></p>
+<h3 id="스프링-프레임워크에-jpa-예외-변환기-적용">스프링 프레임워크에 JPA 예외 변환기 적용</h3>
+<p>JPA 예외를 스프링 프레임워크가 제공하는 추상화된 예외로 변경하려면 <code>PersistenceExceptionTranslationPostProcessor</code>를 스프링 빈으로 등록한다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">//JavaConfig
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">@Bean</span>
+<span style="color:#66d9ef">public</span> PersistenceExceptionTranslationPostProcessor <span style="color:#a6e22e">exceptionTranslation</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> PersistenceExceptionTranslationPostProcessor<span style="color:#f92672">();</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Repository</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">NoResultExceptionTestRepository</span> <span style="color:#f92672">{</span>
+    <span style="color:#a6e22e">@Persistencecontext</span> EntityManager em<span style="color:#f92672">;</span>
+
+    <span style="color:#75715e">//리턴값이 없다고 가정
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">//javax.persistence.NoResultException 발생
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">//메소드 빠져나갈때 AOP 인터셉터 동작
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">//org.springframework.dao.EmptyResultDataAccessException로 예외 변환 후 반환
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> Member <span style="color:#a6e22e">findMember</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+         <span style="color:#66d9ef">return</span> em<span style="color:#f92672">.</span><span style="color:#a6e22e">createQuery</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;select m from Member m&#34;</span><span style="color:#f92672">,</span> Member<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
+				        <span style="color:#f92672">.</span><span style="color:#a6e22e">getSingleResult</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e">//추상화된 예외를 변환하지 않을 경우 
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">@Repository</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">NoResultExceptionTestService</span> <span style="color:#f92672">{</span>
+    <span style="color:#a6e22e">@Persistencecontext</span> EntityManager em<span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">public</span> member <span style="color:#a6e22e">findMember</span><span style="color:#f92672">()</span> <span style="color:#66d9ef">throws</span> javax<span style="color:#f92672">.</span><span style="color:#a6e22e">persistence</span><span style="color:#f92672">.</span><span style="color:#a6e22e">NoResultException</span>    <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> em<span style="color:#f92672">.</span><span style="color:#a6e22e">createQuery</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;select m from Member m&#34;</span><span style="color:#f92672">,</span> Member<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
+									<span style="color:#f92672">.</span><span style="color:#a6e22e">getSingleResult</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="트랜잭션-롤백-시-주의사항">트랜잭션 롤백 시 주의사항</h3>
+<p>데이터베이스의 반영사항만 롤백하였을 경우 영속성 컨택스트 내부 객체는 그대로 남아다. 따라서 트랜잭션이 롤백된 영속성 컨텍스트를 그대로 사용할 때 조심하자.</p>
+<ul>
+<li>트랜잭션당 영속성 컨택스트 전략
+<ul>
+<li>문제생겼을 때 트랜잭션 AOP 종료시점 트랜잭션 롤백하면서 영속성 컨택스트 함께 종료하므로 문제가 없다.</li>
+</ul>
+</li>
+<li>OSIV 사용 전략(문제됨)
+<ul>
+<li>영속성 컨택스트 범위 &gt; 트랜잭션 범위일 경우 문제가 발생한다.</li>
+<li>롤백하고 남아있는 영속성 컨택스트에 이상이 발생해도 다른 컨택스트에서 그대로 사용할 수 있다.</li>
+<li>해결방법 → <code>em.clear()</code> 영속성 컨텍스트 초기화해 예방한다.</li>
+</ul>
+</li>
+</ul>
+<h2 id="엔티티-비교">엔티티 비교</h2>
+<ul>
+<li>비교 방법 3가지
+<ul>
+<li>동일성(identical): == 비교가 같다.</li>
+<li>동등성(equivalent): <code>equals()</code> 비교가 같다.</li>
+<li>데이터베이스 동등성: <code>@Id</code>인 데이터베이스 식별자가 같다.  <code>member.getld().equals(findMember.getld())</code></li>
+</ul>
+</li>
+</ul>
+<p><img src="https://gblobscdn.gitbook.com/assets%2F-M7KQQ2ZLP5HVNbeQNZi%2F-M9paJmHcxPigO5sS4rp%2F-M9paSXYzvbfXhVh7yz6%2Fimage.png?alt=media&amp;token=dd46fb18-e056-4ec2-bc5e-4d5057178eaa" alt="https://gblobscdn.gitbook.com/assets%2F-M7KQQ2ZLP5HVNbeQNZi%2F-M9paJmHcxPigO5sS4rp%2F-M9paSXYzvbfXhVh7yz6%2Fimage.png?alt=media&token=dd46fb18-e056-4ec2-bc5e-4d5057178eaa"></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@RunWith</span><span style="color:#f92672">(</span>SpringJUnit4ClassRunner<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
+<span style="color:#a6e22e">@ContextConfiguration</span><span style="color:#f92672">(</span>locations <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;classpath: appConfig.xml&#34;</span><span style="color:#f92672">)</span>
+<span style="color:#a6e22e">@Transactional</span> <span style="color:#75715e">//트랜잭션 안에서 테스트를 실행한다.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MemberServiceTest</span> <span style="color:#f92672">{</span>
+    <span style="color:#a6e22e">@Autowired</span> MemberService memberservice<span style="color:#f92672">;</span>
+    <span style="color:#a6e22e">@Autowired</span> MemberRepository memberRepository<span style="color:#f92672">;</span>
+
+    <span style="color:#a6e22e">@Test</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">회원가입</span><span style="color:#f92672">()</span> <span style="color:#66d9ef">throws</span> Exception <span style="color:#f92672">{</span>
+            <span style="color:#75715e">//Given 
+</span><span style="color:#75715e"></span>        Member member <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Member<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;kim&#34;</span><span style="color:#f92672">);</span>
+                <span style="color:#75715e">//When
+</span><span style="color:#75715e"></span>        Long saveId <span style="color:#f92672">=</span> memberService<span style="color:#f92672">.</span><span style="color:#a6e22e">join</span><span style="color:#f92672">(</span>member<span style="color:#f92672">);</span>
+                <span style="color:#75715e">//Then
+</span><span style="color:#75715e"></span>        Member findMember <span style="color:#f92672">=</span> memberRepository<span style="color:#f92672">.</span><span style="color:#a6e22e">fineOne</span><span style="color:#f92672">(</span>saveId<span style="color:#f92672">);</span>
+        assertTrue<span style="color:#f92672">(</span>member <span style="color:#f92672">==</span> findMember<span style="color:#f92672">);</span> <span style="color:#75715e">//참조값 비교
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p><img src="https://gblobscdn.gitbook.com/assets%2F-M7KQQ2ZLP5HVNbeQNZi%2F-M9paJmHcxPigO5sS4rp%2F-M9paMDZ71Yr9IsZLQ6A%2Fimage.png?alt=media&amp;token=826a2d57-f68c-4e42-b428-ef392c9cb0ea" alt="https://gblobscdn.gitbook.com/assets%2F-M7KQQ2ZLP5HVNbeQNZi%2F-M9paJmHcxPigO5sS4rp%2F-M9paMDZ71Yr9IsZLQ6A%2Fimage.png?alt=media&token=826a2d57-f68c-4e42-b428-ef392c9cb0ea"></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@RunWith</span><span style="color:#f92672">(</span>SpringJUnit4ClassRunner<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
+<span style="color:#a6e22e">@ContextConfiguration</span><span style="color:#f92672">(</span>locations <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;classpath: appConfig.xml&#34;</span><span style="color:#f92672">)</span>
+<span style="color:#75715e">//@Transactional
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MemberServiceTest</span> <span style="color:#f92672">{</span>
+    <span style="color:#a6e22e">@Autowired</span> MemberService memberservice<span style="color:#f92672">;</span>
+    <span style="color:#a6e22e">@Autowired</span> MemberRepository memberRepository<span style="color:#f92672">;</span>
+
+    <span style="color:#a6e22e">@Test</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">회원가입</span> <span style="color:#f92672">()</span> <span style="color:#66d9ef">throws</span> Exception <span style="color:#f92672">{</span>
+            <span style="color:#75715e">//Given
+</span><span style="color:#75715e"></span>        Member member <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Member<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;kim&#34;</span><span style="color:#f92672">);</span>
+        
+        <span style="color:#75715e">//When
+</span><span style="color:#75715e"></span>        Long saveld <span style="color:#f92672">=</span> memberService<span style="color:#f92672">.</span><span style="color:#a6e22e">join</span><span style="color:#f92672">(</span>member<span style="color:#f92672">);</span>
+         
+        <span style="color:#75715e">//Then
+</span><span style="color:#75715e"></span>        Member findMember <span style="color:#f92672">=</span> memberRepository<span style="color:#f92672">.</span><span style="color:#a6e22e">fineOne</span><span style="color:#f92672">(</span>saveld<span style="color:#f92672">);</span>
+        assertTrue<span style="color:#f92672">(</span>member <span style="color:#f92672">==</span> findMember<span style="color:#f92672">);</span> <span style="color:#75715e">// 실패
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#a6e22e">@Transactional</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MemberService</span> <span style="color:#f92672">{</span>
+    <span style="color:#a6e22e">@Autowired</span> MemberRepository memberRepository<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">public</span> Long <span style="color:#a6e22e">join</span><span style="color:#f92672">(</span>Member member<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//...
+</span><span style="color:#75715e"></span>        memberRepository<span style="color:#f92672">.</span><span style="color:#a6e22e">save</span><span style="color:#f92672">(</span>member<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span> member<span style="color:#f92672">.</span><span style="color:#a6e22e">getld</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#a6e22e">@Repository</span>
+<span style="color:#a6e22e">@Transactional</span> <span style="color:#75715e">//추가
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MemberRepository</span> <span style="color:#f92672">{</span>
+    <span style="color:#a6e22e">@Persistencecontext</span>
+    EntityManager em<span style="color:#f92672">;</span>
+    
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">save</span><span style="color:#f92672">(</span>Member member<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        em<span style="color:#f92672">.</span><span style="color:#a6e22e">persist</span><span style="color:#f92672">(</span>member<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+    
+    <span style="color:#66d9ef">public</span> Member <span style="color:#a6e22e">findOne</span><span style="color:#f92672">(</span>Long id<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> em<span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>Member<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">,</span> id<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">member<span style="color:#f92672">.</span><span style="color:#a6e22e">getId</span><span style="color:#f92672">().</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span>findMember<span style="color:#f92672">.</span><span style="color:#a6e22e">getId</span><span style="color:#f92672">());</span> <span style="color:#75715e">// DB 식별자 비교 
+</span></code></pre></div><p>하지만 영속화 해야 식별자를 얻어 비교할 수 있다는 문제가 있다.  결론, 비즈니스키(예.주민번호)를 이용해 동등성 비교(equals())를 사용할 수 있다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">member<span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span>findMember<span style="color:#f92672">);</span>
+</code></pre></div><ul>
+<li>동일성 비교는 같은 영속성 컨텍스의 관리를 받는 영속 상태의 엔티티에만 적용</li>
+<li>그렇지 않을 경우 동등성 비교</li>
+</ul>
+<h2 id="프록시-심화문제">프록시 심화문제</h2>
+<h3 id="영속성-컨텍스트와-프록시">영속성 컨텍스트와 프록시</h3>
+<p>영속성 컨텍스트는 자신이 관리하는 엔티티의 동일성(identity)을 보장한다.</p>
+<p>그럼 프록시로 조회한 엔티티의 동일성도 보장할까?</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Test</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">영속성컨텍스트와_프록시</span> <span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    Member newMember <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Member<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;member1&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;회원 1&#34;</span><span style="color:#f92672">);</span>
+    em<span style="color:#f92672">.</span><span style="color:#a6e22e">persist</span><span style="color:#f92672">(</span>newMember<span style="color:#f92672">);</span>
+    em<span style="color:#f92672">.</span><span style="color:#a6e22e">flush</span><span style="color:#f92672">();</span>
+    em<span style="color:#f92672">.</span><span style="color:#a6e22e">clear</span><span style="color:#f92672">();</span>
+    
+    Member refMember <span style="color:#f92672">=</span> em<span style="color:#f92672">.</span><span style="color:#a6e22e">getReference</span><span style="color:#f92672">(</span>Member<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;member1&#34;</span><span style="color:#f92672">);</span>
+    Member findMember <span style="color:#f92672">=</span> em<span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>Member<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;member1&#34;</span><span style="color:#f92672">);</span>
+    
+    System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;refMember Type = &#34;</span> <span style="color:#f92672">+</span> refMember<span style="color:#f92672">.</span><span style="color:#a6e22e">getClass</span><span style="color:#f92672">());</span>
+    System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;findMember Type = &#34;</span> <span style="color:#f92672">+</span> findMember<span style="color:#f92672">.</span><span style="color:#a6e22e">getClass</span><span style="color:#f92672">());</span>
+    
+    Assert<span style="color:#f92672">.</span><span style="color:#a6e22e">assertTrue</span><span style="color:#f92672">(</span>refMember <span style="color:#f92672">==</span> findMember<span style="color:#f92672">);</span> <span style="color:#75715e">//성공
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+<span style="color:#75715e">//결과
+</span><span style="color:#75715e">//refMember Type = class jpabook.advanced.Member_$$_jvst843_0
+</span><span style="color:#75715e">//findMember Type = class jpabook.advanced.Member_$$_jvst843_0// 둘다 프록시
+</span></code></pre></div><p>영속성 컨텍스트는 한 번 프록시로 노출한 엔티티는 계속 프록시로 노출한다.</p>
+<p>그래야 영속성 컨텍스트가 영속 엔티티의 동일성을 보장 할 수 있기 때문이다.</p>
+<p><strong>반대로 엔티티 조회후 동일 엔티티를 프록시로 찾으면?</strong>  프록시가 아닌 원본 엔티티가 반환된다. 이 경우에도, 영속성 컨텍스트는 엔티티의 동일성을 보장한다</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Member findMember <span style="color:#f92672">=</span> em<span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>Member<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;member1&#34;</span><span style="color:#f92672">);</span>
+Member refMember <span style="color:#f92672">=</span> em<span style="color:#f92672">.</span><span style="color:#a6e22e">getReference</span><span style="color:#f92672">(</span>Member<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;member1&#34;</span><span style="color:#f92672">)</span> <span style="color:#f92672">;</span>
+</code></pre></div><h3 id="프록시-타입비교">프록시 타입비교</h3>
+<p>프록시로 조회한 엔티티의 타입을 비교할 때는, == 비교를 하면 안 되고, <code>instanceof</code>를 사용해야 한다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">if</span> <span style="color:#f92672">(!(</span>obj <span style="color:#66d9ef">instanceof</span> Member<span style="color:#f92672">))</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+</code></pre></div><h3 id="프록시-동등성-비교">프록시 동등성 비교</h3>
+<p>앞서 이야기한데로 <strong>프록시는 원본을 상속받은 자식 타입이므로</strong> 프록시의 타입을 비교할 때는 == 비교가 아닌 <strong>instanceof를 사용해야 한다.</strong></p>
+<p><code>equals()</code> 메소드를 구현할 때는 일반적으로 멤버 변수를 직접 비교하는데, 프록시의 경우는 실제값이 존재하지 않기 때문에 아무것도 조회할 수 없다.</p>
+<p>따라서 멤버변수에 직접 접근하지 말고 접근자(Getter)를 사용해야 한다.</p>
+<h3 id="상속-관계와-프록시">상속 관계와 프록시</h3>
+<ul>
+<li>다형성을 다루는 도메인 모델에서 주로 발생</li>
+<li>상속관계(OrderItem&lt;-&gt;Item-Album, Movie, Book)를 프록시로 조회할 때 발생할 수 있는 문제점</li>
+<li>프록시를 부모 타입으로 조회하면 <strong>부모의 타입을 기반으로 프록시가 생성</strong>되는 문제가 있다.
+<ul>
+<li>instanceof 연산을 사용 x</li>
+<li>하위 타입으로 다운캐스팅 x</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Test</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">부모타입으로_프록시조회</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+	<span style="color:#75715e">//테스트 데이터 준비
+</span><span style="color:#75715e"></span>	Book saveBook <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Book<span style="color:#f92672">();</span>
+	saveBook<span style="color:#f92672">.</span><span style="color:#a6e22e">setName</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;jpaBook&#34;</span><span style="color:#f92672">);</span>
+	saveBook<span style="color:#f92672">.</span><span style="color:#a6e22e">setAuthor</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;kim&#34;</span><span style="color:#f92672">);</span>
+	em<span style="color:#f92672">.</span><span style="color:#a6e22e">persist</span><span style="color:#f92672">(</span>saveBook<span style="color:#f92672">);</span>
+
+	em<span style="color:#f92672">.</span><span style="color:#a6e22e">flush</span><span style="color:#f92672">();</span>
+	em<span style="color:#f92672">.</span><span style="color:#a6e22e">clear</span><span style="color:#f92672">();</span>
+
+	<span style="color:#75715e">//테스트 시작
+</span><span style="color:#75715e"></span>	Item proxyItem <span style="color:#f92672">=</span> em<span style="color:#f92672">.</span><span style="color:#a6e22e">getReference</span><span style="color:#f92672">(</span>Item<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">,</span> saveBook<span style="color:#f92672">.</span><span style="color:#a6e22e">getId</span><span style="color:#f92672">());</span>
+	System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;proxyItem = &#34;</span> <span style="color:#f92672">+</span> proxyItem<span style="color:#f92672">.</span><span style="color:#a6e22e">getClass</span><span style="color:#f92672">());</span>
+
+	<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>proxyItem <span style="color:#66d9ef">instanceof</span> Book<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;proxyItem instanceof Book&#34;</span><span style="color:#f92672">);</span>
+		Book book <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>Book<span style="color:#f92672">)</span> proxyItem<span style="color:#f92672">;</span>
+		System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;책 저자 = &#34;</span> <span style="color:#f92672">+</span> book<span style="color:#f92672">.</span><span style="color:#a6e22e">getAuthor</span><span style="color:#f92672">());</span>
+	<span style="color:#f92672">}</span>
+
+		<span style="color:#75715e">//결과 검증
+</span><span style="color:#75715e"></span>		Assert<span style="color:#f92672">.</span><span style="color:#a6e22e">assertFalse</span><span style="color:#f92672">(</span>proxyItem<span style="color:#f92672">.</span><span style="color:#a6e22e">getClass</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> Book<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+		Assert<span style="color:#f92672">.</span><span style="color:#a6e22e">assertFalse</span><span style="color:#f92672">(</span>proxyItem <span style="color:#66d9ef">instanceof</span> Book<span style="color:#f92672">);</span>
+		Assert<span style="color:#f92672">.</span><span style="color:#a6e22e">assertTrue</span><span style="color:#f92672">(</span>proxyItem <span style="color:#66d9ef">instanceof</span> Item<span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>출력 결과에 저자가 출력되지 않는다.  proxyltem은 Book이 아닌 Item 클래스를 기반으로 만들어졌다. 즉, proxyltem은 Item$Proxy 타입이고 Book 타입과 관계가 없다. 그래서 <code>proxyitem instanceof Book</code>가 false가 나온다.  조건문이 없더라도, 다운 캐스팅에서 <code>ClassCastException</code> 에러가 난다.</p>
+<h3 id="상속관계에서-발생하는-프록시-문제를-어떻게-해결해야-할까">상속관계에서 발생하는 프록시 문제를 어떻게 해결해야 할까?</h3>
+<ul>
+<li>
+<p>JPQL로 대상 직접 조회</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Book jpqlBook <span style="color:#f92672">=</span> em<span style="color:#f92672">.</span><span style="color:#a6e22e">createQuery</span>
+    <span style="color:#f92672">(</span><span style="color:#e6db74">&#34;select b from Book b where b.id=:bookId&#34;</span><span style="color:#f92672">,</span> Book<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">setParameter</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;bookId&#34;</span><span style="color:#f92672">,</span> item<span style="color:#f92672">.</span><span style="color:#a6e22e">getId</span><span style="color:#f92672">())</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">getSingleResult</span><span style="color:#f92672">();</span>
+</code></pre></div></li>
+<li>
+<p>프록시 벗기기</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">//프록시에서 원본 엔티티를 찾는 메소드
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> T <span style="color:#a6e22e">unProxy</span><span style="color:#f92672">(</span>Obj ect entity<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>entity <span style="color:#66d9ef">instanceof</span> HibernateProxy<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        entity <span style="color:#f92672">=</span> <span style="color:#f92672">((</span>HibernateProxy<span style="color:#f92672">)</span> entity<span style="color:#f92672">)</span>
+                <span style="color:#f92672">.</span><span style="color:#a6e22e">getHibernateLazylnitializer</span><span style="color:#f92672">()</span>
+                <span style="color:#f92672">.</span><span style="color:#a6e22e">getlmplementation</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>T<span style="color:#f92672">)</span> entity<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e">//실행 코드
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">...</span>
+    Item item <span style="color:#f92672">=</span> orderItem<span style="color:#f92672">.</span><span style="color:#a6e22e">getItem</span><span style="color:#f92672">();</span>
+    Item unProxyItem <span style="color:#f92672">=</span> unProxy<span style="color:#f92672">(</span>item<span style="color:#f92672">);</span>
+      
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>unProxyItem <span style="color:#66d9ef">instanceof</span> Book<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;proxyItem instanceod Book&#34;</span><span style="color:#f92672">);</span>
+            Book book <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>Book<span style="color:#f92672">)</span> unproxyItem<span style="color:#f92672">;</span>
+            System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;책 저자 = &#34;</span> <span style="color:#f92672">+</span> book<span style="color:#f92672">.</span><span style="color:#a6e22e">getAuthor</span><span style="color:#f92672">());</span>
+      <span style="color:#f92672">}</span>
+      Assert<span style="color:#f92672">.</span><span style="color:#a6e22e">assertTrue</span><span style="color:#f92672">(</span>item <span style="color:#f92672">!=</span> unProxyItem<span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+
+</code></pre></div><ul>
+<li><code>unProxy()</code>에서 원본 엔티티를 직접 꺼내기 때문에 프록시와 원본 엔티티의 동일성 비교가 실패한다는 문제점이 발생한다.</li>
+</ul>
+</li>
+<li>
+<p>기능을 위한 별도 인터페이스 제공</p>
+<ul>
+<li>다형성을 활용하는 좋은 방법</li>
+<li>프록시의 대상이 되는 타입에 인터페이스를 적용</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">TitleView</span> <span style="color:#f92672">{</span>
+    String <span style="color:#a6e22e">getTitle</span><span style="color:#f92672">();</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#a6e22e">@Inheritance</span><span style="color:#f92672">(</span>strategy <span style="color:#f92672">=</span> InheritanceType<span style="color:#f92672">.</span><span style="color:#a6e22e">SINGLE_TABLE</span><span style="color:#f92672">)</span>
+<span style="color:#a6e22e">@DiscriminatorColumn</span><span style="color:#f92672">(</span>name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;DTYPE&#34;</span><span style="color:#f92672">)</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">abstract</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Item</span> <span style="color:#66d9ef">implements</span> TitleView <span style="color:#f92672">{</span>
+    <span style="color:#a6e22e">@Id</span> <span style="color:#a6e22e">@GeneratedValue</span>
+    <span style="color:#a6e22e">@Column</span><span style="color:#f92672">(</span>name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;ITEM_ID&#34;</span><span style="color:#f92672">)</span>
+    <span style="color:#66d9ef">private</span> Long id<span style="color:#f92672">;</span>
+      
+    <span style="color:#f92672">...</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></li>
+<li>
+<p>비지터 패턴 사용</p>
+</li>
+</ul>
+<p><img src="https://gblobscdn.gitbook.com/assets%2F-M7KQQ2ZLP5HVNbeQNZi%2F-M9uhegVqYnBnVL1AfVd%2F-M9uhkPPU7Lw3DKn-r5w%2Fimage.png?alt=media&amp;token=6fc1c5b4-3229-427c-ae44-9ab524d40d51" alt="https://gblobscdn.gitbook.com/assets%2F-M7KQQ2ZLP5HVNbeQNZi%2F-M9uhegVqYnBnVL1AfVd%2F-M9uhkPPU7Lw3DKn-r5w%2Fimage.png?alt=media&token=6fc1c5b4-3229-427c-ae44-9ab524d40d51"></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">1 <span style="color:#f92672">-</span> 인터페이스 정의
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">Visitor</span> <span style="color:#f92672">{</span>
+	<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">visit</span><span style="color:#f92672">(</span>Book book<span style="color:#f92672">);</span>
+	<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">visit</span><span style="color:#f92672">(</span>Album album<span style="color:#f92672">);</span>
+	<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">visit</span><span style="color:#f92672">(</span>Movie movie<span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+
+2 <span style="color:#f92672">-</span> Visitor의 구현 클래스
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">PrintVisitor</span> <span style="color:#66d9ef">implements</span> Visitor <span style="color:#f92672">{</span>
+	<span style="color:#a6e22e">@Override</span>
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">visit</span><span style="color:#f92672">(</span>Book book<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		<span style="color:#75715e">//넘어오는 book은 Proxy가 아닌 원본 엔티티다. 
+</span><span style="color:#75715e"></span>		System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;book.class = &#34;</span> <span style="color:#f92672">+</span> book<span style="color:#f92672">.</span><span style="color:#a6e22e">getClass</span><span style="color:#f92672">());</span>
+	<span style="color:#f92672">}</span>
+	
+	<span style="color:#a6e22e">@Override</span>
+	<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">visit</span><span style="color:#f92672">(</span>Album album<span style="color:#f92672">)</span> <span style="color:#f92672">{...}</span>
+	<span style="color:#a6e22e">@Override</span>
+	<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">visit</span><span style="color:#f92672">(</span>Movie movie<span style="color:#f92672">)</span> <span style="color:#f92672">{...}</span>
+<span style="color:#f92672">}</span>
+
+3 <span style="color:#f92672">-</span> Book<span style="color:#f92672">,</span> Movie<span style="color:#f92672">,</span> Album 부모 클래스에 추상 메소드 추가
+<span style="color:#a6e22e">@Entity</span>
+<span style="color:#a6e22e">@Inheritance</span><span style="color:#f92672">(</span>strategy <span style="color:#f92672">=</span> InheritanceType<span style="color:#f92672">.</span><span style="color:#a6e22e">SINGLE_TABLE</span><span style="color:#f92672">)</span>
+<span style="color:#a6e22e">@DiscriminatorColumn</span><span style="color:#f92672">(</span>name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;DTYPE&#34;</span><span style="color:#f92672">)</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">abstract</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Item</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#a6e22e">@Id</span> <span style="color:#a6e22e">@GeneratedValue</span>
+	<span style="color:#a6e22e">@Column</span><span style="color:#f92672">(</span>name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;ITEM_ID&#34;</span><span style="color:#f92672">)</span>
+	<span style="color:#66d9ef">private</span> Long id<span style="color:#f92672">;</span>
+
+	<span style="color:#f92672">...</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">abstract</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">accept</span><span style="color:#f92672">(</span>Visitor visitor<span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+
+4 <span style="color:#f92672">-</span> 서브클래스 오버라이드 추가
+<span style="color:#a6e22e">@Entity</span>
+<span style="color:#a6e22e">@DiscriminatorValue</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;B&#34;</span><span style="color:#f92672">)</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Book</span> <span style="color:#66d9ef">extends</span> Item <span style="color:#f92672">{</span>
+
+	<span style="color:#f92672">...</span>
+	<span style="color:#a6e22e">@Override</span>
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">accept</span><span style="color:#f92672">(</span>Visitor visitor<span style="color:#f92672">){</span>
+		visitor<span style="color:#f92672">.</span><span style="color:#a6e22e">visit</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">);</span>
+	<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+
+5 <span style="color:#f92672">-</span> 실행 코드
+<span style="color:#a6e22e">@Test</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">상속관계와_프록시_VisitorPattern</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+	<span style="color:#f92672">...</span>
+	OrderItem orderItem <span style="color:#f92672">=</span> em<span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>OrderItem<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">,</span> orderItemId<span style="color:#f92672">);</span>
+	Item item <span style="color:#f92672">=</span> orderItem<span style="color:#f92672">.</span><span style="color:#a6e22e">getItem</span><span style="color:#f92672">();</span>
+
+	<span style="color:#75715e">//PrintVisitor
+</span><span style="color:#75715e"></span>	item<span style="color:#f92672">.</span><span style="color:#a6e22e">accept</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> PrintVisitor<span style="color:#f92672">());</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">PrintVisitor</span> <span style="color:#66d9ef">implements</span> Visitor <span style="color:#f92672">{</span>
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">visit</span><span style="color:#f92672">(</span>Book book<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		<span style="color:#75715e">//넘어오는 book은 Proxy가 아닌 원본 엔티티다. 
+</span><span style="color:#75715e"></span>		System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;book.class = &#34;</span> <span style="color:#f92672">+</span> book<span style="color:#f92672">.</span><span style="color:#a6e22e">getClass</span><span style="color:#f92672">());</span>
+
+	<span style="color:#f92672">}</span>
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">visit</span><span style="color:#f92672">(</span>Album album<span style="color:#f92672">)</span> <span style="color:#f92672">{...}</span>
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">visit</span><span style="color:#f92672">(</span>Movie movie<span style="color:#f92672">)</span> <span style="color:#f92672">{...}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>TitleVisitor 클래스는 사용하지 않았는데, 비지터 패턴을 구현만 하면 확장이 가능하다는 것을 보여준다.</p>
+<ul>
+<li>장점
+<ul>
+<li>알고리즘과 객체 구조를 분리해서 구조를 수정하지 않고 새로운 동작을 추가 할 수 있다.</li>
+<li>프록시에 대한 걱정 없이, 안전하게 원본 엔티티에 접근이 가능</li>
+<li><code>instanceof</code>나 타입캐스팅 없이 코드를 구현.</li>
+</ul>
+</li>
+<li>단점
+<ul>
+<li>복잡하고 <code>더블 디스패치</code>를 사용하기 때문에 이해하기 어렵다.</li>
+<li>객체 구조가 변경되면 모든 <code>Visitor</code>를 수정해야 한다.</li>
+</ul>
+</li>
+</ul>
+<h2 id="성능-최적화">성능 최적화</h2>
+<h3 id="n1-문제">N+1 문제</h3>
+<p>10장에 요약 되어 있으므로 넘김</p>
+<p>결론은 지연로딩으로 사용하고, 성능 최적화가 필요한 곳에 fetch join을 사용하자</p>
+<h3 id="읽기-전용-쿼리의-성능-최적화">읽기 전용 쿼리의 성능 최적화</h3>
+<p>엔티티가 영속성 컨텍스트에 관리되면, <strong>1차 캐시부터 변경 감지까지</strong> 얻을 수 있는 해택이 많다.</p>
+<p><strong>하지만 영속성 컨텍스트는 변경감지를 위해 스냅샷 인스턴스를 보관하므로 더 많은 메모리를 사용하는 단점이 있다.</strong></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Transactional</span><span style="color:#f92672">(</span>readOnly <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">)</span>
+</code></pre></div><p>위와 같이 읽기 전용으로 설정하면 트랜잭션을 커밋해도 영속성 컨텍스트를 플러시하지 않는다. 그러므로 플러시할 때 일어나는 스냅샷 비교와 같은 무거운 로직들을 수행하지 않으므로 성능이 향상된다.</p>
+<p>JPA 플러시 설정에는 AUTO, COMMIT 두가지만 존재한다.</p>
+<h3 id="배치-처리">배치 처리</h3>
+<p>메모리 부족을 피하기 위해, 일정 단위마다 영속성 컨텍스트의 엔티티를 데이터베이스에 플러시하고 영속성 컨텍스트를 초기화해야 한다. 또한, 2차 캐시에 엔티티를 보관하지 않도록 주의해야 한다. (16.2절 참고)</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">EntityManager em <span style="color:#f92672">=</span> entityManagerFactory<span style="color:#f92672">.</span><span style="color:#a6e22e">createEntityManager</span><span style="color:#f92672">();</span>
+EntityTransaction tx <span style="color:#f92672">=</span> em<span style="color:#f92672">.</span><span style="color:#a6e22e">getTransaction</span><span style="color:#f92672">();</span>
+tx<span style="color:#f92672">.</span><span style="color:#a6e22e">begin</span><span style="color:#f92672">();</span>
+<span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> 100000<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+    Product product <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Product<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;item&#34;</span> <span style="color:#f92672">+</span> i<span style="color:#f92672">,</span> 10000<span style="color:#f92672">);</span>
+    em<span style="color:#f92672">.</span><span style="color:#a6e22e">persist</span><span style="color:#f92672">(</span>product<span style="color:#f92672">);</span>
+    
+    <span style="color:#75715e">//100건마다 플러시와 영속성 컨텍스트 초기화
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span> i <span style="color:#f92672">%</span> 100 <span style="color:#f92672">==</span> 0 <span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		    em<span style="color:#f92672">.</span><span style="color:#a6e22e">flush</span><span style="color:#f92672">();</span>
+        em<span style="color:#f92672">.</span><span style="color:#a6e22e">clear</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+
+tx<span style="color:#f92672">.</span><span style="color:#a6e22e">commit</span><span style="color:#f92672">();</span>
+em<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
+</code></pre></div>
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="https://ddd4117.github.io/tags/spring/">Spring</a>
+
+  <a class="tag tag--primary tag--small" href="https://ddd4117.github.io/tags/jpa/">JPA</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/04/jpa-14%EC%9E%A5-%EC%BB%AC%EB%A0%89%EC%85%98%EA%B3%BC-%EB%B6%80%EA%B0%80-%EA%B8%B0%EB%8A%A5/" data-tooltip="[JPA] 14장 - 컬렉션과 부가 기능">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+            
+              
+                <script src="https://utteranc.es/client.js"
+        repo="ddd4117/ddd4117.github.com"
+        issue-term="[ENTER TERM HERE]"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2021 <a href="https://github.com/ddd4117">1o2o3o</a>. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="5">
+        <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/04/jpa-14%EC%9E%A5-%EC%BB%AC%EB%A0%89%EC%85%98%EA%B3%BC-%EB%B6%80%EA%B0%80-%EA%B8%B0%EB%8A%A5/" data-tooltip="[JPA] 14장 - 컬렉션과 부가 기능">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="5">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://ddd4117.github.io/images/profile.jpg" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">1o2o3o</h4>
+    
+      <div id="about-card-bio">마구잡이 코딩맨</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        SW developer
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        Korea
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://ddd4117.github.io/images/cover.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
+
+
+<script src="https://ddd4117.github.io/js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js"></script>
+
+
+<script lang="javascript">
+window.onload = updateMinWidth;
+window.onresize = updateMinWidth;
+document.getElementById("sidebar").addEventListener("transitionend", updateMinWidth);
+function updateMinWidth() {
+  var sidebar = document.getElementById("sidebar");
+  var main = document.getElementById("main");
+  main.style.minWidth = "";
+  var w1 = getComputedStyle(main).getPropertyValue("min-width");
+  var w2 = getComputedStyle(sidebar).getPropertyValue("width");
+  var w3 = getComputedStyle(sidebar).getPropertyValue("left");
+  main.style.minWidth = `calc(${w1} - ${w2} - ${w3})`;
+}
+</script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = 'https:\/\/ddd4117.github.io\/2021\/04\/jpa-15%EC%9E%A5-%EA%B3%A0%EA%B8%89-%EC%A3%BC%EC%A0%9C%EC%99%80-%EC%84%B1%EB%8A%A5-%EC%B5%9C%EC%A0%81%ED%99%94\/';
+          
+            this.page.identifier = '\/2021\/04\/jpa-15%EC%9E%A5-%EA%B3%A0%EA%B8%89-%EC%A3%BC%EC%A0%9C%EC%99%80-%EC%84%B1%EB%8A%A5-%EC%B5%9C%EC%A0%81%ED%99%94\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'hyuntae';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+
+    
+  </body>
+</html>
+
