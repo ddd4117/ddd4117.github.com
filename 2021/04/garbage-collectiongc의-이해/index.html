@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="kr-ko">
+  <head>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.82.0 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="author" content="1o2o3o">
+<meta name="keywords" content="">
+<meta name="description" content="">
+
+
+<meta property="og:description" content="">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Garbage Collection(GC)의 이해">
+<meta name="twitter:title" content="Garbage Collection(GC)의 이해">
+<meta property="og:url" content="https://ddd4117.github.io/2021/04/garbage-collectiongc%EC%9D%98-%EC%9D%B4%ED%95%B4/">
+<meta property="twitter:url" content="https://ddd4117.github.io/2021/04/garbage-collectiongc%EC%9D%98-%EC%9D%B4%ED%95%B4/">
+<meta property="og:site_name" content="1o2o3o&#39;s Tech Blog">
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+<meta property="og:locale" content="en-us">
+
+  
+    <meta property="article:published_time" content="2021-04-25T23:22:25">
+  
+  
+    <meta property="article:modified_time" content="2021-04-25T23:22:25">
+  
+  
+  
+    
+      <meta property="article:section" content="JAVA">
+    
+  
+  
+    
+      <meta property="article:tag" content="JAVA">
+    
+      <meta property="article:tag" content="Garbage Collection">
+    
+      <meta property="article:tag" content="GC">
+    
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://user-images.githubusercontent.com/28971015/115997205-4cf02100-a61d-11eb-9dc7-aeccb15fe14d.png">
+  <meta property="twitter:image" content="https://user-images.githubusercontent.com/28971015/115997205-4cf02100-a61d-11eb-9dc7-aeccb15fe14d.png">
+
+
+
+
+
+  <meta property="og:image" content="https://ddd4117.github.io/images/profile.jpg">
+  <meta property="twitter:image" content="https://ddd4117.github.io/images/profile.jpg">
+
+
+    <title>Garbage Collection(GC)의 이해 - 1o2o3o&#39;s Tech Blog</title>
+	<script data-ad-client="ca-pub-7778071856226172" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+    <link rel="icon" href="https://ddd4117.github.io/images/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://ddd4117.github.io/2021/04/garbage-collectiongc%EC%9D%98-%EC%9D%B4%ED%95%B4/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css" integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
+    
+    
+    <link rel="stylesheet" href="https://ddd4117.github.io/css/style-twzjdbqhmnnacqs0pwwdzcdbt8yhv8giawvjqjmyfoqnvazl0dalmnhdkvp7.min.css" />
+    
+    
+
+    
+      
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LJYW9800LT"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-LJYW9800LT', { 'anonymize_ip': false });
+}
+</script>
+
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="5">
+ 
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LJYW9800LT"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-LJYW9800LT', { 'anonymize_ip': false });
+}
+</script>
+ 
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://ddd4117.github.io/">1o2o3o&#39;s Tech Blog</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://ddd4117.github.io/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="https://ddd4117.github.io/images/profile.jpg" alt="Author&#39;s picture" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="5">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://ddd4117.github.io/#about">
+          <img class="sidebar-profile-picture" src="https://ddd4117.github.io/images/profile.jpg" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">1o2o3o</h4>
+        
+          <h5 class="sidebar-profile-bio">마구잡이 코딩맨</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/categories/os">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-linux"></i>
+      
+      <span class="sidebar-button-desc">OS</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/categories/spring">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-linux"></i>
+      
+      <span class="sidebar-button-desc">spring</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/ddd4117" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/index.xml">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/#about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="5"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      Garbage Collection(GC)의 이해
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2021-04-25T23:22:25&#43;09:00">
+        
+  April 25, 2021
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://ddd4117.github.io/categories/java">JAVA</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              <h2 id="stop-the-world">stop-the-world</h2>
+<p>GC를 실행하기 위해 JVM이 애플리케이션 실행을 멈추는 것으로 stop-the-world가 발생하면 GC를 실행하는 쓰레드를 제외한 나머지 쓰레드는 모두 작업을 멈춘다. GC작업을 완료 후 중단했던 작업을 다시 시작한다.대게 GC 튜닝이란 stop-the-world 시간을 줄이는 것이다.</p>
+<p>JAVA는 메모리를 명시적으로 해제하지 않기 때문에 가비지 컬렉터(Garbage Collector)가 더 이상 필요 없는(쓰레기) 객체를 찾아 지우는 작업을 한다.</p>
+<p><img src="https://cdn.journaldev.com/wp-content/uploads/2014/05/Java-Memory-Model-450x186.png" alt="https://cdn.journaldev.com/wp-content/uploads/2014/05/Java-Memory-Model-450x186.png"></p>
+<h3 id="weak-generational-hypothesis">Weak generational hypothesis</h3>
+<ul>
+<li>대부분의 객체는 금방 접근 불가능한 상태(unreachable)가 된다.</li>
+<li>오래된 객체에서 젊은 객체로의 참조는 아주 적게 존재한다.</li>
+</ul>
+<p>이에 따라 HotSpot VM(가상 머신)에서는 크게 2개의 물리적 공간으로 나누었다.</p>
+<ul>
+<li>Young Generation
+<ul>
+<li>새롭게 생성한 대부분의 객체가 여기에 위치</li>
+<li>대부분의 객체가 금방 접근 불가능 상태(unreachable) 상태가 되기 때문에 매우 많은 객체가 여기서 생성되었다가 사라진다.</li>
+<li>이 영역에서 객체가 사라질 때 <strong>Minor GC</strong>가 발생한다고 말한다.</li>
+</ul>
+</li>
+<li>Old Generation
+<ul>
+<li>접근 불가능 상태로 되지 않아 Young 영역에서 살아남은 객체가 복사되는 곳</li>
+<li>대부분 Young 영역보다 크게 할당, 크기가 큰 만큼 Young 영역보다 GC는 적게 발생</li>
+<li>이 영역에서 객체가 사라질 때 **Major GC(Full GC)**가 발생한다고말한다.</li>
+</ul>
+</li>
+<li>Permanent Generation
+<ul>
+<li>Method Area라고 불리며, 객체나 억류(intern)된 문자열 정보를 저장하는 곳</li>
+<li>Old에서 넘어온 객체가 영원히 남아있는 곳은 아니며, 이 영역도 GC가 발생한다</li>
+</ul>
+</li>
+</ul>
+<h3 id="old-영역에-있는-객체가-young-영역의-객체를-참조하는-경우">Old 영역에 있는 객체가 Young 영역의 객체를 참조하는 경우</h3>
+<ul>
+<li>Old 영역에는 512바이트의 덩어리(chunk)로 되어 있는 카드 테이블이 존재</li>
+<li>카드 테이블에는 Old 영역에 있는 객체가 Young 영역의 객체를 참조할 때마다 정보가 표시</li>
+<li>Young 영역의 GC를 실행할 때에는 OLD 영역에 있는 모든 객체의 참조를 확인하지 않고, 카드 테이블만 뒤져서 GC 대상인지 식별한다.</li>
+<li>카드 테이블은 write barrier를 사용하여 관리한다.</li>
+</ul>
+<blockquote>
+<p>write barrier - Minor GC를 빠르게 할 수 있도록 하는 장치, 약간의 오버헤드는 발생하지만 전반적인 GC시간은 줄어든다.</p>
+</blockquote>
+<h2 id="young-generation">Young Generation</h2>
+<ul>
+<li>Eden 영역</li>
+<li>Survivor 영역(2개)</li>
+</ul>
+<p>Survivor 영역이 2개이기 때문에 총 3개의 영역으로 나뉜다.</p>
+<h3 id="각-영역의-처리-절차-순서">각 영역의 처리 절차 순서</h3>
+<ul>
+<li>새로 생성된 대부분의 객체는 Eden 영역에 위치</li>
+<li>Eden 영역에서 GC가 한번 발생한 후 살아남은 객체는 Survivor 영역 중 하나로 이동</li>
+<li>Eden 영역에서 GC가 발생하면 이미 살아남은 객체가 존재하는 Survivor 영역으로 객체가 계속 쌓인다.</li>
+<li>하나의 Survivor 영역이 가득 차게 되면 그 중에서 살아남은 객체를 다른 Survivor 영역으로 이동한다.</li>
+<li>가득 찬 Survivor 영역은 아무 데이터도 없는 상태로 된다.</li>
+<li>이 과정을 반복하다가 계속해서 살아남아 있는 객체는 Old 영역으로 이동하게 된다.</li>
+</ul>
+<p>이런 절차를 확인해 보면 Survivor 영역 중 하나는 반드시 비어있는 상태가 된다.</p>
+<h3 id="메모리-할당을-위한-두-가지-기술">메모리 할당을 위한 두 가지 기술</h3>
+<ul>
+<li>bump-the-pointer
+<ul>
+<li>Eden 영역에 할당된 마지막 객체를 추적, 마지막 객체는 Eden 영역의 맨 위(top)에 잇다.</li>
+<li>다음에 생성되는 객체가 있으면 Eden 영역에 넣기 적당한지만 확인한다.</li>
+<li>적당하다고 판정되면 Eden 영역에 넣고, 새로 생성된 객체가 맨 위에 있게 된다.</li>
+<li>새로운 객체를 생성할 때 마지막에 추가된 객체만 점검하면 되므로 메모리 할당이 빠르게 이루어진다.</li>
+</ul>
+</li>
+<li>TLABs(Thread-Local Allocation Buffers)
+<ul>
+<li>Thread-Safe하기 위해서 여러 스레드에서 사용하는 객체를 Eden 영역에 저장하려면 Lock이 발생할 수 밖에 없다.</li>
+<li>각각의 스레드가 각각의 몫에 해당하는 Eden 영역의 작은 덩어리를 가질 수 있도록 하는 것이다.</li>
+<li>각 쓰레드에는 자기가 갖고 있는 TALB에만 접근할 수 있다.</li>
+<li>따라서, bump-the-pointer를 사용하더라도 문제가 되지 않는다.</li>
+</ul>
+</li>
+</ul>
+<h2 id="old-generation">Old Generation</h2>
+<ul>
+<li>Serial GC</li>
+<li>Parallel GC</li>
+<li>Parallel Old GC(Parallel Compacting GC)</li>
+<li>Concurrent Mark &amp; Sweep GC(CMS)</li>
+<li>G1(Garbage First) GC</li>
+<li>절대 운영 서버에서 사용하면 안되는 GC → Serial GC : CPU 코어가 하나만 있을 때 사용하기 위해 만들어 진 것</li>
+</ul>
+<h3 id="serial-gc-xxuserserialgc">Serial GC(-XX:+UserSerialGC)</h3>
+<p>Young 영역에서는 앞에서 기술한 방식을 사용, Old 영역에서는 <code>mark-sweep-compact</code> 알고리즘 사용한다.</p>
+<ol>
+<li>Old 영역에서 살아 있는 객체를 식별<code>(Mark)</code></li>
+<li>힙(Heap)의 앞 부분부터 확인하여 살아 있는것만 남긴다<code>(Sweep)</code></li>
+<li>각 객체들이 연속되게 쌓이도록 힙의 가장 앞 부분부터 채워서 객체가 존재하는 부분과 객체가 없는 부분으로 나눈다<code>(Compaction)</code></li>
+</ol>
+<p>적은 메모리와 CPU 코어 개수가 적을 때 적합한 방식</p>
+<h3 id="parallel-gc-xxuseparallelgc">Parallel GC(-XX:+UseParallelGC)</h3>
+<p>Serial GC와 기본적인 알고리즘은 같다. 그러나 Serial GC는 처리하는 스레드가 하나지만, Parallel GC는 쓰레드가 여러개다.</p>
+<p>Parallel GC는 메모리가 충분하고 코어의 개수가 많을 때 유리하다.</p>
+<p><img src="https://d2.naver.com/content/images/2015/06/helloworld-1329-4.png" alt="https://d2.naver.com/content/images/2015/06/helloworld-1329-4.png"></p>
+<h3 id="parallel-old-gc-xxuseparalleloldgc">Parallel Old GC(-XX:+UseParallelOldGC)</h3>
+<p>Parallel GC와 비교하여 Old영역 GC 알고리즘만 다르다. <code>Mark-Summary-Compaction</code></p>
+<p>Summary 단계에서는 GC를 수행한 영역에 대해서 별도로 살아 있는 객체를 식별한다는 점에서 Sweep 단계와 다르다.</p>
+<h3 id="cms-gcxuseconcmarksweepgc">CMS GC(–X:+UseConcMarkSweepGC)</h3>
+<p><img src="https://d2.naver.com/content/images/2015/06/helloworld-1329-5.png" alt="https://d2.naver.com/content/images/2015/06/helloworld-1329-5.png"></p>
+<ol>
+<li>초기 <code>Initial Mark</code> 단계에서 클래스 로더에서 가장 가까운 객체 중 살아 있는 객체만 찾는 것으로 끝낸다.</li>
+<li>그리고 <code>Concurrent Mark</code> 단계에서는 방금 살아있다고 확인한 객체에서 참조하고 있는 객체들을 따라가면서 확인한다.(다른 스레드가 실행 중인 상태에서 동시에 진행된다)</li>
+<li><code>Remark</code> 단계에서는 <code>Concurrent Mark</code> 단계에서 새로 추가되거나 참조가 끊긴 객체를 확인한다.</li>
+<li><code>Concurrent Sweep</code> 단계에서는 쓰레기를 정리하는 작업을 실행한다. ((다른 스레드가 실행 중인 상태에서 동시에 진행된다)</li>
+</ol>
+<p>이러한 방식으로 진행되기 때문에 <code>stop-the-world</code> 시간이 매우 짧다.</p>
+<p>모든 애플리케이션의 응답 속도가 매우 중요할 때 CMS GC를 사용하며, Low Latency GC라고도 부른다.</p>
+<h3 id="단점">단점</h3>
+<ul>
+<li>다른 GC방식보다 메모리와 CPU를 더 많이 사용한다.</li>
+<li>Compaction단계가 기본적으로 제공되지 않는다.</li>
+</ul>
+<p>조각난 메모리가 많아 Compaction 작업을 실행하면 다른 GC 방식의 Stop-the-world 보다 더 길기 때문에 Compaction 작업이 얼마나 자주 오랫동안 수행되는지 확인해야 한다..</p>
+<p>CMS 콜렉터 방식은 2개 이상의 프로세서를 사용하는 서버에 적당하다. (= Webserver)</p>
+<p>Parallel GC 보다 약 10~20% Heap Memory를 사용한다.</p>
+<h3 id="g1-gc">G1 GC</h3>
+<p><img src="https://d2.naver.com/content/images/2015/06/helloworld-1329-6.png" alt="https://d2.naver.com/content/images/2015/06/helloworld-1329-6.png"></p>
+<ol>
+<li>바둑판의 각 영역에 객체를 할당하고 GC를 실행한다.</li>
+<li>그러다가, 해당 영역이 꽉 차면 다른 영역에서 객체를 할당하고 GC를 실행한다.</li>
+</ol>
+<ul>
+<li>Young GC : Parallel GC, Old GC : Old 영역의 일부 Region만 GC가 일어난다.</li>
+<li>Young, Old 영역으로 이동하는 단계가 사라진 GC방식</li>
+<li>CMS와의 차이는 CMS는 전체를 하나로 본다면, G1은 N개의 영역으로 나누어 GC를 처리한다는 것</li>
+</ul>
+<p>즉, 큰 영역을 한번에 처리할 거냐?, 여러개로 나누어 자주처리할 거냐의 문제</p>
+<h2 id="default-garbage-collectors">Default Garbage Collectors</h2>
+<ul>
+<li>Java7 : Parallel GC</li>
+<li>Java8 : Parallel GC</li>
+<li>Java9 : G1 GC</li>
+<li>Java10 : G1 GC</li>
+</ul>
+<h2 id="참고-자료">참고 자료</h2>
+<ul>
+<li><a href="https://12bme.tistory.com/57">https://12bme.tistory.com/57</a></li>
+<li><a href="https://d2.naver.com/helloworld/1329">https://d2.naver.com/helloworld/1329</a></li>
+</ul>
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="https://ddd4117.github.io/tags/java/">JAVA</a>
+
+  <a class="tag tag--primary tag--small" href="https://ddd4117.github.io/tags/garbage-collection/">Garbage Collection</a>
+
+  <a class="tag tag--primary tag--small" href="https://ddd4117.github.io/tags/gc/">GC</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/04/jpa-15%EC%9E%A5-%EA%B3%A0%EA%B8%89-%EC%A3%BC%EC%A0%9C%EC%99%80-%EC%84%B1%EB%8A%A5-%EC%B5%9C%EC%A0%81%ED%99%94/" data-tooltip="[JPA] 15장 - 고급 주제와 성능 최적화">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+            
+              
+                <script src="https://utteranc.es/client.js"
+        repo="ddd4117/ddd4117.github.com"
+        issue-term="[ENTER TERM HERE]"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2021 <a href="https://github.com/ddd4117">1o2o3o</a>. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="5">
+        <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/04/jpa-15%EC%9E%A5-%EA%B3%A0%EA%B8%89-%EC%A3%BC%EC%A0%9C%EC%99%80-%EC%84%B1%EB%8A%A5-%EC%B5%9C%EC%A0%81%ED%99%94/" data-tooltip="[JPA] 15장 - 고급 주제와 성능 최적화">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="5">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://ddd4117.github.io/images/profile.jpg" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">1o2o3o</h4>
+    
+      <div id="about-card-bio">마구잡이 코딩맨</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        SW developer
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        Korea
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://ddd4117.github.io/images/cover.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
+
+
+<script src="https://ddd4117.github.io/js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js"></script>
+
+
+<script lang="javascript">
+window.onload = updateMinWidth;
+window.onresize = updateMinWidth;
+document.getElementById("sidebar").addEventListener("transitionend", updateMinWidth);
+function updateMinWidth() {
+  var sidebar = document.getElementById("sidebar");
+  var main = document.getElementById("main");
+  main.style.minWidth = "";
+  var w1 = getComputedStyle(main).getPropertyValue("min-width");
+  var w2 = getComputedStyle(sidebar).getPropertyValue("width");
+  var w3 = getComputedStyle(sidebar).getPropertyValue("left");
+  main.style.minWidth = `calc(${w1} - ${w2} - ${w3})`;
+}
+</script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = 'https:\/\/ddd4117.github.io\/2021\/04\/garbage-collectiongc%EC%9D%98-%EC%9D%B4%ED%95%B4\/';
+          
+            this.page.identifier = '\/2021\/04\/garbage-collectiongc%EC%9D%98-%EC%9D%B4%ED%95%B4\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'hyuntae';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+
+    
+  </body>
+</html>
+
