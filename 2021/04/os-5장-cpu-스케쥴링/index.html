@@ -366,6 +366,44 @@ if (!doNotTrack) {
 </ul>
 </li>
 </ul>
+<h2 id="multilevel-queue">Multilevel Queue</h2>
+<ul>
+<li>Ready Queue를 우선순위를 여러개로 나누어 관리 함</li>
+<li>foreground :</li>
+<li>background(batch) : 상호작용을 하지 않기 때문에 FCFS</li>
+</ul>
+<h2 id="multilevel-feedback-queue">MultiLevel Feedback Queue</h2>
+<ul>
+<li>결국 MQ는 자신의 우선순위를 바꾸지 못함, MFQ에서는 프로세스들이 우선순위를 바꾼다.</li>
+<li>CPU burst가 짧은 애들한테 우선순위를 먼저주고, 긴 애들은 점점 내려간다.</li>
+<li>밑으로 갈수록 할당시간이 늘어나다가, 결국 FCFS에 도달하여 모두 처리할 수 있도록 함</li>
+</ul>
+<h2 id="cpu가-여러개-있는-경우의-스케쥴링">CPU가 여러개 있는 경우의 스케쥴링</h2>
+<ul>
+<li>Homogeneous Processor</li>
+<li>Symmetric Multiprocess : 모든 CPU들이 대등해서 모든 CPU가 스케쥴링</li>
+<li>Asymmetric Multiprocess : 하나의 CPU가 데이터 접근과 공유를 책임지고 나머지를 컨트롤 함</li>
+</ul>
+<h2 id="real-time-scheduling">Real Time Scheduling</h2>
+<ul>
+<li>Hard real time system
+<ul>
+<li>미리 real time을 파악해서 데드라인을 맞출 수 있도록 스케쥴링</li>
+</ul>
+</li>
+<li>Soft real time system
+<ul>
+<li>반드시 데드라인을 맞추지 않아도 됨</li>
+<li>soft real-time task 우선순위를 일반 프로세스보다 높게 가지게하여 먼저 처리하게 한다.</li>
+</ul>
+</li>
+</ul>
+<h2 id="thread-scheduling">Thread Scheduling</h2>
+<ul>
+<li>프로세스 안 쓰레드의 스케쥴링은 어떻게 할 것인가?</li>
+<li>Local Scheduling : User Level Thread</li>
+<li>Global Scheduling : OS가 쓰레드의 존재를 암</li>
+</ul>
 <h2 id="참고자료">참고자료</h2>
 <p>반효경 교수님의 운영체제 강의를 참고하였습니다.
 (<a href="https://core.ewha.ac.kr/publicview/C0101020140318134023355997?vmode=f">https://core.ewha.ac.kr/publicview/C0101020140318134023355997?vmode=f</a>)</p>
