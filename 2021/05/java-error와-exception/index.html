@@ -12,15 +12,37 @@
 
 
 <meta property="og:description" content="">
-<meta property="og:type" content="website">
-<meta property="og:title" content="GC">
-<meta name="twitter:title" content="GC">
-<meta property="og:url" content="https://ddd4117.github.io/tags/gc/">
-<meta property="twitter:url" content="https://ddd4117.github.io/tags/gc/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[JAVA] Error와 Exception">
+<meta name="twitter:title" content="[JAVA] Error와 Exception">
+<meta property="og:url" content="https://ddd4117.github.io/2021/05/java-error%EC%99%80-exception/">
+<meta property="twitter:url" content="https://ddd4117.github.io/2021/05/java-error%EC%99%80-exception/">
 <meta property="og:site_name" content="1o2o3o&#39;s Tech Blog">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
 <meta property="og:locale" content="en-us">
+
+  
+    <meta property="article:published_time" content="2021-05-01T23:37:29">
+  
+  
+    <meta property="article:modified_time" content="2021-05-01T23:37:29">
+  
+  
+  
+    
+      <meta property="article:section" content="JAVA">
+    
+  
+  
+    
+      <meta property="article:tag" content="JAVA">
+    
+      <meta property="article:tag" content="Garbage Collection">
+    
+      <meta property="article:tag" content="GC">
+    
+  
 
 
 <meta name="twitter:card" content="summary">
@@ -31,6 +53,9 @@
 
 
 
+  <meta property="og:image" content="https://user-images.githubusercontent.com/28971015/115997205-4cf02100-a61d-11eb-9dc7-aeccb15fe14d.png">
+  <meta property="twitter:image" content="https://user-images.githubusercontent.com/28971015/115997205-4cf02100-a61d-11eb-9dc7-aeccb15fe14d.png">
+
 
 
 
@@ -39,17 +64,15 @@
   <meta property="twitter:image" content="https://ddd4117.github.io/images/profile.jpg">
 
 
-    <title>GC - 1o2o3o&#39;s Tech Blog</title>
+    <title>[JAVA] Error와 Exception - 1o2o3o&#39;s Tech Blog</title>
 	<script data-ad-client="ca-pub-7778071856226172" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 
     <link rel="icon" href="https://ddd4117.github.io/images/favicon.png">
     
-      <link rel="alternate" type="application/rss+xml" title="RSS" href="https://ddd4117.github.io/tags/gc/index.xml">
-    
 
     
 
-    <link rel="canonical" href="https://ddd4117.github.io/tags/gc/">
+    <link rel="canonical" href="https://ddd4117.github.io/2021/05/java-error%EC%99%80-exception/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -80,7 +103,7 @@ if (!doNotTrack) {
 
   <body>
     <div id="blog">
-      <header id="header" data-behavior="2">
+      <header id="header" data-behavior="5">
  
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-LJYW9800LT"></script>
 <script>
@@ -112,7 +135,7 @@ if (!doNotTrack) {
   
 </header>
 
-      <nav id="sidebar" data-behavior="2">
+      <nav id="sidebar" data-behavior="5">
   <div class="sidebar-container">
     
       <div class="sidebar-profile">
@@ -231,35 +254,21 @@ if (!doNotTrack) {
 </nav>
 
       
-        
 
-      
-      <div id="main" data-behavior="2"
+      <div id="main" data-behavior="5"
         class="
                hasCoverMetaIn
                ">
-        
-          <section class="postShorten-group main-content-wrap">
-            
-            
-              
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
   
-    
+    <h1 class="post-title" itemprop="headline">
+      [JAVA] Error와 Exception
+    </h1>
   
-
-
   
-
-<article class="postShorten postShorten--thumbnailimg-left" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="https://ddd4117.github.io/2021/05/java-error%EC%99%80-exception/">
-          [JAVA] Error와 Exception
-        </a>
-      </h1>
-      
   <div class="postShorten-meta post-meta">
     
       <time itemprop="datePublished" datetime="2021-05-01T23:37:29&#43;09:00">
@@ -279,89 +288,112 @@ if (!doNotTrack) {
 
   </div>
 
-    </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              <h1 id="error와-exception">Error와 Exception</h1>
+<h2 id="오류error와-예외exception-개념">오류(Error)와 예외(Exception) 개념</h2>
+<p>오류(Error)란 시스템에 비정상적인 상황이 생겼을 경우를 뜻한다. 시스템 레벨에서 발생하기 때문에 심각한 수준의 오류이다. 개발자가 미리 예측하여 처리할 수 없기 때문에, 오류에 대한 처리를 신경 쓰지 않아도 된다.</p>
+<p>예외(Exception)란 개발자가 구현한 로직에서 발생한 경우를 뜻한다. 즉, 예외는 발생할 상황을 미리 예측하여 처리할 수 있다.</p>
+<p>자료 : <a href="https://okky.kr/article/362305">https://okky.kr/article/362305</a></p>
+<h2 id="checked-exceptionuncheckedruntime-exception">Checked Exception/Unchecked(Runtime) Exception</h2>
+<h3 id="checked-exception">Checked Exception</h3>
+<p>반드시 예외를 처리해야하는 Exception으로, 컴파일 단계에서 확인할 수 있다. Roll-back하지 않으며, 대표적으로 IOException, SQLException이 있다.</p>
+<h3 id="unchecked-exception">UnChecked Exception</h3>
+<p>명시적인 처리를 강제하지 않는 Exception으로 실행단게에서 확인할 수 있다. Roll-back을 진행하며, RuntimeException 하위 예외가 해당한다(NullPointerException, IllegalArgumentException, IndexOutofBoundException 등)</p>
+<p>Checked Exception과 UnChecked Exception의 가장 명확한 구분 기준은 ’꼭 처리를 해야 하는가?’이다. Checked Exception이 발생할 가능성이 있는 메소드라면 반드시 로직을 처리해야 하고, UnChecked Exception은 명시적인 예외처리를 하지 않아도 된다.</p>
+<p>또한, 예외처리 시점에서도 구분할 수 있다.</p>
+<h2 id="참고-자료">참고 자료</h2>
+<ul>
+<li><a href="https://okky.kr/article/362305">https://okky.kr/article/362305</a></li>
+<li><a href="http://www.nextree.co.kr/p3239/">http://www.nextree.co.kr/p3239/</a></li>
+</ul>
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="https://ddd4117.github.io/tags/java/">JAVA</a>
+
+  <a class="tag tag--primary tag--small" href="https://ddd4117.github.io/tags/garbage-collection/">Garbage Collection</a>
+
+  <a class="tag tag--primary tag--small" href="https://ddd4117.github.io/tags/gc/">GC</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/04/garbage-collectiongc%EC%9D%98-%EC%9D%B4%ED%95%B4/" data-tooltip="Garbage Collection(GC)의 이해">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
       
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
         
       
-      <p>
-        <a href="https://ddd4117.github.io/2021/05/java-error%EC%99%80-exception/" class="postShorten-excerpt_link link">Continue reading</a>
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
         
-      </p>
-    </div>
-  </div>
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
   
-    <a href="https://ddd4117.github.io/2021/05/java-error%EC%99%80-exception/">
-      <div class="postShorten-thumbnailimg">
-        <img alt="" itemprop="image" src="https://user-images.githubusercontent.com/28971015/115997205-4cf02100-a61d-11eb-9dc7-aeccb15fe14d.png"/>
-      </div>
-    </a>
-  
-</article>
+</div>
 
             
               
-  
-    
-  
-
-
-  
-
-<article class="postShorten postShorten--thumbnailimg-left" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="https://ddd4117.github.io/2021/04/garbage-collectiongc%EC%9D%98-%EC%9D%B4%ED%95%B4/">
-          Garbage Collection(GC)의 이해
-        </a>
-      </h1>
-      
-  <div class="postShorten-meta post-meta">
-    
-      <time itemprop="datePublished" datetime="2021-04-25T23:22:25&#43;09:00">
-        
-  April 25, 2021
-
-      </time>
-    
-    
-  
-  
-    <span>in</span>
-    
-      <a class="category-link" href="https://ddd4117.github.io/categories/java">JAVA</a>
-    
-  
-
-  </div>
-
-    </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
-      
-        
-      
-      <p>
-        <a href="https://ddd4117.github.io/2021/04/garbage-collectiongc%EC%9D%98-%EC%9D%B4%ED%95%B4/" class="postShorten-excerpt_link link">Continue reading</a>
-        
-      </p>
-    </div>
-  </div>
-  
-    <a href="https://ddd4117.github.io/2021/04/garbage-collectiongc%EC%9D%98-%EC%9D%B4%ED%95%B4/">
-      <div class="postShorten-thumbnailimg">
-        <img alt="" itemprop="image" src="https://user-images.githubusercontent.com/28971015/115997205-4cf02100-a61d-11eb-9dc7-aeccb15fe14d.png"/>
-      </div>
-    </a>
-  
-</article>
-
+                <script src="https://utteranc.es/client.js"
+        repo="ddd4117/ddd4117.github.com"
+        issue-term="[ENTER TERM HERE]"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+              
             
-            
-
-          </section>
-        
+          </div>
+        </article>
         <footer id="footer" class="main-content-wrap">
   <span class="copyrights">
     &copy; 2021 <a href="https://github.com/ddd4117">1o2o3o</a>. All Rights Reserved
@@ -369,6 +401,66 @@ if (!doNotTrack) {
 </footer>
 
       </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="5">
+        <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/04/garbage-collectiongc%EC%9D%98-%EC%9D%B4%ED%95%B4/" data-tooltip="Garbage Collection(GC)의 이해">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="5">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
     </div>
     
     <div id="about">
@@ -448,6 +540,32 @@ $(document).ready(function() {
 });
 </script>
 
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = 'https:\/\/ddd4117.github.io\/2021\/05\/java-error%EC%99%80-exception\/';
+          
+            this.page.identifier = '\/2021\/05\/java-error%EC%99%80-exception\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'hyuntae';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
 
 
 

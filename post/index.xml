@@ -6,7 +6,16 @@
     <description>Recent content in Posts on 1o2o3o&#39;s Tech Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>kr-ko</language>
-    <lastBuildDate>Sun, 25 Apr 2021 23:22:25 +0900</lastBuildDate><atom:link href="https://ddd4117.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 01 May 2021 23:37:29 +0900</lastBuildDate><atom:link href="https://ddd4117.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>[JAVA] Error와 Exception</title>
+      <link>https://ddd4117.github.io/2021/05/java-error%EC%99%80-exception/</link>
+      <pubDate>Sat, 01 May 2021 23:37:29 +0900</pubDate>
+      
+      <guid>https://ddd4117.github.io/2021/05/java-error%EC%99%80-exception/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>Garbage Collection(GC)의 이해</title>
       <link>https://ddd4117.github.io/2021/04/garbage-collectiongc%EC%9D%98-%EC%9D%B4%ED%95%B4/</link>
