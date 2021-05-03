@@ -3,14 +3,42 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://ddd4117.github.io/</loc>
-    <lastmod>2021-05-01T23:37:29+09:00</lastmod>
+    <lastmod>2021-05-03T22:51:50+09:00</lastmod>
     <changefreq>weekly</changefreq>
   </url><url>
-    <loc>https://ddd4117.github.io/2021/05/java-error%EC%99%80-exception/</loc>
-    <lastmod>2021-05-01T23:37:29+09:00</lastmod>
+    <loc>https://ddd4117.github.io/2021/05/6%EC%9E%A5-process-synchronization/</loc>
+    <lastmod>2021-05-03T22:51:50+09:00</lastmod>
     <changefreq>weekly</changefreq>
   </url><url>
     <loc>https://ddd4117.github.io/categories/</loc>
+    <lastmod>2021-05-03T22:51:50+09:00</lastmod>
+    <changefreq>weekly</changefreq>
+  </url><url>
+    <loc>https://ddd4117.github.io/tags/cs/</loc>
+    <lastmod>2021-05-03T22:51:50+09:00</lastmod>
+    <changefreq>weekly</changefreq>
+  </url><url>
+    <loc>https://ddd4117.github.io/tags/os/</loc>
+    <lastmod>2021-05-03T22:51:50+09:00</lastmod>
+    <changefreq>weekly</changefreq>
+  </url><url>
+    <loc>https://ddd4117.github.io/categories/os/</loc>
+    <lastmod>2021-05-03T22:51:50+09:00</lastmod>
+    <changefreq>weekly</changefreq>
+  </url><url>
+    <loc>https://ddd4117.github.io/post/</loc>
+    <lastmod>2021-05-03T22:51:50+09:00</lastmod>
+    <changefreq>weekly</changefreq>
+  </url><url>
+    <loc>https://ddd4117.github.io/tags/</loc>
+    <lastmod>2021-05-03T22:51:50+09:00</lastmod>
+    <changefreq>weekly</changefreq>
+  </url><url>
+    <loc>https://ddd4117.github.io/tags/%EC%9A%B4%EC%98%81%EC%B2%B4%EC%A0%9C/</loc>
+    <lastmod>2021-05-03T22:51:50+09:00</lastmod>
+    <changefreq>weekly</changefreq>
+  </url><url>
+    <loc>https://ddd4117.github.io/2021/05/java-error%EC%99%80-exception/</loc>
     <lastmod>2021-05-01T23:37:29+09:00</lastmod>
     <changefreq>weekly</changefreq>
   </url><url>
@@ -27,14 +55,6 @@
     <changefreq>weekly</changefreq>
   </url><url>
     <loc>https://ddd4117.github.io/categories/java/</loc>
-    <lastmod>2021-05-01T23:37:29+09:00</lastmod>
-    <changefreq>weekly</changefreq>
-  </url><url>
-    <loc>https://ddd4117.github.io/post/</loc>
-    <lastmod>2021-05-01T23:37:29+09:00</lastmod>
-    <changefreq>weekly</changefreq>
-  </url><url>
-    <loc>https://ddd4117.github.io/tags/</loc>
     <lastmod>2021-05-01T23:37:29+09:00</lastmod>
     <changefreq>weekly</changefreq>
   </url><url>
@@ -71,22 +91,6 @@
     <changefreq>weekly</changefreq>
   </url><url>
     <loc>https://ddd4117.github.io/2021/04/os-5%EC%9E%A5-cpu-%EC%8A%A4%EC%BC%80%EC%A5%B4%EB%A7%81/</loc>
-    <lastmod>2021-04-19T22:03:58+09:00</lastmod>
-    <changefreq>weekly</changefreq>
-  </url><url>
-    <loc>https://ddd4117.github.io/tags/cs/</loc>
-    <lastmod>2021-04-19T22:03:58+09:00</lastmod>
-    <changefreq>weekly</changefreq>
-  </url><url>
-    <loc>https://ddd4117.github.io/tags/os/</loc>
-    <lastmod>2021-04-19T22:03:58+09:00</lastmod>
-    <changefreq>weekly</changefreq>
-  </url><url>
-    <loc>https://ddd4117.github.io/categories/os/</loc>
-    <lastmod>2021-04-19T22:03:58+09:00</lastmod>
-    <changefreq>weekly</changefreq>
-  </url><url>
-    <loc>https://ddd4117.github.io/tags/%EC%9A%B4%EC%98%81%EC%B2%B4%EC%A0%9C/</loc>
     <lastmod>2021-04-19T22:03:58+09:00</lastmod>
     <changefreq>weekly</changefreq>
   </url><url>
