@@ -564,7 +564,126 @@ compile/load time의 경우 원래 메모리 위치로 swap in 해야 함</li>
 </ul>
 </li>
 <li>page table 자체를 page로 구성</li>
-<li>사용되지 않는 주소 공간에 대한 outer page table의 entry값은 NULL로 구성</li>
+<li>사용되지 않는 주소 공간에 대한 outer page table의 entry값은 NULL로 구성(대응 하는 inner page table이 없음)</li>
+<li>page table 하나당 4K고, page table entry는 4B임 그래서 약 1K(2^10)개의 entry가 들어가게 됨</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/28971015/117576579-76cb3c80-b121-11eb-9d1d-ef0b1acc0ca0.png" alt="https://user-images.githubusercontent.com/28971015/117576579-76cb3c80-b121-11eb-9d1d-ef0b1acc0ca0.png"></p>
+<ul>
+<li>20 bit의 page number
+<ul>
+<li>각 page table entry는 4B</li>
+<li>10 bit의 page number</li>
+<li>10 bit의 page offset</li>
+</ul>
+</li>
+<li>12 bit의 page offset
+<ul>
+<li>12 bit인 이유는 page table이 4KB이기 때문(2^12)</li>
+</ul>
+</li>
+<li>P1은 outer page table의 index</li>
+<li>P2는 outer page table의 page에서의 변위(displacement)</li>
+</ul>
+<p>❓ 그럼 64 bit일 때는 어떻게 page bit를 나눌까?</p>
+<h2 id="memory-protection">Memory Protection</h2>
+<p>Page table의 각 entry마다 아래의 bit를 둠</p>
+<ul>
+<li>Protection bit
+<ul>
+<li>page에 대한 접근 권한(read/write/read-only)</li>
+</ul>
+</li>
+<li>Valid-invalid bit
+<ul>
+<li>valid → 해당 주소의 frame에 그 프로세스를 구성하는 유효한 내용이 있음을 뜻함(접근 허용)</li>
+<li>invalid → 해당 주소의 frame에 유효한 내용이 없음을 뜻함(접근 불허)</li>
+</ul>
+</li>
+</ul>
+<h2 id="inverted-page-table">Inverted Page Table</h2>
+<p><img src="https://user-images.githubusercontent.com/28971015/117661021-cae52800-b1d8-11eb-9e21-003609e01fe6.png" alt="https://user-images.githubusercontent.com/28971015/117661021-cae52800-b1d8-11eb-9e21-003609e01fe6.png"></p>
+<ul>
+<li>page table이 매우 큰 이유
+<ul>
+<li>모든 process 별로 그 logical address에 대응하는 모든 page에 대해 page table entry가 존재</li>
+<li>대응하는 page가 메모리에 있든 아니든 간에 page table에는 entry로 존재</li>
+</ul>
+</li>
+<li>Inverted page table
+<ul>
+<li>Page frame 하나당 page table에 하나의 entry를 둔 것(system-wide)</li>
+<li>각 page table entry는 각각의 물리적 메모리의 page frame이 담고 있는 내용 표시(process-id, process의 logical address)</li>
+<li>단점
+<ul>
+<li>테이블 전체를 탐색해야 함</li>
+</ul>
+</li>
+<li>조치
+<ul>
+<li>associative register 사용(expensive)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="shared-page">Shared Page</h2>
+<ul>
+<li>Shared code
+<ul>
+<li>Re-entrant code(=Pure code)</li>
+<li>read-only로 하여 프로세스 간에 하나의 code만 메모리에 올림(text editors, compilers, window systems)</li>
+<li>shared code는 모든 프로세스의 logical address space에서 동일한 위치에 있어야 함</li>
+</ul>
+</li>
+<li>Private code and data
+<ul>
+<li>각 프로세스들은 독자적으로 메모리에 올림</li>
+<li>Private data는 logical address space의 아무 곳에 와도 무방</li>
+</ul>
+</li>
+</ul>
+<h2 id="segmentation">Segmentation</h2>
+<p><img src="https://user-images.githubusercontent.com/28971015/117662678-c7eb3700-b1da-11eb-805d-76d7b34b40eb.png" alt="https://user-images.githubusercontent.com/28971015/117662678-c7eb3700-b1da-11eb-805d-76d7b34b40eb.png"></p>
+<ul>
+<li>프로그램은 의미 단위인 여러 개의 segment로 구성
+<ul>
+<li>작게는 프로그램을 구성하는 함수 하나하나를 세그먼트로 정의</li>
+<li>크게는 프로그램 전체를 하나의 세그먼트로 정의</li>
+<li>일반적으로는 code, data, stack 부분이 하나씩의 세그먼트로 정의</li>
+</ul>
+</li>
+<li>Segment는 다음과 같은 logical unit임
+<ul>
+<li>main()</li>
+<li>function</li>
+<li>global variables</li>
+<li>stack</li>
+<li>symbol table, arrays</li>
+</ul>
+</li>
+<li>Logical address는 다음과 같이 구성 <code>&lt;segment-number, offset&gt;</code></li>
+<li>Segment table
+<ul>
+<li>base - starting physical address of the segment(STBR)</li>
+<li>limit - length of the segment(STLR)
+<ul>
+<li>의미 단위로 자르는 것이므로 page와는 다르게 limit이 존재 함</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>segment의 길이가 동일하지 않으므로 가변분할 방식에서 동일한 문제점들이 발생
+→ external fragmentation</li>
+<li>의미 단위로 잘랐기 때문에 각 세그먼트 별로 protection bit가 있음</li>
+<li>segment는 의미 단위기 때문에 공유(sharing)와 보안(protection)에 있어 paging보다 효과적</li>
+</ul>
+<h2 id="segmentation-with-paging">Segmentation with Paging</h2>
+<ul>
+<li>pure segmentation과의 차이점
+<ul>
+<li>segment-table entry가 segment의 base address를 가지고 있는 것이 아니라 segment를 구성하는 page table의 base address를 가지고 있음</li>
+</ul>
+</li>
 </ul>
               
             </div>
