@@ -13,38 +13,34 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hash Table 자료구조">
-<meta name="twitter:title" content="Hash Table 자료구조">
-<meta property="og:url" content="https://ddd4117.github.io/2021/05/hash-table-%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0/">
-<meta property="twitter:url" content="https://ddd4117.github.io/2021/05/hash-table-%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0/">
+<meta property="og:title" content="Collection Framework">
+<meta name="twitter:title" content="Collection Framework">
+<meta property="og:url" content="https://ddd4117.github.io/2021/05/collection-framework/">
+<meta property="twitter:url" content="https://ddd4117.github.io/2021/05/collection-framework/">
 <meta property="og:site_name" content="1o2o3o&#39;s Tech Blog">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2021-05-11T23:28:42">
+    <meta property="article:published_time" content="2021-05-12T00:00:30">
   
   
-    <meta property="article:modified_time" content="2021-05-11T23:28:42">
+    <meta property="article:modified_time" content="2021-05-12T00:00:30">
   
-  
-  
-    
-      <meta property="article:section" content="cs">
-    
   
   
     
-      <meta property="article:tag" content="cs">
+      <meta property="article:section" content="JAVA">
     
-      <meta property="article:tag" content="list">
+  
+  
     
-      <meta property="article:tag" content="array">
+      <meta property="article:tag" content="JAVA">
     
-      <meta property="article:tag" content="리스트">
+      <meta property="article:tag" content="Garbage Collection">
     
-      <meta property="article:tag" content="배열">
+      <meta property="article:tag" content="GC">
     
   
 
@@ -57,8 +53,8 @@
 
 
 
-  <meta property="og:image" content="https://user-images.githubusercontent.com/28971015/117668032-7fcf1300-b1e0-11eb-80ff-1b09e9dcb32f.png">
-  <meta property="twitter:image" content="https://user-images.githubusercontent.com/28971015/117668032-7fcf1300-b1e0-11eb-80ff-1b09e9dcb32f.png">
+  <meta property="og:image" content="https://user-images.githubusercontent.com/28971015/115997205-4cf02100-a61d-11eb-9dc7-aeccb15fe14d.png">
+  <meta property="twitter:image" content="https://user-images.githubusercontent.com/28971015/115997205-4cf02100-a61d-11eb-9dc7-aeccb15fe14d.png">
 
 
 
@@ -68,7 +64,7 @@
   <meta property="twitter:image" content="https://ddd4117.github.io/images/profile.jpg">
 
 
-    <title>Hash Table 자료구조 - 1o2o3o&#39;s Tech Blog</title>
+    <title>Collection Framework - 1o2o3o&#39;s Tech Blog</title>
 	<script data-ad-client="ca-pub-7778071856226172" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 
     <link rel="icon" href="https://ddd4117.github.io/images/favicon.png">
@@ -76,7 +72,7 @@
 
     
 
-    <link rel="canonical" href="https://ddd4117.github.io/2021/05/hash-table-%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0/">
+    <link rel="canonical" href="https://ddd4117.github.io/2021/05/collection-framework/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -279,15 +275,15 @@ if (!doNotTrack) {
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      Hash Table 자료구조
+      Collection Framework
     </h1>
   
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2021-05-11T23:28:42&#43;09:00">
+      <time itemprop="datePublished" datetime="2021-05-12T00:00:30&#43;09:00">
         
-  May 11, 2021
+  May 12, 2021
 
       </time>
     
@@ -296,7 +292,7 @@ if (!doNotTrack) {
   
     <span>in</span>
     
-      <a class="category-link" href="https://ddd4117.github.io/categories/cs">cs</a>
+      <a class="category-link" href="https://ddd4117.github.io/categories/java">JAVA</a>
     
   
 
@@ -306,76 +302,75 @@ if (!doNotTrack) {
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="hash-table-자료구조">Hash Table 자료구조</h1>
-<p>Hashing이란 임의의 길이의 값을 Hash function을 사용하여 고정된 크기의 값으로 변환하는 작업</p>
-<p>Hashing을 사용하여 데이터를 저장하는 자료구조를 <strong>Hash table</strong> 이라고 한다.</p>
-<ul>
-<li>Key : 고유한 값이며, Hash function의 input이 된다.</li>
-<li>Hash function : Key를 Hash로 바꿔주는 역할을 한다.</li>
-<li>Value : bucket(저장소)에 최종적으로 저장되는 값으로 Key와 매핑이 된다.</li>
+              <ul>
+<li>다수의 데이터를 쉽고 효과적으로 처리할 수 있는 표준화된 방법을 제공하는 클래스의 집합</li>
+<li>데이터를 저장하는 자료구조와 데이터를 처리하는 알고리즘을 구조화하여 클래스로 구현해 놓은 것</li>
+<li>interface를 사용하여 구현</li>
 </ul>
-<h2 id="특징">특징</h2>
+<p><img src="https://user-images.githubusercontent.com/28971015/117835747-153ad780-b2b3-11eb-9361-7235cd4e66bd.png" alt="https://user-images.githubusercontent.com/28971015/117835747-153ad780-b2b3-11eb-9361-7235cd4e66bd.png"></p>
+<h3 id="장점">장점</h3>
 <ul>
-<li>Key와 Value로 구성되어 1:1로 연관되어 있는 자료구조</li>
-<li>Key를 통해 Value를 구할 수 있다.</li>
-<li>hash function을 수행하면 array내에 저장된 index 위치를 찾아 낼 수 있어 저장과 삭제가 빠르다.</li>
-</ul>
-<h2 id="연산">연산</h2>
+<li>이미 구현된 것을 사용함으로써 코딩 시간을 감소시킬 수 있다.
 <ul>
-<li>put : Key/Value가 주어졌을 때, Key/Value를 저장하는 명령[O(1)], worst : O(N)]</li>
-<li>search : Key가 주어졌을 때 연관되는 Value를 얻는 명령[O(1), worst : O(N)]</li>
-<li>delete : Key가 주어졌을 때 주어진 Key와 매핑되는 Value를 삭제하는 명령[O(1), worst : O(N)]</li>
-</ul>
-<h2 id="collision충돌">Collision(충돌)</h2>
-<p>서로 다른 key가 같은 hash가 되는 경우 Hash collision이라고 한다.</p>
-<ul>
-<li>Collision은 필연적으로 생길 수 밖에 없으며 Collision을 관리하는게 목표이다.</li>
-<li>두가지 방법이 존재한다.
-<ul>
-<li>Separate Chaining</li>
-<li>Open Addressing</li>
+<li>이미 검증되어 있기 때문에 코드 품질을 보장한다.</li>
 </ul>
 </li>
+<li>유지보수 시간을 감소시킬 수 있다.</li>
 </ul>
-<h3 id="separate-chaining">Separate Chaining</h3>
+<h2 id="주요-인터페이스">주요 인터페이스</h2>
+<h2 id="collection-interface-group">Collection Interface Group</h2>
+<p>직접적인 구현은 제공하지 않으며, 모든 컬렉션 클래스가 구현해야 하는 메서드들을 포함하고 있다.</p>
 <ul>
-<li>충돌이 발생하면 그 index가 가리키고 있는 Linked list에 노드를 추가하여 값을 추가한다.</li>
-<li>데이터를 추출하고자 할 때는 key에 대한 hash를 구한 후, hash가 가리키고 있는 Linked list를 선형 검색하여, 해당 key에 대한 data를 return</li>
-<li>java8의 경우 bucket이 8이상일 경우 Tree로, 6이하일 경우 Linked list로 구성한다.</li>
+<li><code>boolean add(E e)</code> : 해당 컬렉션에 전달된 요소를 추가</li>
+<li><code>boolean remove(Object o)</code> : 해당 컬렉션에서 전달된 객체를 제거</li>
+<li><code>void clear()</code> : 해당 컬렉션의 모든 요소를 제거</li>
+<li><code>boolean contains(Object o)</code> : 해당 컬렉션이 전달된 객체를 포함하고 있는지</li>
+<li><code>boolean equals(Object o)</code> : 해당 컬렉션과 전달된 객체가 같은지</li>
+<li><code>boolean isEmpty()</code> : 해당 컬렉션이 비어있는지</li>
+<li><code>Iterator&lt;E&gt; iterator()</code> : 해당 컬렉션의 반복자(iterator)를 반환</li>
+<li><code>int size()</code> : 해당 컬렉션의 요소의 총 개수를 반환</li>
+<li><code>Object[] toArray()</code> : 해당 컬렉션의 모든 요소를 Object 타입의 배열로 반환</li>
 </ul>
-<h3 id="open-addressing">Open Addressing</h3>
+<h3 id="list">List</h3>
+<p>순서가 있는 데이터의 집합으로, 데이터의 중복을 허용</p>
 <ul>
-<li>추가적인 메모리를 사용하지 않고, hash table의 빈 공간을 사용하는 방법</li>
-<li>Separate chaining에 비해 메모리를 덜 사용한다.</li>
-<li>Hash function의 성능에 의존한다.</li>
-<li>데이터의 길이가 늘어나면 그에 해당하는 저장소를 마련해야 한다.</li>
-<li>3가지 방식
-<ul>
-<li>Linear Probing
-<ul>
-<li>충돌이 발생했을 때, index 뒤에 있는 bucket 중에서 빈 bucket을 찾아 데이터를 넣는 방식</li>
+<li>Vector, ArrayList, LinkedList, Stack, Queue</li>
 </ul>
-</li>
-<li>Quadratic Probing
+<h3 id="set">Set</h3>
+<p>순서가 없는 데이터의 집합으로, 데이터의 중복을 허용하지 않음</p>
 <ul>
-<li>1^2, 2^2, 3^2&hellip; 으로 탐사를 하는 방식으로 Linear Probing에 비해 탐색과 삭제에 효율적</li>
-<li>하지만 초기 해시값이 같을 경우 클러스터링 문제가 발생</li>
+<li>HashSet, TreeSet</li>
 </ul>
-</li>
-<li>Double Hashing
+<h3 id="queue">Queue</h3>
+<p>요소를 FIFO(First-In First-Out) 방식으로 정렬하며 예외에는 우선순위 큐가 있음</p>
 <ul>
-<li>클러스터링 문제를 피하기 위해 도입</li>
-<li>처음 Hash function으로 hash를 찾고, 두번째 Hash function으로 충돌이 발생했을 때 탐사폭을 계산하기 위해 사용되는 방식</li>
+<li>Priority Queue</li>
 </ul>
-</li>
+<h2 id="map-interface">Map Interface</h2>
+<h3 id="map">Map</h3>
+<p>키와 값의 한쌍으로 이루어지는 데이터의 집합으로, 순서가 없음, 키는 중복X, 값은 중복O</p>
+<ul>
+<li>HashMap, TreeMap, Hashtable, Properties</li>
 </ul>
-</li>
-<li>삭제</li>
+<h2 id="collection-class">Collection Class</h2>
+<ul>
+<li>컬렉션 인터페이스에 대한 구현 클래스를 제공하는 것</li>
+</ul>
+<h2 id="collection-framework의-모범-사례">Collection Framework의 모범 사례</h2>
+<ul>
+<li>크기(size)가 고정되어 있다면 ArrayList보다 <strong>Array</strong>를 사용하라.</li>
+<li>맵에 삽입된 순서대로 iterate를 하고 싶으면 <strong>TreeMap</strong>을 사용하는 것이 좋다.</li>
+<li>중복을 허용하고 싶지 않으면 <strong>Set</strong>을 사용하면 된다.</li>
+<li>몇몇 컬렉션 클래스들을 초기 용량을 지정할 수 있다. 만약 저장할 요소들의 사이즈를 알 경우에 <strong>초기 용량</strong>을 지정함으로써 rehashing이나 resizing이 일어나는 것을 회피할 수 있다.</li>
+<li>코드를 작성할 때, 구현 클래스가 아닌 <strong>인터페이스</strong>를 기반으로 작성해야 나중에 구현체를 변경할 때 코드를 재작성하는 수고를 줄일 수 있다.</li>
+<li>런타임에 발생할 수 있는 ClassCastException을 회피하려면 항상 <strong>제네릭(Generics)을</strong> 사용해서 type-safety 한 상태를 유지하라.</li>
+<li>맵에 키를 사용할 때 JDK에서 제공하는 <strong>immutable</strong> 클래스를 사용하여 사용자 클래스에서 hashCode()와 equals() 구현할 필요가 없게 하라</li>
+<li>읽기 전용 및 동기화, 빈 컬렉션 등을 만들 때는 자신만의 구현으로 생성하지 말고 Collections에서 제공하는 <strong>유틸리티 클래스</strong>를 사용하라. 이는 코드 재사용성을 높여주고 안정적이며 유지보수 비용을 줄여 준다.</li>
 </ul>
 <h2 id="참고-자료">참고 자료</h2>
 <ul>
-<li><a href="https://bcho.tistory.com/1072">https://bcho.tistory.com/1072</a></li>
-<li><a href="https://baeharam.github.io/posts/data-structure/hash-table/">https://baeharam.github.io/posts/data-structure/hash-table/</a></li>
+<li><a href="http://tcpschool.com/java/java_collectionFramework_concept">http://tcpschool.com/java/java_collectionFramework_concept</a></li>
+<li><a href="https://gbsb.tistory.com/247">https://gbsb.tistory.com/247</a>(👍)</li>
 </ul>
               
             </div>
@@ -388,15 +383,11 @@ if (!doNotTrack) {
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">TAGGED IN</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="https://ddd4117.github.io/tags/cs/">cs</a>
+  <a class="tag tag--primary tag--small" href="https://ddd4117.github.io/tags/java/">JAVA</a>
 
-  <a class="tag tag--primary tag--small" href="https://ddd4117.github.io/tags/list/">list</a>
+  <a class="tag tag--primary tag--small" href="https://ddd4117.github.io/tags/garbage-collection/">Garbage Collection</a>
 
-  <a class="tag tag--primary tag--small" href="https://ddd4117.github.io/tags/array/">array</a>
-
-  <a class="tag tag--primary tag--small" href="https://ddd4117.github.io/tags/%EB%A6%AC%EC%8A%A4%ED%8A%B8/">리스트</a>
-
-  <a class="tag tag--primary tag--small" href="https://ddd4117.github.io/tags/%EB%B0%B0%EC%97%B4/">배열</a>
+  <a class="tag tag--primary tag--small" href="https://ddd4117.github.io/tags/gc/">GC</a>
 
                   </div>
                 
@@ -409,7 +400,7 @@ if (!doNotTrack) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/05/collection-framework/" data-tooltip="Collection Framework">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -417,7 +408,7 @@ if (!doNotTrack) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/05/array%EC%99%80-list%EC%9D%98-%EB%B9%84%EA%B5%90/" data-tooltip="Array와 List의 비교">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/05/hash-table-%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0/" data-tooltip="Hash Table 자료구조">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -481,7 +472,7 @@ if (!doNotTrack) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/05/collection-framework/" data-tooltip="Collection Framework">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -489,7 +480,7 @@ if (!doNotTrack) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/05/array%EC%99%80-list%EC%9D%98-%EB%B9%84%EA%B5%90/" data-tooltip="Array와 List의 비교">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/05/hash-table-%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0/" data-tooltip="Hash Table 자료구조">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -617,9 +608,9 @@ $(document).ready(function() {
     
       <script>
         var disqus_config = function () {
-          this.page.url = 'https:\/\/ddd4117.github.io\/2021\/05\/hash-table-%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0\/';
+          this.page.url = 'https:\/\/ddd4117.github.io\/2021\/05\/collection-framework\/';
           
-            this.page.identifier = '\/2021\/05\/hash-table-%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0\/'
+            this.page.identifier = '\/2021\/05\/collection-framework\/'
           
         };
         (function() {
