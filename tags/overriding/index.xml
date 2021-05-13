@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Overriding on 1o2o3o&#39;s Tech Blog</title>
+    <link>https://ddd4117.github.io/tags/overriding/</link>
+    <description>Recent content in Overriding on 1o2o3o&#39;s Tech Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>kr-ko</language>
+    <lastBuildDate>Thu, 13 May 2021 23:15:11 +0900</lastBuildDate><atom:link href="https://ddd4117.github.io/tags/overriding/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>다형성(Polymorphism)</title>
+      <link>https://ddd4117.github.io/2021/05/%EB%8B%A4%ED%98%95%EC%84%B1polymorphism/</link>
+      <pubDate>Thu, 13 May 2021 23:15:11 +0900</pubDate>
+      
+      <guid>https://ddd4117.github.io/2021/05/%EB%8B%A4%ED%98%95%EC%84%B1polymorphism/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
