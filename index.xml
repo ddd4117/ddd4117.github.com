@@ -6,7 +6,16 @@
     <description>Recent content on 1o2o3o&#39;s Tech Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>kr-ko</language>
-    <lastBuildDate>Tue, 25 May 2021 23:18:51 +0900</lastBuildDate><atom:link href="https://ddd4117.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 26 May 2021 20:22:27 +0900</lastBuildDate><atom:link href="https://ddd4117.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>[JAVA] Reflection 이란</title>
+      <link>https://ddd4117.github.io/2021/05/java-reflection-%EC%9D%B4%EB%9E%80/</link>
+      <pubDate>Wed, 26 May 2021 20:22:27 +0900</pubDate>
+      
+      <guid>https://ddd4117.github.io/2021/05/java-reflection-%EC%9D%B4%EB%9E%80/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>[JAVA] Concurrent 패키지 정리</title>
       <link>https://ddd4117.github.io/2021/05/java-concurrent-%ED%8C%A8%ED%82%A4%EC%A7%80-%EC%A0%95%EB%A6%AC/</link>
