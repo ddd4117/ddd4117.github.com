@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="kr-ko">
+  <head>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.82.0 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="author" content="1o2o3o">
+<meta name="keywords" content="">
+<meta name="description" content="">
+
+
+<meta property="og:description" content="">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[JPA] OSIV(Open-Session-In-View)">
+<meta name="twitter:title" content="[JPA] OSIV(Open-Session-In-View)">
+<meta property="og:url" content="https://ddd4117.github.io/2021/06/jpa-osivopen-session-in-view/">
+<meta property="twitter:url" content="https://ddd4117.github.io/2021/06/jpa-osivopen-session-in-view/">
+<meta property="og:site_name" content="1o2o3o&#39;s Tech Blog">
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+<meta property="og:locale" content="en-us">
+
+  
+    <meta property="article:published_time" content="2021-06-02T22:10:38">
+  
+  
+    <meta property="article:modified_time" content="2021-06-02T22:10:38">
+  
+  
+  
+    
+      <meta property="article:section" content="Spring">
+    
+  
+  
+    
+      <meta property="article:tag" content="Spring">
+    
+      <meta property="article:tag" content="JPA">
+    
+      <meta property="article:tag" content="OSIV">
+    
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://user-images.githubusercontent.com/28971015/120214869-028f3f00-c270-11eb-81c4-8bc723163265.png">
+  <meta property="twitter:image" content="https://user-images.githubusercontent.com/28971015/120214869-028f3f00-c270-11eb-81c4-8bc723163265.png">
+
+
+
+
+
+  <meta property="og:image" content="https://ddd4117.github.io/images/profile.jpg">
+  <meta property="twitter:image" content="https://ddd4117.github.io/images/profile.jpg">
+
+
+    <title>[JPA] OSIV(Open-Session-In-View) - 1o2o3o&#39;s Tech Blog</title>
+	<script data-ad-client="ca-pub-7778071856226172" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+    <link rel="icon" href="https://ddd4117.github.io/images/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://ddd4117.github.io/2021/06/jpa-osivopen-session-in-view/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css" integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
+    
+    
+    <link rel="stylesheet" href="https://ddd4117.github.io/css/style-twzjdbqhmnnacqs0pwwdzcdbt8yhv8giawvjqjmyfoqnvazl0dalmnhdkvp7.min.css" />
+    
+    
+
+    
+      
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LJYW9800LT"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-LJYW9800LT', { 'anonymize_ip': false });
+}
+</script>
+
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="5">
+ 
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LJYW9800LT"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-LJYW9800LT', { 'anonymize_ip': false });
+}
+</script>
+ 
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://ddd4117.github.io/">1o2o3o&#39;s Tech Blog</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://ddd4117.github.io/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="https://ddd4117.github.io/images/profile.jpg" alt="Author&#39;s picture" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="5">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://ddd4117.github.io/#about">
+          <img class="sidebar-profile-picture" src="https://ddd4117.github.io/images/profile.jpg" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">1o2o3o</h4>
+        
+          <h5 class="sidebar-profile-bio">마구잡이 코딩맨</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/categories/os">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-linux"></i>
+      
+      <span class="sidebar-button-desc">OS</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/categories/spring">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tv"></i>
+      
+      <span class="sidebar-button-desc">spring</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/categories/java">
+    
+      <i class="sidebar-button-icon fa fa-terminal"></i>
+      
+      <span class="sidebar-button-desc">java</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/categories/cs">
+    
+      <i class="sidebar-button-icon fa fa-pencil"></i>
+      
+      <span class="sidebar-button-desc">cs</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/categories/leetcode">
+    
+      <i class="sidebar-button-icon fa fa-code"></i>
+      
+      <span class="sidebar-button-desc">leetcode</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/ddd4117" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/index.xml">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/#about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="5"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      [JPA] OSIV(Open-Session-In-View)
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2021-06-02T22:10:38&#43;09:00">
+        
+  June 2, 2021
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://ddd4117.github.io/categories/spring">Spring</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              <p>OSIV(Open Session In View)는 영속성 컨텍스트를 뷰까지 열어둔다는 뜻이다.</p>
+<p>지연 로딩된 객체를 초기화하는 것은 영속성 컨텍스트의 도움을 받아서 이루어진다.</p>
+<p>즉, 영속성 컨텍스트가 열려 있어야 가능한 작업인데, Service 계층이 종료되는 시점에 Transaction이 닫힌다.</p>
+<h2 id="과거-osiv-요청-당-트랜잭션">과거 OSIV: 요청 당 트랜잭션</h2>
+<p>OSIV의 핵심은 뷰에서도 지연 로딩이 가능하도록 하는 것이다.</p>
+<p><img src="https://user-images.githubusercontent.com/2491418/84342949-d3586b80-abe1-11ea-99ff-e67647db8354.png" alt="https://user-images.githubusercontent.com/2491418/84342949-d3586b80-abe1-11ea-99ff-e67647db8354.png"></p>
+<p>그림과 같이 요청이 들어오자마자 서블릿 필터나 스프링 인터셉터에서 영속성 컨텍스트를 만들면서 트랜잭션을 시작하고 요청이 끝날 때 트랜잭션과 영속성 컨텍스트를 함께 종료한다.</p>
+<h3 id="요청-당-트랜잭션-방식의-osiv-문제점">요청 당 트랜잭션 방식의 OSIV 문제점</h3>
+<p>요청 당 트랜잭션 방식의 OSIV가 가지는 문제점은 컨트롤러나 뷰 같은 프리젠테이션 계층이 엔티티를 변경할 수 있다는 점이다. 프리젠테이션 계층에서 엔티티를 수정하지 못하게 막는 방법들은 다음과 같다.</p>
+<ul>
+<li>엔티티를 읽기 전용 인터페이스로 제공</li>
+<li>엔티티 래핑</li>
+<li>DTO만 반환</li>
+</ul>
+<h3 id="엔티티를-읽기-전용-인터페이스로-제공">엔티티를 읽기 전용 인터페이스로 제공</h3>
+<p>엔티티를 직접 노출하는 대신에 다음 예제와 같이 읽기 전용 메소드만 제공하는 인터페이스를 프리젠테이션 계층에 제공하는 방법이다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">MemberView</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">getName</span><span style="color:#f92672">();</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#a6e22e">@Entity</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Member</span> <span style="color:#66d9ef">implements</span> MemberView <span style="color:#f92672">{</span>
+    <span style="color:#f92672">...</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MemberService</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">public</span> MemberView <span style="color:#a6e22e">getMember</span><span style="color:#f92672">(</span>id<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> memberRepository<span style="color:#f92672">.</span><span style="color:#a6e22e">findById</span><span style="color:#f92672">(</span>id<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="엔티티-래핑">엔티티 래핑</h3>
+<p>엔티티의 읽기 전용 메소드만 가지고 있는 엔티티를 감싼 객체를 만들고 이것을 프리젠테이션 계층에 반환하는 방법이다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MemberWarpper</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> Member member<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">MemberWrapper</span><span style="color:#f92672">(</span>member<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">member</span> <span style="color:#f92672">=</span> member<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#75715e">//읽기 전용 메소드만 제공
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">getName</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> member<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="dto만-반환">DTO만 반환</h3>
+<p>가장 전통적인 방법으로 프리젠테이션 계층에 엔티티 대신에 단순히 데이터만 전달하는 객체인 DTO를 생성해서 반환하는 것이다. 하지만 이 방법은 OSIV를 사용하는 장점을 살릴 수 없고 엔티티를 거의 복사한 듯한 DTO 클래스도 하나 더 만들어야 한다.</p>
+<p>지금까지 설명한 OSIV는 요청 당 트랜잭션 방식의 OSIV다.</p>
+<p>최근에는 이런 문제점을 어느정도 보완해서 비즈니스 계층에서만 트랜잭션을 유지하는 방식의 OSIV를 사용한다. 스프링 프레임워크가 제공하는 OSIV가 바로 이 방식을 사용하는 OSIV다.</p>
+<h2 id="스프링-osiv-비즈니스-계층-트랜잭션">스프링 OSIV: 비즈니스 계층 트랜잭션</h2>
+<p>스프링 Boot에서는 <code>Open Session In View 패턴</code>을 <code>OpenEntityManagerInViewInterceptor</code>를 통해 default로 지원을 해주고 있습니다.</p>
+<p>OSIV를 서블릿 필터에서 적용할지 스프링 인터셉터에서 적용할지에 따라 원하는 클래스를 선택해서 사용하면 된다. 예를 들어) JPA를 사용하면서 서블릿 필터에 OSIV를 적용하려면 <code>OpenEntityManagerInViewFilter</code>를 서블릿 필터에 등록하면 되고, 스프링 인터셉터에 OSIV를 적용하려면 <code>OpenEntityManagerInViewInterceptor</code>를 스프링 인터셉터에 등록하면 된다.</p>
+<p>참고) spring의 OSIV default value는 true이다.</p>
+<h2 id="스프링-osiv-분석">스프링 OSIV 분석</h2>
+<p>스프링 프레임워크가 제공하는 OSIV는 비즈니스 계층에서 트랜잭션을 사용하는 OSIV다.</p>
+<p><img src="https://user-images.githubusercontent.com/2491418/84342960-dce1d380-abe1-11ea-91b1-e513dd7a4bac.png" alt="https://user-images.githubusercontent.com/2491418/84342960-dce1d380-abe1-11ea-91b1-e513dd7a4bac.png"></p>
+<p>클라이언트의 요청이 들어오면 영속성 컨텍스트를 생성한다. 이때 트랜잭션은 시작하지 않는다. 비즈니스 로직을 실행하고 서비스 계층이 끝나면 트랜잭션을 커밋하면서 영속성 컨텍스트를 플러시한다. 이때 트랜잭션만 종료하고 영속성 컨텍스트는 살려둔다. 이후 클라이언트의 요청이 끝날 때 영속성 컨텍스트를 종료한다.</p>
+<ol>
+<li>클라이언트의 요청이 들어오면 서블릿 필터나, 스프링 인터셉터에서 영속성 컨텍스트를 생성한다. 단 이때 트랜잭션은 시작하지는 않는다.</li>
+<li>서비스 계층에서 <code>@Transactional</code>로 트랜잭션을 시작할 때 1번에서 미리 생성해둔 영속성 컨텍스트를 찾아와서 트랜잭션을 시작한다.</li>
+<li>서비스 계층이 끝나면 트랜잭션을 커밋하고 영속성 컨텍스트를 플러시한다. 이때 트랜잭션은 끝내지만 영속성 컨텍스트는 종료하지 않는다.</li>
+<li>컨트롤러와 뷰까지 영속성 컨텍스트가 유지되므로 조회한 엔티티는 영속 상태를 유지한다.</li>
+<li>서블릿 필터나, 스프링 인터셉터로 요청이 들어오면 영속성 컨텍스트를 종료한다. 이때 플러시를 호출하지 않고 바로 종료한다.</li>
+</ol>
+<h2 id="트랜잭션-없이-읽기">트랜잭션 없이 읽기</h2>
+<p>엔티티를 변경하지 않고 단순히 조회만 할 때는 트랜잭션이 없어도 되는데 이것을 트랜잭션 없이 읽기라 한다. 프록시를 초기화하는 지연 로딩도 조회 기능이므로 트랜잭션 없이 읽기가 가능하다.</p>
+<p>OSIV는 다음과 같은 특징이 있다.</p>
+<ul>
+<li>영속성 컨텍스트를 프리젠테이션 계층까지 유지한다.</li>
+<li>프리젠테이션 계층에는 트랜잭션이 없으므로 엔티티를 수정할 수 없다.</li>
+<li>프리젠테이션 계층에는 트랜잭션에 없지만 트랜잭션 없이 읽기를 사용해서 지연로딩을 할 수 있다.</li>
+</ul>
+<h3 id="예제-코드">예제 코드</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Entity</span>
+<span style="color:#a6e22e">@Table</span><span style="color:#f92672">(</span>name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;MEMBERS&#34;</span><span style="color:#f92672">)</span>
+<span style="color:#a6e22e">@NoArgsConstructor</span>
+<span style="color:#a6e22e">@Getter</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Member</span> <span style="color:#f92672">{</span>
+    <span style="color:#a6e22e">@Id</span>
+    <span style="color:#a6e22e">@GeneratedValue</span><span style="color:#f92672">(</span>strategy <span style="color:#f92672">=</span> GenerationType<span style="color:#f92672">.</span><span style="color:#a6e22e">IDENTITY</span><span style="color:#f92672">)</span>
+    <span style="color:#66d9ef">private</span> Long id<span style="color:#f92672">;</span>
+
+    <span style="color:#a6e22e">@Column</span><span style="color:#f92672">(</span>name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">)</span>
+    <span style="color:#66d9ef">private</span> String name<span style="color:#f92672">;</span>
+
+    <span style="color:#a6e22e">@ManyToOne</span><span style="color:#f92672">(</span>fetch <span style="color:#f92672">=</span> FetchType<span style="color:#f92672">.</span><span style="color:#a6e22e">LAZY</span><span style="color:#f92672">)</span>
+    <span style="color:#66d9ef">private</span> Team team<span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setName</span><span style="color:#f92672">(</span>String name<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">name</span> <span style="color:#f92672">=</span> name<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Entity</span>
+<span style="color:#a6e22e">@Table</span><span style="color:#f92672">(</span>name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;TEAMS&#34;</span><span style="color:#f92672">)</span>
+<span style="color:#a6e22e">@NoArgsConstructor</span>
+<span style="color:#a6e22e">@Getter</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Team</span> <span style="color:#f92672">{</span>
+    <span style="color:#a6e22e">@Id</span>
+    <span style="color:#a6e22e">@GeneratedValue</span><span style="color:#f92672">(</span>strategy <span style="color:#f92672">=</span> GenerationType<span style="color:#f92672">.</span><span style="color:#a6e22e">IDENTITY</span><span style="color:#f92672">)</span>
+    <span style="color:#66d9ef">private</span> Long id<span style="color:#f92672">;</span>
+
+    <span style="color:#a6e22e">@Column</span><span style="color:#f92672">(</span>name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">)</span>
+    <span style="color:#66d9ef">private</span> String name<span style="color:#f92672">;</span>
+
+    <span style="color:#a6e22e">@OneToMany</span><span style="color:#f92672">(</span>mappedBy <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;team&#34;</span><span style="color:#f92672">,</span> fetch <span style="color:#f92672">=</span> FetchType<span style="color:#f92672">.</span><span style="color:#a6e22e">LAZY</span><span style="color:#f92672">)</span>
+    <span style="color:#66d9ef">private</span> List<span style="color:#f92672">&lt;</span>Member<span style="color:#f92672">&gt;</span> members <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
+
+<span style="color:#f92672">}</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Service</span>
+<span style="color:#a6e22e">@RequiredArgsConstructor</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">OSIVService</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> MemberRepository memberRepository<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> TeamRepository teamRepository<span style="color:#f92672">;</span>
+
+    <span style="color:#a6e22e">@Transactional</span>
+    <span style="color:#66d9ef">public</span> Member <span style="color:#a6e22e">findMemberById</span><span style="color:#f92672">(</span>Long memberId<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> memberRepository<span style="color:#f92672">.</span><span style="color:#a6e22e">findById</span><span style="color:#f92672">(</span>memberId<span style="color:#f92672">)</span>
+                <span style="color:#f92672">.</span><span style="color:#a6e22e">orElseThrow</span><span style="color:#f92672">(</span>RuntimeException<span style="color:#f92672">::</span><span style="color:#66d9ef">new</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#a6e22e">@Transactional</span>
+    <span style="color:#66d9ef">public</span> Team <span style="color:#a6e22e">findTeams</span><span style="color:#f92672">(</span>Long teamId<span style="color:#f92672">){</span>
+        <span style="color:#66d9ef">return</span> teamRepository<span style="color:#f92672">.</span><span style="color:#a6e22e">findById</span><span style="color:#f92672">(</span>teamId<span style="color:#f92672">)</span>
+                <span style="color:#f92672">.</span><span style="color:#a6e22e">orElseThrow</span><span style="color:#f92672">(</span>RuntimeException<span style="color:#f92672">::</span><span style="color:#66d9ef">new</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@RestController</span>
+<span style="color:#a6e22e">@RequiredArgsConstructor</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MemberController</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> OSIVService osivService<span style="color:#f92672">;</span>
+
+    <span style="color:#a6e22e">@GetMapping</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;/member/{memberId}&#34;</span><span style="color:#f92672">)</span>
+    <span style="color:#66d9ef">public</span> MemberResponse <span style="color:#a6e22e">getAllMembers</span><span style="color:#f92672">(</span><span style="color:#a6e22e">@PathVariable</span> Long memberId<span style="color:#f92672">){</span>
+        Member member <span style="color:#f92672">=</span> osivService<span style="color:#f92672">.</span><span style="color:#a6e22e">findMemberById</span><span style="color:#f92672">(</span>memberId<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span> MemberResponse<span style="color:#f92672">.</span><span style="color:#a6e22e">of</span><span style="color:#f92672">(</span>member<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Getter</span>
+<span style="color:#a6e22e">@AllArgsConstructor</span>
+<span style="color:#a6e22e">@NoArgsConstructor</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MemberResponse</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> Long id<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> String name<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> TeamResponse team<span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> MemberResponse <span style="color:#a6e22e">of</span><span style="color:#f92672">(</span>Member member<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> MemberResponse<span style="color:#f92672">(</span>
+                member<span style="color:#f92672">.</span><span style="color:#a6e22e">getId</span><span style="color:#f92672">(),</span>
+                member<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">(),</span>
+                TeamResponse<span style="color:#f92672">.</span><span style="color:#a6e22e">of</span><span style="color:#f92672">(</span>member<span style="color:#f92672">.</span><span style="color:#a6e22e">getTeam</span><span style="color:#f92672">())</span>
+        <span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#a6e22e">@Getter</span>
+<span style="color:#a6e22e">@AllArgsConstructor</span>
+<span style="color:#a6e22e">@NoArgsConstructor</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TeamResponse</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> Long id<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> String name<span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> TeamResponse <span style="color:#a6e22e">of</span><span style="color:#f92672">(</span>Team team<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> TeamResponse<span style="color:#f92672">(</span>team<span style="color:#f92672">.</span><span style="color:#a6e22e">getId</span><span style="color:#f92672">(),</span> team<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">());</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e">//data.sql
+</span><span style="color:#75715e"></span>INSERT INTO TEAMS <span style="color:#a6e22e">VALUES</span><span style="color:#f92672">(</span>1<span style="color:#f92672">,</span> <span style="color:#960050;background-color:#1e0010">&#39;</span>BARCA<span style="color:#960050;background-color:#1e0010">&#39;</span><span style="color:#f92672">);</span>
+INSERT INTO TEAMS <span style="color:#a6e22e">VALUES</span><span style="color:#f92672">(</span>2<span style="color:#f92672">,</span> <span style="color:#960050;background-color:#1e0010">&#39;</span>REAL MADRID<span style="color:#960050;background-color:#1e0010">&#39;</span><span style="color:#f92672">);</span>
+INSERT INTO TEAMS <span style="color:#a6e22e">VALUES</span><span style="color:#f92672">(</span>3<span style="color:#f92672">,</span> <span style="color:#960050;background-color:#1e0010">&#39;</span>PARIS SAINT<span style="color:#960050;background-color:#1e0010">&#39;</span><span style="color:#f92672">);</span>
+
+INSERT INTO MEMBERS <span style="color:#a6e22e">VALUES</span><span style="color:#f92672">(</span>1<span style="color:#f92672">,</span> <span style="color:#960050;background-color:#1e0010">&#39;</span>MESSI<span style="color:#960050;background-color:#1e0010">&#39;</span><span style="color:#f92672">,</span> 1<span style="color:#f92672">);</span>
+INSERT INTO MEMBERS <span style="color:#a6e22e">VALUES</span><span style="color:#f92672">(</span>2<span style="color:#f92672">,</span> <span style="color:#960050;background-color:#1e0010">&#39;</span>RONALDO<span style="color:#960050;background-color:#1e0010">&#39;</span><span style="color:#f92672">,</span> 2<span style="color:#f92672">);</span>
+</code></pre></div><p><code>/member/1</code>을 호출을 하면 다음과 같은 응답이 내려온다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">GET <span style="color:#f92672">/</span>member<span style="color:#f92672">/</span>1
+<span style="color:#f92672">{</span>
+  <span style="color:#e6db74">&#34;id&#34;</span><span style="color:#f92672">:</span> 1<span style="color:#f92672">,</span>
+  <span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;MESSI&#34;</span><span style="color:#f92672">,</span>
+  <span style="color:#e6db74">&#34;team&#34;</span><span style="color:#f92672">:</span> <span style="color:#f92672">{</span>
+    <span style="color:#e6db74">&#34;id&#34;</span><span style="color:#f92672">:</span> 1<span style="color:#f92672">,</span>
+    <span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;BARCA&#34;</span>
+  <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>하나씩 살펴보자.</p>
+<p><code>MemberController</code>에서 요청이 이루어질 때 <code>osivService.findMemberById(memberId)</code> 를 한 시점에서는 Team은 initialize 되어있지않고 proxy객체로 남아있다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Member member <span style="color:#f92672">=</span> osivService<span style="color:#f92672">.</span><span style="color:#a6e22e">findMemberById</span><span style="color:#f92672">(</span>memberId<span style="color:#f92672">);</span>
+
+<span style="color:#75715e">//console
+</span><span style="color:#75715e"></span>Hibernate: select member0_<span style="color:#f92672">.</span><span style="color:#a6e22e">id</span> as id1_0_0_<span style="color:#f92672">,</span> member0_<span style="color:#f92672">.</span><span style="color:#a6e22e">name</span> as name2_0_0_<span style="color:#f92672">,</span> member0_<span style="color:#f92672">.</span><span style="color:#a6e22e">team_id</span> as team_id3_0_0_ from members member0_ where member0_<span style="color:#f92672">.</span><span style="color:#a6e22e">id</span><span style="color:#f92672">=?</span>
+</code></pre></div><p>그러다가 <code>MemberResponse.of(...)</code>에서 <code>TeamResponse.of(...)</code>의 <code>team.getName()</code>을 호출 할 때 initialize된다</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> TeamResponse<span style="color:#f92672">(</span>team<span style="color:#f92672">.</span><span style="color:#a6e22e">getId</span><span style="color:#f92672">(),</span> team<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">());</span>
+
+<span style="color:#75715e">//console
+</span><span style="color:#75715e"></span>Hibernate: select team0_<span style="color:#f92672">.</span><span style="color:#a6e22e">id</span> as id1_1_0_<span style="color:#f92672">,</span> team0_<span style="color:#f92672">.</span><span style="color:#a6e22e">name</span> as name2_1_0_ from teams team0_ where team0_<span style="color:#f92672">.</span><span style="color:#a6e22e">id</span><span style="color:#f92672">=?</span>
+</code></pre></div><p>이렇듯 Presentation계층에는 Transaction이 없지만 OSIV를 통한 지연로딩을 처리할 수 있다.</p>
+<p><code>spring.jpa.open-in-view=false</code> 로 설정하면 <code>team.getName()</code>을 할 때 에러가 발생한다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">org<span style="color:#f92672">.</span><span style="color:#a6e22e">hibernate</span><span style="color:#f92672">.</span><span style="color:#a6e22e">LazyInitializationException</span><span style="color:#f92672">:</span> 
+could not initialize proxy <span style="color:#f92672">[</span>com<span style="color:#f92672">.</span><span style="color:#a6e22e">example</span><span style="color:#f92672">.</span><span style="color:#a6e22e">osiv</span><span style="color:#f92672">.</span><span style="color:#a6e22e">persistence</span><span style="color:#f92672">.</span><span style="color:#a6e22e">Team</span><span style="color:#960050;background-color:#1e0010">#</span>1<span style="color:#f92672">]</span> 
+<span style="color:#f92672">-</span> no Session
+</code></pre></div><h3 id="컨트롤러에선-플러시가-동작하지-않는-이유는-무엇일까">컨트롤러에선 플러시가 동작하지 않는 이유는 무엇일까?</h3>
+<ul>
+<li>트랜잭션을 사용하는 서비스 계층이 끝날 때 트랜잭션이 커밋되면서 이미 플러시해버렸다. 스프링이 제공하는 OSIV 서블릿 필터나 OSIV 스프링 인터셉터는 요청이 끝나면 플러시를 호출하지 않고 <code>em.close()</code>로 영속성 컨텍스트만 종료해 버리므로 플러시가 일어나지 않는다 .</li>
+<li>프리젠테이션 계층에서 <code>em.flush()</code>를 호출해서 강제로 플러시해도 트랜잭션 범위 밖이이므로 데이터를 수정할 수 없다는 예외를 만난다.</li>
+</ul>
+<h3 id="스프링-osiv-주의사항">스프링 OSIV 주의사항</h3>
+<p>그런데 여기에는 한 가지 예외가 있다.</p>
+<p>프레젠테이션 계층에서 엔티티를 수정한 직후에 트랜잭션을 포함하는 서비스 계층을 호출하면 문제가 발생한다.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MemberController</span> <span style="color:#f92672">{</span>
+<span style="color:#a6e22e">@GetMapping</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;/member/{memberId}&#34;</span><span style="color:#f92672">)</span>
+    <span style="color:#66d9ef">public</span> MemberResponse <span style="color:#a6e22e">getAllMembers</span><span style="color:#f92672">(</span><span style="color:#a6e22e">@PathVariable</span> Long memberId<span style="color:#f92672">){</span>
+        Member member <span style="color:#f92672">=</span> osivService<span style="color:#f92672">.</span><span style="color:#a6e22e">findMemberById</span><span style="color:#f92672">(</span>memberId<span style="color:#f92672">);</span>
+        member<span style="color:#f92672">.</span><span style="color:#a6e22e">setName</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;***&#34;</span><span style="color:#f92672">);</span> <span style="color:#75715e">//추가
+</span><span style="color:#75715e"></span>        Team team <span style="color:#f92672">=</span> osivService<span style="color:#f92672">.</span><span style="color:#a6e22e">findTeams</span><span style="color:#f92672">(</span>member<span style="color:#f92672">.</span><span style="color:#a6e22e">getTeam</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getId</span><span style="color:#f92672">());</span>  <span style="color:#75715e">//추가
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> MemberResponse<span style="color:#f92672">.</span><span style="color:#a6e22e">of</span><span style="color:#f92672">(</span>member<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>위의 코드는 <code>osivService.findTeams()</code> 메소드가 끝나면 트랜잭션 AOP는 트랜잭션을 커밋하고 영속성 컨텍스트를 플러시한다. 이때 변경 감지가 동작하면서 회원 엔티티의 수정 사항을 데이터베이스에 반영한다.</p>
+<p>이런 문제를 해결하는 단순한 방법은 트랜잭션이 있는 비즈니스 로직을 모두 호출하고 나서 엔티티를 변경하면 된다.</p>
+<p>스프링 OSIV는 같은 영속성 컨텍스트를 여러 트랜잭션이 공유할 수 있으므로 이런 문제가 발생한다.</p>
+<h2 id="osiv-정리">OSIV 정리</h2>
+<h3 id="스프링-osiv의-특징">스프링 OSIV의 특징</h3>
+<ul>
+<li>한 번 조회한 엔티티는 요청이 끝날 때까지 영속 상태를 유지한다.</li>
+<li>엔티티 수정은 트랜잭션이 있는 게층에서만 동작한다.</li>
+</ul>
+<h3 id="스프링-osiv의-단점">스프링 OSIV의 단점</h3>
+<ul>
+<li>OSIV를 적용하면 같은 영속성 컨텍스트를 여러 트랜잭션이 공유할 수 있다는 점을 주의해야 한다.</li>
+<li>프리젠테이션 계층에서 엔티티를 수정하고나서 비즈니스 로직을 수행하면 엔티티가 수정될 수 있다.</li>
+<li>프리젠테이션 계층에서 지연 로딩에 의한 SQL이 실행된다. 따라서 성능 튜닝시에 확인해야 할 부분이 넓다.</li>
+</ul>
+<h2 id="참고-자료">참고 자료</h2>
+<ul>
+<li><a href="https://woowacourse.github.io/javable/post/2020-09-11-osiv/">https://woowacourse.github.io/javable/post/2020-09-11-osiv/</a></li>
+<li><a href="https://kingbbode.tistory.com/27">https://kingbbode.tistory.com/27</a></li>
+</ul>
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="https://ddd4117.github.io/tags/spring/">Spring</a>
+
+  <a class="tag tag--primary tag--small" href="https://ddd4117.github.io/tags/jpa/">JPA</a>
+
+  <a class="tag tag--primary tag--small" href="https://ddd4117.github.io/tags/osiv/">OSIV</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/06/leetcode-#2.-add-two-numbersmedium/" data-tooltip="[LeetCode] #2. Add Two Numbers(Medium)">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+            
+              
+                <script src="https://utteranc.es/client.js"
+        repo="ddd4117/ddd4117.github.com"
+        issue-term="[ENTER TERM HERE]"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2021 <a href="https://github.com/ddd4117">1o2o3o</a>. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="5">
+        <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/06/leetcode-#2.-add-two-numbersmedium/" data-tooltip="[LeetCode] #2. Add Two Numbers(Medium)">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="5">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://ddd4117.github.io/images/profile.jpg" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">1o2o3o</h4>
+    
+      <div id="about-card-bio">마구잡이 코딩맨</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        SW developer
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        Korea
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://ddd4117.github.io/images/cover.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
+
+
+<script src="https://ddd4117.github.io/js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js"></script>
+
+
+<script lang="javascript">
+window.onload = updateMinWidth;
+window.onresize = updateMinWidth;
+document.getElementById("sidebar").addEventListener("transitionend", updateMinWidth);
+function updateMinWidth() {
+  var sidebar = document.getElementById("sidebar");
+  var main = document.getElementById("main");
+  main.style.minWidth = "";
+  var w1 = getComputedStyle(main).getPropertyValue("min-width");
+  var w2 = getComputedStyle(sidebar).getPropertyValue("width");
+  var w3 = getComputedStyle(sidebar).getPropertyValue("left");
+  main.style.minWidth = `calc(${w1} - ${w2} - ${w3})`;
+}
+</script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = 'https:\/\/ddd4117.github.io\/2021\/06\/jpa-osivopen-session-in-view\/';
+          
+            this.page.identifier = '\/2021\/06\/jpa-osivopen-session-in-view\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'hyuntae';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+
+    
+  </body>
+</html>
+
