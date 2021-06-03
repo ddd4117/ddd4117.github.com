@@ -6,7 +6,52 @@
     <description>Recent content in Tags on 1o2o3o&#39;s Tech Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>kr-ko</language>
-    <lastBuildDate>Wed, 02 Jun 2021 22:10:38 +0900</lastBuildDate><atom:link href="https://ddd4117.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 03 Jun 2021 22:58:17 +0900</lastBuildDate><atom:link href="https://ddd4117.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>cs</title>
+      <link>https://ddd4117.github.io/tags/cs/</link>
+      <pubDate>Thu, 03 Jun 2021 22:58:17 +0900</pubDate>
+      
+      <guid>https://ddd4117.github.io/tags/cs/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>database</title>
+      <link>https://ddd4117.github.io/tags/database/</link>
+      <pubDate>Thu, 03 Jun 2021 22:58:17 +0900</pubDate>
+      
+      <guid>https://ddd4117.github.io/tags/database/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>dbms</title>
+      <link>https://ddd4117.github.io/tags/dbms/</link>
+      <pubDate>Thu, 03 Jun 2021 22:58:17 +0900</pubDate>
+      
+      <guid>https://ddd4117.github.io/tags/dbms/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>schema</title>
+      <link>https://ddd4117.github.io/tags/schema/</link>
+      <pubDate>Thu, 03 Jun 2021 22:58:17 +0900</pubDate>
+      
+      <guid>https://ddd4117.github.io/tags/schema/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sql</title>
+      <link>https://ddd4117.github.io/tags/sql/</link>
+      <pubDate>Thu, 03 Jun 2021 22:58:17 +0900</pubDate>
+      
+      <guid>https://ddd4117.github.io/tags/sql/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>JPA</title>
       <link>https://ddd4117.github.io/tags/jpa/</link>
@@ -193,15 +238,6 @@
       <pubDate>Mon, 24 May 2021 23:23:56 +0900</pubDate>
       
       <guid>https://ddd4117.github.io/tags/optional/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>cs</title>
-      <link>https://ddd4117.github.io/tags/cs/</link>
-      <pubDate>Sun, 23 May 2021 15:20:10 +0900</pubDate>
-      
-      <guid>https://ddd4117.github.io/tags/cs/</guid>
       <description></description>
     </item>
     

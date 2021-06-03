@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>sql on 1o2o3o&#39;s Tech Blog</title>
+    <link>https://ddd4117.github.io/tags/sql/</link>
+    <description>Recent content in sql on 1o2o3o&#39;s Tech Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>kr-ko</language>
+    <lastBuildDate>Thu, 03 Jun 2021 22:58:17 +0900</lastBuildDate><atom:link href="https://ddd4117.github.io/tags/sql/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Database 기초 및 SQL</title>
+      <link>https://ddd4117.github.io/2021/06/database-%EA%B8%B0%EC%B4%88-%EB%B0%8F-sql/</link>
+      <pubDate>Thu, 03 Jun 2021 22:58:17 +0900</pubDate>
+      
+      <guid>https://ddd4117.github.io/2021/06/database-%EA%B8%B0%EC%B4%88-%EB%B0%8F-sql/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

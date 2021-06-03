@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="kr-ko">
+  <head>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.82.0 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="author" content="1o2o3o">
+<meta name="keywords" content="">
+<meta name="description" content="">
+
+
+<meta property="og:description" content="">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Database 기초 및 SQL">
+<meta name="twitter:title" content="Database 기초 및 SQL">
+<meta property="og:url" content="https://ddd4117.github.io/2021/06/database-%EA%B8%B0%EC%B4%88-%EB%B0%8F-sql/">
+<meta property="twitter:url" content="https://ddd4117.github.io/2021/06/database-%EA%B8%B0%EC%B4%88-%EB%B0%8F-sql/">
+<meta property="og:site_name" content="1o2o3o&#39;s Tech Blog">
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+<meta property="og:locale" content="en-us">
+
+  
+    <meta property="article:published_time" content="2021-06-03T22:58:17">
+  
+  
+    <meta property="article:modified_time" content="2021-06-03T22:58:17">
+  
+  
+  
+    
+      <meta property="article:section" content="cs">
+    
+  
+  
+    
+      <meta property="article:tag" content="database">
+    
+      <meta property="article:tag" content="cs">
+    
+      <meta property="article:tag" content="sql">
+    
+      <meta property="article:tag" content="dbms">
+    
+      <meta property="article:tag" content="schema">
+    
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://user-images.githubusercontent.com/28971015/120657329-5cd20f00-c4bf-11eb-8441-29cffdbaeee4.png">
+  <meta property="twitter:image" content="https://user-images.githubusercontent.com/28971015/120657329-5cd20f00-c4bf-11eb-8441-29cffdbaeee4.png">
+
+
+
+
+
+  <meta property="og:image" content="https://ddd4117.github.io/images/profile.jpg">
+  <meta property="twitter:image" content="https://ddd4117.github.io/images/profile.jpg">
+
+
+    <title>Database 기초 및 SQL - 1o2o3o&#39;s Tech Blog</title>
+	<script data-ad-client="ca-pub-7778071856226172" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+    <link rel="icon" href="https://ddd4117.github.io/images/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://ddd4117.github.io/2021/06/database-%EA%B8%B0%EC%B4%88-%EB%B0%8F-sql/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css" integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
+    
+    
+    <link rel="stylesheet" href="https://ddd4117.github.io/css/style-twzjdbqhmnnacqs0pwwdzcdbt8yhv8giawvjqjmyfoqnvazl0dalmnhdkvp7.min.css" />
+    
+    
+
+    
+      
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LJYW9800LT"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-LJYW9800LT', { 'anonymize_ip': false });
+}
+</script>
+
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="5">
+ 
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LJYW9800LT"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-LJYW9800LT', { 'anonymize_ip': false });
+}
+</script>
+ 
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://ddd4117.github.io/">1o2o3o&#39;s Tech Blog</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://ddd4117.github.io/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="https://ddd4117.github.io/images/profile.jpg" alt="Author&#39;s picture" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="5">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://ddd4117.github.io/#about">
+          <img class="sidebar-profile-picture" src="https://ddd4117.github.io/images/profile.jpg" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">1o2o3o</h4>
+        
+          <h5 class="sidebar-profile-bio">마구잡이 코딩맨</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/categories/os">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-linux"></i>
+      
+      <span class="sidebar-button-desc">OS</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/categories/spring">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tv"></i>
+      
+      <span class="sidebar-button-desc">spring</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/categories/java">
+    
+      <i class="sidebar-button-icon fa fa-terminal"></i>
+      
+      <span class="sidebar-button-desc">java</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/categories/leetcode">
+    
+      <i class="sidebar-button-icon fa fa-code"></i>
+      
+      <span class="sidebar-button-desc">leetcode</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/categories/cs">
+    
+      <i class="sidebar-button-icon fa fa-pencil"></i>
+      
+      <span class="sidebar-button-desc">cs</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/ddd4117" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/index.xml">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://ddd4117.github.io/#about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="5"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      Database 기초 및 SQL
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2021-06-03T22:58:17&#43;09:00">
+        
+  June 3, 2021
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://ddd4117.github.io/categories/cs">cs</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              <h2 id="데이터베이스database란">데이터베이스(Database)란</h2>
+<p>여러 사람이 공유하여 사용할 목적으로 체계화해 통합, 관리하는 데이터의 집합으로, 작성된 목록으로써 여러 응용 시스템들의 통합된 정보들을 저장하여 운영할 수 있는 공용 데이터들의 묶음이다.</p>
+<h2 id="데이터베이스-관리-시스템dbms-database-management-system">데이터베이스 관리 시스템(DBMS, Database Management System)</h2>
+<p>다수의 사용자들이 데이베이스 내의 데이터를 접근할 수 있도록 관리해주는 소프트웨어(미들웨어)</p>
+<p>ex) Oracle, Mysql, MS_SQL, Postgresql 등</p>
+<h2 id="데이터베이스-특징">데이터베이스 특징</h2>
+<ul>
+<li>실시간 접근성 - 비정형적인 질의에 대해 실시간 처리에 의한 응답이 가능</li>
+<li>계속적인 변화 - 데이터의 삽입, 삭제, 갱신으로 항상 최신 데이터 유지</li>
+<li>동시 공용 - 다수의 사용자가 동시에 같은 내용의 데이터 접근</li>
+<li>내용에 의한 참조 - 주소나 위치가 아닌 데이터 내용으로 찾음</li>
+</ul>
+<h2 id="데이터베이스-용어">데이터베이스 용어</h2>
+<ul>
+<li>Tuple(튜플) : 행을 의미하며, 같은 말로는 Record, Row라고 함
+<ul>
+<li>Cardinality : 튜플의 수</li>
+</ul>
+</li>
+<li>Attribute(어트리뷰트) : 열을 의미하며, Column이라고 함
+<ul>
+<li>Degree : 어트리뷰트의 수</li>
+</ul>
+</li>
+</ul>
+<h2 id="schema스키마">Schema(스키마)</h2>
+<ul>
+<li>DB의 구조와 제약 조건에 관한 전반적인 병세를 기술한 메타데이터의 집합</li>
+<li>Entity, Attribute, Relationship 및 데이터 조작시 데이터 값들이 갖는 제약 조건 등에 관한 전반적 정의</li>
+<li>외부 스키마, 개념 스키마, 내부 스키마로 나뉨
+<ul>
+<li>외부 스키마 = 서브 스키마 = 사용자 View
+<ul>
+<li>외부 스키마는 사용자 입장에서 필요로 하는 DB의 논리적 구조 정의</li>
+</ul>
+</li>
+<li>개념 스키마
+<ul>
+<li>개체간의 관계와 제약 조건을 나타내고 DB 접근 권한, 보안 및 무결성 규칙에 관한 명세 정의</li>
+</ul>
+</li>
+<li>내부 스키마
+<ul>
+<li>물리적 저장장치에서 본 DB 구조</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="transaction트랜잭션">Transaction(트랜잭션)</h2>
+<ul>
+<li>데이터베이스의 상태를 변환 시키는 하나의 논리적 기능을 수행하기 위한 작업의 단위</li>
+<li>장애시 데이터를 복구하는 작업의 단위</li>
+<li>작업을 서로 분리하는 단위</li>
+<li>all or nothing - 전체가 수행되거나 전혀 수행되지 않아야 한다.</li>
+</ul>
+<h3 id="트랜잭션의-성질">트랜잭션의 성질</h3>
+<ul>
+<li>원자성(Atomicity) - all or nothing</li>
+<li>일관성(Consistency) - 수행하기 전이나 수행한 후나 일관된 상태 유지</li>
+<li>독립성(Isolation) - 수행중인 트랜잭션에 다른 트랜잭션이 끼어들어 데이터를 훼손하지 말아야 한다.</li>
+<li>영속성(지속성)(Durability) - 수행이 완료된 트랜잭션은 영구 저장해야 한다.</li>
+</ul>
+<h2 id="sqlstructured-query-language">SQL(Structured Query Language)</h2>
+<ul>
+<li>비절차적 언어(선언적 언어)</li>
+<li>자신이 원하는 바(what)만 명시하며, 원하는 것을 처리하는 방법(how)은 명시할 수 없음</li>
+<li>자연어에 가까운 구문을 사용하여 질의를 표현할 수 있음</li>
+</ul>
+<h2 id="sql의-구성요소">SQL의 구성요소</h2>
+<ul>
+<li>
+<p><strong>데이터 정의어(Data Definition Language:DDL)</strong></p>
+<ul>
+<li>데이터 정의어 란? 데이터베이스를 정의하는 언어이며, 데이터를 생성, 수정, 삭제하는 등의 데이터의 전체의 골격을 결정하는 역할을 하는 언어</li>
+<li>CREATE
+<ul>
+<li>DOMAIN, TABLE, VIEW, INDEX</li>
+</ul>
+</li>
+<li>ALTER
+<ul>
+<li>TABLE
+<ul>
+<li>ADD () PRIMARY KEY</li>
+<li>DROP</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>DROP
+<ul>
+<li>DOMAIN, TABLE, VIEW, INDEX</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>데이터 조작어(Data Manipulation Language:DML)</strong></p>
+<ul>
+<li>정의된 데이터베이스에 입력된 레코드를 조회하거나 수정하거나 삭제하는 등의 역할을 하는 언어</li>
+<li>UPDATE</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">UPDATE</span> DEPARTMENT
+<span style="color:#66d9ef">SET</span> FLOOR <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>
+<span style="color:#66d9ef">WHERE</span> DEPTNO <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</code></pre></div><ul>
+<li>DELETE</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">DELETE</span> <span style="color:#66d9ef">FROM</span> DEPARTMENT
+<span style="color:#66d9ef">WHERE</span> DEPTNAME <span style="color:#f92672">=</span> <span style="color:#960050;background-color:#1e0010">총무</span>;
+</code></pre></div><ul>
+<li>INSERT</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> DEPARTMENT
+<span style="color:#66d9ef">VALUES</span>(<span style="color:#ae81ff">5</span>, <span style="color:#e6db74">&#39;연구&#39;</span>, <span style="color:#ae81ff">9</span>);
+</code></pre></div><ul>
+<li>SELECT
+<ul>
+<li>RDB에서 정보를 검색하는 SQL문으로 가장 많이 사용 됨</li>
+<li>별칭(alias) - 서로 다른 릴레이션에 동이한 이름을 가진 attribute가 있을 때 구분하는 방법, as로 사용됨</li>
+<li>DISTINCT - 중복 제거</li>
+<li>%를 사용한 문자 비교</li>
+<li>연산자 우선순위
+<ul>
+<li>비교 연산자 = &gt; NOT &gt; AND &gt; OR</li>
+</ul>
+</li>
+<li><code>attr BETWEEN A AND B</code> == A ≤ attr ≤ B</li>
+<li>IN - 리스트를 사용한 검색</li>
+<li>산술 연산자(+, -, *, /) 가능</li>
+<li>NULL 비교는 <code>attr = NULL</code>이 아닌 <code>attr IS NULL</code>, <code>attr IS NOT NULL</code></li>
+<li>count(), max(), min(), avg(), sum()
+<ul>
+<li>통계함수와 함께 where절을 사용할 시 where조건을 먼저 실행 한 후의 통계값을 추출한다.</li>
+</ul>
+</li>
+<li>Group by .. Having
+<ul>
+<li>만들어진 그룹에 대해 조건을 줄 경우 사용</li>
+<li>SELECT는 AVG, MAX 등의 조건을 주지 못함</li>
+</ul>
+</li>
+<li>IN - 한 attribute가 집합에 속하는 가</li>
+<li>EXISTS - 한 attribute가 집합에 속하는 가
+<ul>
+<li>IN과 EXISTS의 비교는 EXISTS는 ROW를 체크하고 return하지만, IN은 값까지 비교한다.</li>
+</ul>
+</li>
+<li>ANY - 한 attribute가 집합에 속하는 하나 이상의 값들과 관계를 갖는가</li>
+<li>ALL - 한 attribute가 집합에 속하는 모든 값들과 관계를 갖는가</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#f92672">#</span><span style="color:#75715e">--- 사용 예제
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">SELECT</span> [<span style="color:#66d9ef">DISTINCT</span>] attr1, attr2, ...
+<span style="color:#66d9ef">FROM</span> RELATIONS
+[<span style="color:#66d9ef">WHERE</span> <span style="color:#960050;background-color:#1e0010">조건</span>]
+[<span style="color:#66d9ef">GROUP</span> <span style="color:#66d9ef">BY</span> attr1]
+[<span style="color:#66d9ef">HAVING</span> <span style="color:#960050;background-color:#1e0010">조건</span>]
+[<span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> attr1]
+
+<span style="color:#f92672">#</span><span style="color:#75715e">---
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">SELECT</span> DEPTNAME, FLOOR
+<span style="color:#66d9ef">FROM</span> DEPARTMENT <span style="color:#66d9ef">AS</span> D, EMPLOYEE <span style="color:#66d9ef">AS</span> E
+<span style="color:#66d9ef">WHERE</span> DEPTNO <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">OR</span> DEPOTNO <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>;
+
+<span style="color:#f92672">#</span><span style="color:#75715e">--- %를 이용한 문자열 비교
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">SELECT</span> EMPNAME, TITLE, DNO
+<span style="color:#66d9ef">FROM</span> EMPLOYEE
+<span style="color:#66d9ef">WHERE</span> EMPNAME <span style="color:#66d9ef">LIKE</span> <span style="color:#e6db74">&#39;%이%&#39;</span>;
+
+<span style="color:#f92672">#</span><span style="color:#75715e">--- IN을 이용한 검색
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span>
+<span style="color:#66d9ef">FROM</span> EMPLOYEE
+<span style="color:#66d9ef">WHERE</span> DNO <span style="color:#66d9ef">IN</span> (<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">3</span>);
+
+<span style="color:#f92672">#</span><span style="color:#75715e">--- 산술 연산자를 이용한 검색
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">SELECT</span> EMPNAME, SALARY, SALARY <span style="color:#f92672">*</span> <span style="color:#ae81ff">1</span>.<span style="color:#ae81ff">1</span> <span style="color:#66d9ef">AS</span> NEWSALARY
+<span style="color:#66d9ef">FROM</span> EMPLOYEE
+<span style="color:#66d9ef">WHERE</span> TITLE <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;과장&#39;</span>;
+</code></pre></div></li>
+<li>
+<p><strong>데이터 제어어(DCL)</strong></p>
+<ul>
+<li>데이터베이스에 접근하거나 객체에 권한을 주는 등의 역할을 하는 언어</li>
+<li>GRANT (특정 데이터베이스 사용자에게 특정 작업을 수행 권한을 부여)</li>
+<li>REVOKE (특정 데이터베이스 이용자로부터 이미 준 권한을 박탈 함.)</li>
+<li>SET TRANSACTION ( 트랜잭션 모드 설정 (동시 트랜잭션 격리 수준 (ISOLATION MODE) 등))</li>
+<li>BEGIN (<a href="https://ko.wikipedia.org/wiki/%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4_%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98">트랜잭션</a> 시작)</li>
+<li><a href="https://ko.wikipedia.org/wiki/COMMIT">COMMIT</a> (트랜잭션의 실행)</li>
+<li><a href="https://ko.wikipedia.org/wiki/%EB%A1%A4%EB%B0%B1_(%EB%8D%B0%EC%9D%B4%ED%84%B0_%EA%B4%80%EB%A6%AC)">ROLLBACK</a> (트랜잭션 취소)</li>
+<li><a href="https://ko.wikipedia.org/wiki/SAVEPOINT">SAVEPOINT</a> (무작위로 롤백 지점을 설정)</li>
+<li>LOCK (TABLE 등의 자원을 차지)</li>
+</ul>
+</li>
+</ul>
+<h2 id="query-실행순서">Query 실행순서</h2>
+<ol>
+<li>FROM</li>
+<li>ON</li>
+<li>JOIN</li>
+<li>WHERE</li>
+<li>GROUP BY</li>
+<li>HAVING</li>
+<li>SELECT</li>
+<li>DISTINCT</li>
+<li>ORDER BY</li>
+<li>TOP</li>
+</ol>
+<h2 id="데이터-타입">데이터 타입</h2>
+<p><a href="https://www.notion.so/b473f4e8161c4419b56ec0fe09f07cb7">Untitled</a></p>
+<h2 id="제약조건">제약조건</h2>
+<ul>
+<li>
+<p>기본키(PRIMARY KEY) 제약조건</p>
+</li>
+<li>
+<p>외래키(FOREIGN KEY) 제약조건</p>
+<ul>
+<li>
+<p><code>ON UPDATE CASCADE</code>
+상위 테이블에서 primary 값이 수정될 경우, 하위 테이블의 reference값은 변경된 상위 테이블의 수정된 값을 가지면서 참조 무결성을 유지합니다.</p>
+</li>
+<li>
+<p><code>ON DELETE CASCADE</code></p>
+<p>상위 테이블에서 primary 값이 삭제될 경우, 하위 테이블의 reference값은 삭제되면서 참조 무결성을 유지합니다.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>UNIQUE 제약조건</p>
+</li>
+<li>
+<p>CHECK 제약조건</p>
+</li>
+<li>
+<p>DEFAULT 정의</p>
+</li>
+</ul>
+<h2 id="select---join">SELECT - JOIN</h2>
+<ul>
+<li>조인은 두 개 이상의 릴레이션으로부터 연관된 튜플들을 결합</li>
+<li>FROM 절에 두 개 이상의 릴레이션들이 열거되고 조건이 WHERE절에 표현 됨</li>
+</ul>
+<h2 id="select---중첩-질의">SELECT - 중첩 질의</h2>
+<ul>
+<li>WHERE절에 다시 SELECT &hellip; FROM &hellip; WHERE 형태로 포함된 SELECT 문</li>
+<li>subquery(부질의)라고 함</li>
+<li>INSERT, DELETE, UPDATE에도 사용 됨</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span> 
+<span style="color:#66d9ef">FROM</span> (<span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">FROM</span> products <span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> <span style="color:#66d9ef">no</span> <span style="color:#66d9ef">DESC</span>) <span style="color:#66d9ef">as</span> A
+<span style="color:#66d9ef">WHERE</span> A.<span style="color:#66d9ef">no</span> <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">3</span>;
+
+<span style="color:#75715e">---
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span> 
+<span style="color:#66d9ef">FROM</span> EMPLOYEE E
+<span style="color:#66d9ef">WHERE</span> DNO <span style="color:#66d9ef">IN</span> (
+	<span style="color:#66d9ef">SELECT</span> DEPTNO
+	<span style="color:#66d9ef">FROM</span> DEPARTMENT
+  <span style="color:#66d9ef">WHERE</span> DEPTNAME <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;영업&#39;</span> <span style="color:#66d9ef">OR</span> DEPTNAME <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;개발&#39;</span>
+)
+</code></pre></div><h2 id="trigger">Trigger</h2>
+<ul>
+<li>명시된 이벤트가 발생할 때마다 DBMS가 자동적으로 수행하는, 사용자가 정의하는 프로시저</li>
+<li>ECA(Event-Condition-Action)이라고 함</li>
+<li>트리거를 명시하려면 트리거를 활성화시키는 사건인 이벤트, 트리거가 활성화되었을 때 수행되는 테스트인 조건, 트리거가 활성화되고 조건이 참일 때 수행되는 프로시저를 표현</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">TRIGGER</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">TRIGGER_NAME</span><span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">AFTER</span> <span style="color:#f92672">&lt;</span><span style="color:#960050;background-color:#1e0010">트리거</span> <span style="color:#960050;background-color:#1e0010">유발하는</span> <span style="color:#960050;background-color:#1e0010">이벤트</span>
+<span style="color:#66d9ef">ON</span> <span style="color:#f92672">&lt;</span><span style="color:#960050;background-color:#1e0010">릴레이션</span><span style="color:#f92672">&gt;</span>
+[<span style="color:#66d9ef">WHERE</span> <span style="color:#f92672">&lt;</span><span style="color:#960050;background-color:#1e0010">조건</span><span style="color:#f92672">&gt;</span>]
+<span style="color:#66d9ef">BEGIN</span> <span style="color:#f92672">&lt;</span>SQL문(<span style="color:#960050;background-color:#1e0010">들</span>)<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">END</span>
+
+<span style="color:#75715e">---
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">TRIGGER</span> RAISE_SALARY
+<span style="color:#66d9ef">ON</span> EMPLOYEE
+<span style="color:#66d9ef">FOR</span> <span style="color:#66d9ef">INSERT</span>
+<span style="color:#66d9ef">AS</span>
+<span style="color:#66d9ef">UPDATE</span> EMPLOYEE
+<span style="color:#66d9ef">SET</span> SALARY <span style="color:#f92672">=</span> SALARY <span style="color:#f92672">*</span> <span style="color:#ae81ff">1</span>.<span style="color:#ae81ff">1</span>
+<span style="color:#66d9ef">WHERE</span> SALARY <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">1500000</span>;
+</code></pre></div><h2 id="참고-자료">참고 자료</h2>
+<ul>
+<li><a href="https://noahlogs.tistory.com/36">https://noahlogs.tistory.com/36</a></li>
+</ul>
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="https://ddd4117.github.io/tags/database/">database</a>
+
+  <a class="tag tag--primary tag--small" href="https://ddd4117.github.io/tags/cs/">cs</a>
+
+  <a class="tag tag--primary tag--small" href="https://ddd4117.github.io/tags/sql/">sql</a>
+
+  <a class="tag tag--primary tag--small" href="https://ddd4117.github.io/tags/dbms/">dbms</a>
+
+  <a class="tag tag--primary tag--small" href="https://ddd4117.github.io/tags/schema/">schema</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/06/jpa-osivopen-session-in-view/" data-tooltip="[JPA] OSIV(Open-Session-In-View)">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+            
+              
+                <script src="https://utteranc.es/client.js"
+        repo="ddd4117/ddd4117.github.com"
+        issue-term="[ENTER TERM HERE]"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2021 <a href="https://github.com/ddd4117">1o2o3o</a>. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="5">
+        <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/06/jpa-osivopen-session-in-view/" data-tooltip="[JPA] OSIV(Open-Session-In-View)">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="5">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://ddd4117.github.io/images/profile.jpg" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">1o2o3o</h4>
+    
+      <div id="about-card-bio">마구잡이 코딩맨</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        SW developer
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        Korea
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://ddd4117.github.io/images/cover.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
+
+
+<script src="https://ddd4117.github.io/js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js"></script>
+
+
+<script lang="javascript">
+window.onload = updateMinWidth;
+window.onresize = updateMinWidth;
+document.getElementById("sidebar").addEventListener("transitionend", updateMinWidth);
+function updateMinWidth() {
+  var sidebar = document.getElementById("sidebar");
+  var main = document.getElementById("main");
+  main.style.minWidth = "";
+  var w1 = getComputedStyle(main).getPropertyValue("min-width");
+  var w2 = getComputedStyle(sidebar).getPropertyValue("width");
+  var w3 = getComputedStyle(sidebar).getPropertyValue("left");
+  main.style.minWidth = `calc(${w1} - ${w2} - ${w3})`;
+}
+</script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = 'https:\/\/ddd4117.github.io\/2021\/06\/database-%EA%B8%B0%EC%B4%88-%EB%B0%8F-sql\/';
+          
+            this.page.identifier = '\/2021\/06\/database-%EA%B8%B0%EC%B4%88-%EB%B0%8F-sql\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'hyuntae';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+
+    
+  </body>
+</html>
+
