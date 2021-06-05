@@ -13,20 +13,20 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Threadpool Size 설정">
-<meta name="twitter:title" content="Threadpool Size 설정">
-<meta property="og:url" content="https://ddd4117.github.io/2021/06/threadpool-size-%EC%84%A4%EC%A0%95/">
-<meta property="twitter:url" content="https://ddd4117.github.io/2021/06/threadpool-size-%EC%84%A4%EC%A0%95/">
+<meta property="og:title" content="[Java] Stream 정리">
+<meta name="twitter:title" content="[Java] Stream 정리">
+<meta property="og:url" content="https://ddd4117.github.io/2021/06/java-stream-%EC%A0%95%EB%A6%AC/">
+<meta property="twitter:url" content="https://ddd4117.github.io/2021/06/java-stream-%EC%A0%95%EB%A6%AC/">
 <meta property="og:site_name" content="1o2o3o&#39;s Tech Blog">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2021-06-04T21:39:16">
+    <meta property="article:published_time" content="2021-06-05T21:04:58">
   
   
-    <meta property="article:modified_time" content="2021-06-04T21:39:16">
+    <meta property="article:modified_time" content="2021-06-05T21:04:58">
   
   
   
@@ -66,7 +66,7 @@
   <meta property="twitter:image" content="https://ddd4117.github.io/images/profile.jpg">
 
 
-    <title>Threadpool Size 설정 - 1o2o3o&#39;s Tech Blog</title>
+    <title>[Java] Stream 정리 - 1o2o3o&#39;s Tech Blog</title>
 	<script data-ad-client="ca-pub-7778071856226172" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 
     <link rel="icon" href="https://ddd4117.github.io/images/favicon.png">
@@ -74,7 +74,7 @@
 
     
 
-    <link rel="canonical" href="https://ddd4117.github.io/2021/06/threadpool-size-%EC%84%A4%EC%A0%95/">
+    <link rel="canonical" href="https://ddd4117.github.io/2021/06/java-stream-%EC%A0%95%EB%A6%AC/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -287,15 +287,15 @@ if (!doNotTrack) {
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      Threadpool Size 설정
+      [Java] Stream 정리
     </h1>
   
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2021-06-04T21:39:16&#43;09:00">
+      <time itemprop="datePublished" datetime="2021-06-05T21:04:58&#43;09:00">
         
-  June 4, 2021
+  June 5, 2021
 
       </time>
     
@@ -314,37 +314,81 @@ if (!doNotTrack) {
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="threadpoolsize">ThreadPoolSize</h1>
-<h1 id="이상적인-threadpool-설정방법">이상적인 ThreadPool 설정방법</h1>
-<h2 id="threadpool을-왜-쓰는걸까">ThreadPool을 왜 쓰는걸까?</h2>
-<p>스레드를 요청마다 생성하면 좋겠지만, 스레드 생성은 시간이 걸리고, 오버헤드가 발생한다.</p>
-<p>요청 처리에 대해 지연시간이 발생되며, JVM과 OS에 의해 처리되어야하는 부분도 발생한다.</p>
-<p>그래서 생각해낸 것이 ThreadPool인데, ThreadPool은 말그래도 Thread가 모여있는 자료구조? 집합? 뭐그런거다.</p>
-<p>ThreadPool은 이전에 생성한 스레드를 재사용해서 오버헤드와 리소스 문제를 줄일 수 있다.</p>
-<h2 id="threadpool의-제한">ThreadPool의 제한</h2>
-<p>Worker Thread가 데이터베이스에 의존하는 경우, Database Connection Pool size에 따라 제한된다. 100개의 DB Connection Pool에 1000개의 worker thread는 말이 되지 않는다.</p>
-<p>또한, Worker Thread가 몇개의 요청만 동시에 처리할 수 있는 외부 서비스를 호출하는 경우, 외부 서비스 처리량에 의해 스레드 풀이 제한된다.</p>
-<h2 id="heading"></h2>
-<h2 id="threadpool의-고려-요소">ThreadPool의 고려 요소</h2>
-<p>ThreadPool의 가장 중요한 요소 중 하나는 CPU이다.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">int</span> numOfCores <span style="color:#f92672">=</span> Runtime<span style="color:#f92672">.</span><span style="color:#a6e22e">getRuntime</span><span style="color:#f92672">().</span><span style="color:#a6e22e">availableProcessors</span><span style="color:#f92672">();</span>
-</code></pre></div><p>다른 제약으로는 memory, file handles, socket handles 등등이 있다.</p>
-<h2 id="threadpool-계산">ThreadPool 계산</h2>
-<p>브라이언 괴츠(Brian Goetz)는 다음과 같은 공식을 추천한다.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"> Number of threads <span style="color:#f92672">=</span> Number of Available Cores <span style="color:#f92672">*</span> <span style="color:#f92672">(</span>1 <span style="color:#f92672">+</span> Wait time <span style="color:#f92672">/</span> Service time<span style="color:#f92672">)</span>
-</code></pre></div><ul>
-<li><strong>Waiting time</strong> - I/O 바인딩 작업이 완료될 때 까지 대기하는 시간, 즉 원격 서비스에서 HTTP 응답을 기다리는 시간</li>
-<li><strong>Service time</strong> - HTTP 응답 처리, 마샬링/언마샬링, 기타 변환 등의 작업을 수행하는 데 소요되는 시간</li>
+              <p>Stream은 자바 8부터 추가된 기능으로 컬렉션, 배열등의 저장 요소를 하나씩 참조하여 함수형 인터페이스(lambda expression)를 적용하며 반복적으로 처리할 수 있도록 해주는 기능</p>
+<p>왜 사용하는가? 불필요한 코딩(for, if 문법)을 걷어낼 수 있고 직관적이기 때문에 가독성이 좋아진다.</p>
+<h2 id="stream-특징">Stream 특징</h2>
+<ul>
+<li>원본의 데이터를 변경하지 않는다.</li>
 </ul>
-<blockquote>
-<p>예를 들어Worker Thread가 Microservice를 호출한다. MicroService 응답시간이 50ms, 처리 시간이 5ms이다. 그리고 우리 서버는 듀얼코어일 때Number of Available = 2, Waittime = 50, Service time = 52 * (1 + 50 / 5) = 22 threads</p>
-</blockquote>
-<p>그러나, 이런 방식은 굉장히 단순화되었다. HTTP Connection Pool 외에도, JDBC 연결 풀이 있을 수 있다.</p>
-<p>만약, 여러 종류의 Worker Thread가 필요하다면, 각 ThreadPool은 작업량에 따라 조정될 수 있도록 여러 개의 ThreadPool을 사용하는 것이 가장 좋다.</p>
+<p>Stream API는 원본의 데이터를 조회하여 원본의 데이터가 아닌 별도의 요소들로 Stream을 생성한다. 그렇기 때문에 원본의 데이터로부터 읽기만 할 뿐이며, 정렬이나 필터링 등의 작업은 별도의 Stream 요소들에서 처리가 된다.</p>
+<ul>
+<li>일회용이다.</li>
+</ul>
+<p>Stream은 일회용이기 때문에 한번 사용이 끝나면 재사용이 불가능하다. Stream이 또 필요한 경우 다시 생성해야하며, 재사용을 한다면 IllegalStateException이 발생한다.</p>
+<ul>
+<li>내부 반복으로 작업을 처리한다.</li>
+</ul>
+<h2 id="stream-중간연산">Stream 중간연산</h2>
+<p>연산 결과를 스트림으로 반환하기 때문에 중간 연산을 연속해서 할 수 있다.</p>
+<ul>
+<li>
+<p>filter</p>
+<ul>
+<li>조건에 맞게 거르는 것</li>
+</ul>
+</li>
+<li>
+<p>map</p>
+<ul>
+<li>원하는 필드만 뽑아내거나 특정 형태로 변환할 때 사용</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Stream<span style="color:#f92672">&lt;</span>R<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">map</span><span style="color:#f92672">(</span>Function<span style="color:#f92672">&lt;?</span> <span style="color:#66d9ef">super</span> T<span style="color:#f92672">,</span> <span style="color:#f92672">?</span> <span style="color:#66d9ef">extends</span> R<span style="color:#f92672">&gt;</span> mapper<span style="color:#f92672">);</span>
+</code></pre></div></li>
+<li>
+<p>peek</p>
+</li>
+<li>
+<p>sorted</p>
+</li>
+<li>
+<p>limit</p>
+</li>
+<li>
+<p>distinct</p>
+</li>
+<li>
+<p>skip</p>
+</li>
+<li>
+<p>mapToInt, mapToLong, mapToDouble&hellip;</p>
+</li>
+</ul>
+<h2 id="stream-최종연산">Stream 최종연산</h2>
+<p>스트림의 요소를 소모하면서 연산을 수행하기 때문에 한번만 연산이 가능하다</p>
+<ul>
+<li>count(), min(), max(), sum(), average()</li>
+<li>reduce()
+<ul>
+<li>스트림의 요소를 줄여나가면서 연산을 수행하고 최종결과를 반환</li>
+</ul>
+</li>
+<li>forEach()</li>
+<li>collect()
+<ul>
+<li>reduce()와 유사하나, collect()는 매개변수 타입이 Collector이다.</li>
+</ul>
+</li>
+<li>iterator()+</li>
+</ul>
+<h2 id="parallel-stream">parallel stream</h2>
+<p>내부적으로 fork &amp; join 프레임워크를 이용해서 자동적으로 연산을 병렬로 수행한다.</p>
+<p>여러 쓰레드가 스트림에서 요소를 필터링하고 나온 요소 수를 계산하고 쓰레드끼리 다시 한 번 각자 계산한 값들을 더해서 return 해준다.</p>
 <h2 id="참고-자료">참고 자료</h2>
 <ul>
-<li><a href="https://jobs.zalando.com/en/tech/blog/how-to-set-an-ideal-thread-pool-size/?gh_src=4n3gxh1">https://jobs.zalando.com/en/tech/blog/how-to-set-an-ideal-thread-pool-size/?gh_src=4n3gxh1</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Little's_law">https://en.wikipedia.org/wiki/Little%27s_law</a></li>
+<li><a href="https://jeong-pro.tistory.com/165">https://jeong-pro.tistory.com/165</a></li>
+<li><a href="https://mangkyu.tistory.com/112">https://mangkyu.tistory.com/112</a></li>
+<li><a href="https://multifrontgarden.tistory.com/254">https://multifrontgarden.tistory.com/254</a></li>
+<li><a href="https://ict-nroo.tistory.com/43">https://ict-nroo.tistory.com/43</a></li>
 </ul>
               
             </div>
@@ -376,7 +420,7 @@ if (!doNotTrack) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/06/java-stream-%EC%A0%95%EB%A6%AC/" data-tooltip="[Java] Stream 정리">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -384,7 +428,7 @@ if (!doNotTrack) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/06/database-%EA%B8%B0%EC%B4%88-%EB%B0%8F-sql/" data-tooltip="Database 기초 및 SQL">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/06/threadpool-size-%EC%84%A4%EC%A0%95/" data-tooltip="Threadpool Size 설정">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -448,7 +492,7 @@ if (!doNotTrack) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/06/java-stream-%EC%A0%95%EB%A6%AC/" data-tooltip="[Java] Stream 정리">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -456,7 +500,7 @@ if (!doNotTrack) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/06/database-%EA%B8%B0%EC%B4%88-%EB%B0%8F-sql/" data-tooltip="Database 기초 및 SQL">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://ddd4117.github.io/2021/06/threadpool-size-%EC%84%A4%EC%A0%95/" data-tooltip="Threadpool Size 설정">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -584,9 +628,9 @@ $(document).ready(function() {
     
       <script>
         var disqus_config = function () {
-          this.page.url = 'https:\/\/ddd4117.github.io\/2021\/06\/threadpool-size-%EC%84%A4%EC%A0%95\/';
+          this.page.url = 'https:\/\/ddd4117.github.io\/2021\/06\/java-stream-%EC%A0%95%EB%A6%AC\/';
           
-            this.page.identifier = '\/2021\/06\/threadpool-size-%EC%84%A4%EC%A0%95\/'
+            this.page.identifier = '\/2021\/06\/java-stream-%EC%A0%95%EB%A6%AC\/'
           
         };
         (function() {
